@@ -48,7 +48,8 @@ The full list of 88 columns:
 ## 🧹 Part 1: Metadata Cleaning
 
 Due to some technical noise in the metadata, several cleaning steps were performed to ensure data consistency before downstream analyses.
-___
+
+<hr style="border: none; border-top: 1px solid #ccc;" />
 
 ### Step 1: Clean B cell clusters
 
@@ -69,7 +70,7 @@ target_receptors <- c("Aberant ab", "Aberrant g", "gd", "ab")
 
 - ✅ **The number of B cells that were removed: 775**
 
-___
+<hr style="border: none; border-top: 1px solid #ccc;" />
 
 ### Step 2: Clean non-B cell clusters (T cells)
 
@@ -77,7 +78,7 @@ For clusters not in the above list, we found rows where `imm_receptor == "hkl"` 
 
 - ✅ **The number of T cells that were removed: 1459**
 
-___
+<hr style="border: none; border-top: 1px solid #ccc;" />
 
 ### Step 3: Remove ambiguous "T and B" values
 

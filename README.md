@@ -4,6 +4,7 @@ This repository contains a portion of the data analysis tasks for discovering bi
 
 ---
 ---
+---
 
 ## 📥 Part 0: Input
 
@@ -46,6 +47,7 @@ The full list of 88 columns:
 
 ---
 ---
+---
 
 ## 🧹 Part 1: Metadata Cleaning
 
@@ -72,7 +74,7 @@ target_receptors <- c("Aberant ab", "Aberrant g", "gd", "ab")
 
 - ✅ **The number of B cells that were removed: 775**
 
-***
+---
 
 ### Step 2: Clean non-B cell clusters (T cells)
 
@@ -80,7 +82,7 @@ For clusters not in the above list, we found rows where `imm_receptor == "hkl"` 
 
 - ✅ **The number of T cells that were removed: 1459**
 
-***
+---
 
 ### Step 3: Remove ambiguous "T and B" values
 
@@ -88,5 +90,6 @@ Some cells had `imm_receptor == "T and B"` — these were ambiguous and removed 
 
 - ✅ **The number of cells with imm_receptor == "T and B" that were removed: 1116**
 
+---
 ---
 ---

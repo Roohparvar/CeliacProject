@@ -3,6 +3,7 @@
 This repository contains a portion of the data analysis tasks for discovering biologically relevant insights in **Celiac disease**.
 
 ---
+---
 
 ## 📥 Input
 
@@ -43,6 +44,7 @@ The full list of 88 columns:
 "clone_size_bucket_ab"
 ```
 
+---
 ---
 
 ## 🧹 Part 1: Metadata Cleaning
@@ -86,4 +88,5 @@ Some cells had `imm_receptor == "T and B"` — these were ambiguous and removed 
 
 - ✅ **The number of cells with imm_receptor == "T and B" that were removed: 1116**
 
+---
 ---

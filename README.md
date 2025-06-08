@@ -5,7 +5,7 @@ This repository contains a portion of the data analysis tasks for discovering bi
 ---
 ---
 
-## 📥 Input
+## 📥 Part 0: Input
 
 The main input was a **metadata table** containing **88 columns**, including sample identifiers, receptor information, clustering results, UMAP coordinates, and other annotations.
 

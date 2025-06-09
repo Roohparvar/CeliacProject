@@ -106,15 +106,15 @@ In this part, we analyzed how each immune receptor type (imm_receptor2) is distr
 
 In this part, we performed T cell receptor (TCR) analysis to investigate the diversity, clonality, and distribution of T cells across clusters. For this analysis, the main columns from the metadata that were required are described below:
 
-1. PatientName / Patient: Identifier of the patient/sample; useful for grouping or stratifying TCR results.
-2. a_cdr3, b_cdr3, g_cdr3, d_cdr3, h_cdr3, k_cdr3, l_cdr3: Complementarity-determining region 3 (CDR3) sequences of various TCR and BCR chains. These are the most informative regions for identifying T cell clones and assessing repertoire diversity.
-3. TRAV, TRBV, TRGV, TRDV: Variable (V) gene segments for the α, β, γ, and δ chains of TCRs.
-4. TRAJ, TRBJ, TRGJ, TRDJ: Joining (J) gene segments for the same TCR chains.
-5. contigCount_T: Number of TCR contigs detected per cell, used as a measure of confidence in TCR identification.
-6. file_T: Original file from which the TCR data was extracted.
-7. imm_receptor2: The refined immune receptor assignment used as the main label to distinguish between αβ, γδ, and ambiguous or noisy TCRs.
-8. cluster: Cell cluster assignment used to relate TCR properties to specific cell populations or phenotypes.
-9. clone_size_ab, clone_size_gd, clone_size_bucket_ab, clone_size_bucket_gd: Measures of clonal expansion for αβ and γδ TCRs, used in clonality analysis.
+1. **PatientName / Patient**: Identifier of the patient/sample; useful for grouping or stratifying TCR results.
+2. **a_cdr3, b_cdr3, g_cdr3, d_cdr3, h_cdr3, k_cdr3, l_cdr3**: Complementarity-determining region 3 (CDR3) sequences of various TCR and BCR chains. These are the most informative regions for identifying T cell clones and assessing repertoire diversity.
+3. **TRAV, TRBV, TRGV, TRDV**: Variable (V) gene segments for the α, β, γ, and δ chains of TCRs.
+4. **TRAJ, TRBJ, TRGJ, TRDJ**: Joining (J) gene segments for the same TCR chains.
+5. **contigCount_T**: Number of TCR contigs detected per cell, used as a measure of confidence in TCR identification.
+6. **file_T**: Original file from which the TCR data was extracted.
+7. **imm_receptor2**: The refined immune receptor assignment used as the main label to distinguish between αβ, γδ, and ambiguous or noisy TCRs.
+8. **cluster**: Cell cluster assignment used to relate TCR properties to specific cell populations or phenotypes.
+9. **clone_size_ab, clone_size_gd, clone_size_bucket_ab, clone_size_bucket_gd**: Measures of clonal expansion for αβ and γδ TCRs, used in clonality analysis.
 
 These columns allow us to analyze:
 1. The distribution of specific TCR clones across cell clusters

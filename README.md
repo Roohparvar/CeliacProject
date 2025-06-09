@@ -6,7 +6,7 @@ This repository contains a portion of the data analysis tasks for discovering bi
 ---
 ---
 
-## 📥 Part 0: Input
+## Part 0: Input
 
 The main input was a **metadata table** containing **88 columns**, including sample identifiers, receptor information, clustering results, UMAP coordinates, and other annotations.
 
@@ -49,7 +49,7 @@ The full list of 88 columns:
 ---
 ---
 
-## 🧹 Part 1: Metadata Cleaning
+## Part 1: Metadata Cleaning
 
 Due to some technical noise in the metadata, several cleaning steps were performed to ensure data consistency before downstream analyses.
 
@@ -89,6 +89,13 @@ For clusters not in the above list, we found rows where `imm_receptor == "hkl"` 
 Some cells had `imm_receptor == "T and B"` — these were ambiguous and removed as well.
 
 - ✅ **The number of cells with imm_receptor == "T and B" that were removed: 1116**
+
+---
+---
+---
+
+## Part 2: Immune Receptors Distribution
+In this part, we analyzed how each immune receptor type (imm_receptor2) is distributed across different clusters. To visualize this, we generated bar plots showing the count of each immune receptor within each cluster. This analysis helps to better understand the composition of clusters based on immune receptor types and provides insights into their distribution patterns.
 
 ---
 ---

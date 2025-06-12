@@ -183,6 +183,50 @@ full_metadata$imm_receptor_Esmaeil[full_metadata$imm_receptor_Esmaeil == "T and 
 
 
 
+########################################################### Start | Updated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence
+clone_sizes <- table(full_metadata$cdr_Full_ab)
+full_metadata$clone_size_ab <- clone_sizes[full_metadata$cdr_Full_ab]
+
+
+full_metadata$clone_size_bucket_ab <- ifelse(
+  is.na(full_metadata$clone_size_ab),
+  NA,
+  ifelse(
+    full_metadata$clone_size_ab == 1,
+    "Singleton",
+    ifelse(
+      full_metadata$clone_size_ab >= 2 & full_metadata$clone_size_ab < 10,
+      "Small clone (2+)",
+      "Large clone (10+)"
+    )
+  )
+)
+########################################################### End | Updated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence
+
+
+
+########################################################### Start | Updated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence
+clone_sizes <- table(full_metadata$cdr_Full_gd)
+full_metadata$clone_size_gd <- clone_sizes[full_metadata$cdr_Full_gd]
+
+
+full_metadata$clone_size_bucket_gd <- ifelse(
+  is.na(full_metadata$clone_size_gd),
+  NA,
+  ifelse(
+    full_metadata$clone_size_gd == 1,
+    "Singleton",
+    ifelse(
+      full_metadata$clone_size_gd >= 2 & full_metadata$clone_size_gd < 10,
+      "Small clone (2+)",
+      "Large clone (10+)"
+    )
+  )
+)
+########################################################### End | Updated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence
+
+
+
 ########################################################### Start | Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
 full_metadata$imm_receptor_Esmaeil_clean <- ifelse(
   full_metadata$imm_receptor_Esmaeil == "" | is.na(full_metadata$imm_receptor_Esmaeil),

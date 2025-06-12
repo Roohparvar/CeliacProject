@@ -107,35 +107,28 @@ Calculated `clone_size_ab` and `clone_size_bucket_ab` based on the frequency of 
 Calculated `clone_size_gd` and `clone_size_bucket_gd` based on the frequency of each `cdr_Full_gd` sequence.
 
 ---
+---
+---
+## Part 2: Distribution of Aberrant T Cells
 
-## Part 2: Immune Receptor Distribution
+In this phase, we analyzed how Aberrant T cells are distributed across the different clusters. This step helps to better understand the localization and potential roles of Aberrant T cells within specific cellular populations.
+---
+---
+---
+
+## Part 3: G_CDR3 Combination Analysis
+
+In this section, we explored the distribution of cells that contain the **CDR3_G** sequence and how their combinations with **CDR3_A** and **CDR3_B** are spread across different clusters. This analysis provides insights into the immune receptor pairing patterns and how they may influence cluster-specific behavior or identity.
+
+---
+---
+---
+
+
+## Part 4: Immune Receptor Distribution
 
 We analyzed how each immune receptor type (`imm_receptor2`) is distributed across different clusters.  
 Bar plots were generated to visualize the counts of each receptor type within clusters.  
 This analysis helps characterize the immune landscape and receptor usage across cell populations.
-
----
-
-## Part 3: TCR Analysis
-
-In this section, we explored the diversity, clonality, and distribution of T cell receptors (TCRs) across clusters.
-
-Key metadata columns used:
-
-- `PatientName`, `Patient`: Sample identifiers
-- `a_cdr3`, `b_cdr3`, `g_cdr3`, `d_cdr3`, `h_cdr3`, `k_cdr3`, `l_cdr3`: CDR3 sequences
-- `TRAV`, `TRBV`, `TRGV`, `TRDV`: V gene usage
-- `TRAJ`, `TRBJ`, `TRGJ`, `TRDJ`: J gene usage
-- `contigCount_T`, `file_T`: TCR detection stats and sources
-- `imm_receptor2`: Final receptor assignment label
-- `cluster`: Cell groupings
-- `clone_size_ab`, `clone_size_gd`, `clone_size_bucket_ab`, `clone_size_bucket_gd`: Clonality measures
-
-TCR analysis included:
-
-1. Clone distribution across clusters  
-2. V/J gene segment usage  
-3. Clonal expansion in disease vs. control  
-4. Mapping receptor identity to cell phenotypes
 
 ---

@@ -78,7 +78,7 @@ target_receptors <- c("Aberant ab", "Aberrant g", "gd", "ab")
 
 ### Step 2: Clean non-B cell clusters (T cells)
 
-For clusters not in the above list, we found rows where `imm_receptor == "hkl"` due to technical noise, and removed those values.
+For clusters not in the above list, we found rows where `imm_receptor == "hkl"` and removed those entries.
 
 - ✅ **The number of T cells that were removed: 1459**
 

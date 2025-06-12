@@ -53,9 +53,30 @@ The full list of 88 columns:
 
 Due to some technical noise in the metadata, several cleaning steps were performed to ensure data consistency before downstream analyses.
 
-***
+---
+### Step 1: Corrected Typo in Column Values.
+Fixed a typo in the imm_receptor column values and renamed the column to imm_receptor_Jerome.
+---
+### Step 2: Updated Clusters.
+Updated the cluster column in full_metadata based on matching CellID entries from updated_clusters.xlsx.
+---
+### Step 3: Combined TCR α and β Chains.
+Created a new column cdr_Full_ab by concatenating a_cdr3 and b_cdr3 when both values are present.
+---
+### Step 4: Combined TCR γ and δ Chains.
+Created a new column cdr_Full_gd by concatenating g_cdr3 and d_cdr3 when both values are present.
+---
+### Step 5: Combined Ig Heavy and Kappa Chains.
+Created a new column cdr_Full_ig_hk by concatenating h_cdr3 and k_cdr3 when both values are present.
+---
+### Step 6: Combined Ig Heavy and Lambda Chains.
+Created a new column cdr_Full_ig_hL by concatenating h_cdr3 and l_cdr3 when both values are present.
+---
+### Step 7: Reordered Columns.
+Rearranged columns in the metadata file according to a predefined order for clarity and consistency.
+---
 
-### Step 1: Clean B cell clusters
+### Step 8: Clean B cell clusters
 
 We identified B cell-related clusters using:
 
@@ -76,7 +97,7 @@ target_receptors <- c("Aberant ab", "Aberrant g", "gd", "ab")
 
 ---
 
-### Step 2: Clean non-B cell clusters (T cells)
+### Step 9: Clean non-B cell clusters (T cells)
 
 For clusters not in the above list, we found rows where `imm_receptor == "hkl"` and removed those entries.
 
@@ -84,11 +105,18 @@ For clusters not in the above list, we found rows where `imm_receptor == "hkl"` 
 
 ---
 
-### Step 3: Remove ambiguous "T and B" values
+### Step 10: Remove ambiguous "T and B" values
 
 Some cells had `imm_receptor == "T and B"` — these were ambiguous and removed as well.
 
 - ✅ **The number of cells with imm_receptor == "T and B" that were removed: 1116**
+
+---
+### Step 11: Computed Clone Size for ab Chains.
+Populated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence.
+---
+### Step 12: Computed Clone Size for gd Chains.
+Populated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence.
 
 ---
 ---

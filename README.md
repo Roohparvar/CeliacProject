@@ -3,6 +3,8 @@
 This repository contains a portion of the data analysis tasks aimed at discovering biologically relevant insights in **Celiac disease**.
 
 ---
+---
+---
 
 ## Part 0: Input
 
@@ -47,77 +49,79 @@ The primary input was a **metadata table** with **88 columns**, including sample
 </details>
 
 ---
+---
+---
 
 ## Part 1: Metadata Cleaning
 
 To ensure consistency and reliability of downstream analyses, several metadata cleaning steps were performed:
 
-### ✅ Step 1: Corrected Typo in Column Values  
+### Step 1: Corrected Typo in Column Values  
 Fixed a typo in the `imm_receptor` column and renamed it to `imm_receptor_Jerome`.
 
-### ✅ Step 2: Updated Clusters  
+### Step 2: Updated Clusters  
 Updated the `cluster` column in `full_metadata` based on `CellID` matches from `updated_clusters.xlsx`.
 
-### ✅ Step 3: Combined TCR α and β Chains  
+### Step 3: Combined TCR α and β Chains  
 Created `cdr_Full_ab` by combining `a_cdr3` and `b_cdr3` when both were present.
 
-### ✅ Step 4: Combined TCR γ and δ Chains  
+### Step 4: Combined TCR γ and δ Chains  
 Created `cdr_Full_gd` by combining `g_cdr3` and `d_cdr3` when both were present.
 
-### ✅ Step 5: Combined Ig Heavy and Kappa Chains  
+### Step 5: Combined Ig Heavy and Kappa Chains  
 Created `cdr_Full_ig_hk` by combining `h_cdr3` and `k_cdr3` when both were present.
 
-### ✅ Step 6: Combined Ig Heavy and Lambda Chains  
+### Step 6: Combined Ig Heavy and Lambda Chains  
 Created `cdr_Full_ig_hL` by combining `h_cdr3` and `l_cdr3` when both were present.
 
-### ✅ Step 7: Reordered Columns  
+### Step 7: Reordered Columns  
 Reorganized the metadata columns to a predefined, logical order.
 
-### ✅ Step 8: Cleaned B Cell Clusters  
+### Step 8: Cleaned B Cell Clusters  
 Identified and filtered B cell-related clusters using:
 
 ```r
 target_clusters <- c(
-  "Mast cells", "Plasma cells", "B cells_1", "B cells_2", "B cells MZB1+",
-  "Aber. Plasma cells", "Macrophages", "Plasmablast", "B cells BAFFR", "Dendritic cells"
+  "Mast cells", "Plasma cells_1", "B cells_1", "B cells_2", "B cells MZB1+",
+  "Plasma cells_2", "Macrophages", "Plasmablast", "B cells BAFFR", "DC"
 )
 ```
 
 Removed rows where `imm_receptor` was one of:
 ```r
-c("Aberant ab", "Aberrant g", "gd", "ab")
+c("Aberrant ab", "Aberrant g", "gd", "ab")
 ```
 
 **📌 Removed B cells:** `775`
 
-### ✅ Step 9: Cleaned Non-B Cell Clusters (T Cells)  
+### Step 9: Cleaned Non-B Cell Clusters (T Cells)  
 Removed rows in non-B cell clusters where `imm_receptor == "hkl"`.
 
 **📌 Removed T cells:** `1459`
 
-### ✅ Step 10: Removed Ambiguous Immune Receptor Assignments  
+### Step 10: Removed Ambiguous Immune Receptor Assignments  
 Filtered out cells with ambiguous `imm_receptor == "T and B"`.
 
 **📌 Removed ambiguous cells:** `1116`
 
-### ✅ Step 11: Computed Clone Size for ab TCRs  
+### Step 11: Computed Clone Size for ab TCRs  
 Calculated `clone_size_ab` and `clone_size_bucket_ab` based on the frequency of each `cdr_Full_ab` sequence.
 
-### ✅ Step 12: Computed Clone Size for gd TCRs  
+### Step 12: Computed Clone Size for gd TCRs  
 Calculated `clone_size_gd` and `clone_size_bucket_gd` based on the frequency of each `cdr_Full_gd` sequence.
 
 ---
 ---
 ---
-## Part 2: Distribution of Aberrant T Cells
 
+## Part 2: Distribution of Aberrant T Cells
 In this phase, we analyzed how Aberrant T cells are distributed across the different clusters. This step helps to better understand the localization and potential roles of Aberrant T cells within specific cellular populations.
+
 ---
 ---
 ---
 
 ## Part 3: G_CDR3 Combination Analysis
-
 In this section, we explored the distribution of cells that contain the **CDR3_G** sequence and how their combinations with **CDR3_A** and **CDR3_B** are spread across different clusters. This analysis provides insights into the immune receptor pairing patterns and how they may influence cluster-specific behavior or identity.
 
 ---
@@ -126,9 +130,10 @@ In this section, we explored the distribution of cells that contain the **CDR3_G
 
 
 ## Part 4: Immune Receptor Distribution
-
 We analyzed how each immune receptor type (`imm_receptor2`) is distributed across different clusters.  
 Bar plots were generated to visualize the counts of each receptor type within clusters.  
 This analysis helps characterize the immune landscape and receptor usage across cell populations.
 
+---
+---
 ---

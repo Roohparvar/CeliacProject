@@ -12,9 +12,12 @@ names(full_metadata)[names(full_metadata) == "imm_receptor"] <- "imm_receptor_Je
 ########################################################### End | Corrects a typo in 'imm_receptor' values and renames the column to 'imm_receptor_Jerome'
 
 
+
+########################################################### Start | # Update the 'cluster' column in full_metadata based on matching CellID from updated_clusters.xlsx
 new_clusters <- read_excel("new_cell_clusters.xlsx")
 idx <- match(full_metadata$CellID, new_clusters$CellID)
 full_metadata$cluster[!is.na(idx)] <- new_clusters$cluster[idx[!is.na(idx)]]
+########################################################### End | # Update the 'cluster' column in full_metadata based on matching CellID from updated_clusters.xlsx
 
 
 
@@ -122,10 +125,10 @@ ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "whi
 
 
 ########################################################### Start | Duplicate the 'imm_receptor_Jerome' column as 'imm_receptor_Esmaeil'
-full_metadata$imm_receptor_Esmaeil <- full_metadata$imm_receptor
+full_metadata$imm_receptor_Esmaeil <- full_metadata$imm_receptor_Jerome
 
 cols <- colnames(full_metadata)
-i <- which(cols == "imm_receptor")
+i <- which(cols == "imm_receptor_Jerome")
 
 new_order <- append(cols, "imm_receptor_Esmaeil", after = i)
 new_order <- new_order[!duplicated(new_order)]
@@ -135,13 +138,14 @@ full_metadata <- full_metadata[, new_order]
 
 
 
-########################################################### Start | Remove "ab", gd", Aberant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
+########################################################### Start | Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
 target_clusters <- c(
-  "Mast cells", "Plasma cells", "B cells_1", "B cells_2", "B cells MZB1+",
-  "Aber. Plasma cells", "Macrophages", "Plasmablast", "B cells BAFFR", "Dendritic cells"
+  "Mast cells", "Plasma cells_1", "B cells_1", "B cells_2",
+  "B cells MZB1+", "Plasma cells_2", "Macrophages", "Plasmablast",
+  "B cells BAFFR", "DC"
 )
 
-target_receptors <- c("Aberant ab", "Aberrant g", "gd", "ab")
+target_receptors <- c("Aberrant ab", "Aberrant g", "gd", "ab")
 
 rows_to_clean <- which(
   full_metadata$cluster %in% target_clusters &
@@ -149,14 +153,15 @@ rows_to_clean <- which(
 )
 full_metadata$imm_receptor_Esmaeil[rows_to_clean] <- ""
 # The number of B cells that were removed: 775
-########################################################### End | Remove "gd", Aberant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
+########################################################### End | Remove "gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
 
 
 
 ########################################################### Start | Remove hkl values from imm_receptor_Esmaeil in selected T cell clusters
 target_clusters <- c(
-  "Mast cells", "Plasma cells", "B cells_1", "B cells_2", "B cells MZB1+",
-  "Aber. Plasma cells", "Macrophages", "Plasmablast", "B cells BAFFR", "Dendritic cells"
+  "Mast cells", "Plasma cells_1", "B cells_1", "B cells_2",
+  "B cells MZB1+", "Plasma cells_2", "Macrophages", "Plasmablast",
+  "B cells BAFFR", "DC"
 )
 
 rows_to_clear <- which(
@@ -164,7 +169,7 @@ rows_to_clear <- which(
     full_metadata$imm_receptor_Esmaeil == "hkl"
 )
 
-length(rows_to_clear)
+
 full_metadata$imm_receptor_Esmaeil[rows_to_clear] <- ""
 # The number of T cells that were removed: 1459
 ########################################################### End | Remove hkl values from imm_receptor_Esmaeil in selected T cell clusters
@@ -179,8 +184,6 @@ full_metadata$imm_receptor_Esmaeil[full_metadata$imm_receptor_Esmaeil == "T and 
 
 
 ########################################################### Start | Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
-library(ggplot2)
-
 full_metadata$imm_receptor_Esmaeil_clean <- ifelse(
   full_metadata$imm_receptor_Esmaeil == "" | is.na(full_metadata$imm_receptor_Esmaeil),
   "None",
@@ -190,7 +193,7 @@ full_metadata$imm_receptor_Esmaeil_clean <- ifelse(
 
 full_metadata$imm_receptor_Esmaeil_clean <- factor(
   full_metadata$imm_receptor_Esmaeil_clean,
-  levels = c("None", "ab", "gd", "abgd", "hkl", "Aberant ab", "Aberrant g")
+  levels = c("None", "ab", "gd", "abgd", "hkl", "Aberrant ab", "Aberrant g")
 )
 
 
@@ -199,13 +202,13 @@ custom_colors <- c(
   "gd" = "#ff7f0e",
   "abgd" = "#2ca02c",
   "hkl" = "#d62728",
-  "Aberant ab" = "#9467bd",
+  "Aberrant ab" = "#9467bd",
   "Aberrant g" = "#8c564b",
   "None" = "gray80"
 )
 
 
-png("UMAP_imm_receptor_Esmaeil_layered.png", width = 2000, height = 1600, res = 300)
+png("UMAP_imm_receptor_layered.png", width = 2000, height = 1600, res = 300)
 
 
 ggplot(full_metadata, aes(
@@ -226,14 +229,15 @@ ggplot(full_metadata, aes(
     size = 0.1,
     alpha = 0.85
   ) +
-  scale_color_manual(values = custom_colors, name = "imm_receptor_Esmaeil") +
+  scale_color_manual(values = custom_colors, name = "imm_receptor") +
   labs(
-    title = "UMAP colored by imm_receptor_Esmaeil",
+    title = "UMAP colored by imm_receptor",
     x = "UMAP 1",
     y = "UMAP 2"
   ) +
   theme_minimal() +
   theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
     legend.title = element_text(size = 10),
     legend.text = element_text(size = 9)
   ) +
@@ -242,3 +246,9 @@ ggplot(full_metadata, aes(
 
 dev.off()
 ########################################################### End | Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
+
+
+
+########################################################### Start | Save MetaData
+save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "MetaData_V2_Esmaeil.Rdata")
+########################################################### End | Save MetaData

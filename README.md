@@ -1,91 +1,80 @@
 # Celiac Project
 
-This repository contains a portion of the data analysis tasks for discovering biologically relevant insights in **Celiac disease**.
+This repository contains a portion of the data analysis tasks aimed at discovering biologically relevant insights in **Celiac disease**.
 
----
----
 ---
 
 ## Part 0: Input
 
-The main input was a **metadata table** containing **88 columns**, including sample identifiers, receptor information, clustering results, UMAP coordinates, and other annotations.
+The primary input was a **metadata table** with **88 columns**, including sample identifiers, immune receptor sequences, clustering results, UMAP coordinates, and various annotations.
 
-The full list of 88 columns:
+<details>
+<summary><strong>Click to view the full list of 88 columns</strong></summary>
 
 ```
-"PatientName"                          "g_cdr3"                               "d_cdr3"                              
-"a_cdr3"                               "b_cdr3"                               "Patient"                             
-"FolderName"                           "Diagnosis"                            "Timepoint"                           
-"Run"                                  "Batch"                                "Tissue"                               
-"Sorted"                               "Type"                                 "Technology"                           
-"FolderNameMulti"                      "HTONameMulti"                         "scanpy_noint_UMAP_1"                  
-"scanpy_noint_UMAP_2"                  "seurat_noint_cluster"                 "rPCA_k3_cluster"                      
-"seurat_noint_UMAP_1"                  "seurat_noint_UMAP_2"                  "rPCA_k3_UMAP_1"                       
-"rPCA_k3_UMAP_2"                       "rPCA_k5_cluster"                      "rPCA_k5_UMAP_1"                       
-"rPCA_k5_UMAP_2"                       "rPCA_k10_cluster"                     "rPCA_k10_UMAP_1"                      
-"rPCA_k10_UMAP_2"                      "rPCA_k20_cluster"                     "rPCA_k20_UMAP_1"                      
-"rPCA_k20_UMAP_2"                      "scVI_no_hvg_leiden_cluster"           "scVI_no_hvg_MDE_1"                    
-"scVI_no_hvg_MDE_2"                    "scVI_no_hvg_UMAP_1"                   "scVI_no_hvg_UMAP_2"                   
-"scVI_with_hvg_leiden_scVI_1"          "scVI_with_hvg_leiden_scVI_1.2"        "scVI_with_hvg_leiden_scVI_1.5"       
-"scVI_with_hvg_leiden_scVI_1.8"        "scVI_with_hvg_leiden_scVI_2"          "scVI_with_hvg_MDE_1"                 
-"scVI_with_hvg_MDE_2"                  "scVI_with_hvg_UMAP_1"                 "scVI_with_hvg_UMAP_2"                
-"scVI_with_hvg_paper_leiden_cluster"   "scVI_with_hvg_paper_MDE_1"            "scVI_with_hvg_paper_MDE_2"           
-"scVI_with_hvg_paper_UMAP_1"           "scVI_with_hvg_paper_UMAP_2"           "nCount_RNA"                          
-"nFeature_RNA"                         "CellID"                               "doubletCluster"                      
-"doubletCell"                          "doublet"                              "mt_ratio"                            
-"scVI_with_hvg_leiden_scVI_1.5_subset" "TRAV"                                 "TRBV"                                
-"TRGV"                                 "TRDV"                                 "TRAJ"                                
-"TRBJ"                                 "TRGJ"                                 "TRDJ"                                
-"contigCount_T"                        "file_T"                               "h_cdr3"                              
-"k_cdr3"                               "l_cdr3"                               "IGHV"                                
-"IGKV"                                 "IGLV"                                 "IGHJ"                                
-"IGKJ"                                 "IGLJ"                                 "contigCount_B"                       
-"file_B"                               "imm_receptor"                         "cluster"                             
-"clone_size_ab"                        "clone_size_gd"                        "clone_size_bucket_gd"                
+"PatientName"                          "g_cdr3"                               "d_cdr3"
+"a_cdr3"                               "b_cdr3"                               "Patient"
+"FolderName"                           "Diagnosis"                            "Timepoint"
+"Run"                                  "Batch"                                "Tissue"
+"Sorted"                               "Type"                                 "Technology"
+"FolderNameMulti"                      "HTONameMulti"                         "scanpy_noint_UMAP_1"
+"scanpy_noint_UMAP_2"                  "seurat_noint_cluster"                 "rPCA_k3_cluster"
+"seurat_noint_UMAP_1"                  "seurat_noint_UMAP_2"                  "rPCA_k3_UMAP_1"
+"rPCA_k3_UMAP_2"                       "rPCA_k5_cluster"                      "rPCA_k5_UMAP_1"
+"rPCA_k5_UMAP_2"                       "rPCA_k10_cluster"                     "rPCA_k10_UMAP_1"
+"rPCA_k10_UMAP_2"                      "rPCA_k20_cluster"                     "rPCA_k20_UMAP_1"
+"rPCA_k20_UMAP_2"                      "scVI_no_hvg_leiden_cluster"           "scVI_no_hvg_MDE_1"
+"scVI_no_hvg_MDE_2"                    "scVI_no_hvg_UMAP_1"                   "scVI_no_hvg_UMAP_2"
+"scVI_with_hvg_leiden_scVI_1"          "scVI_with_hvg_leiden_scVI_1.2"        "scVI_with_hvg_leiden_scVI_1.5"
+"scVI_with_hvg_leiden_scVI_1.8"        "scVI_with_hvg_leiden_scVI_2"          "scVI_with_hvg_MDE_1"
+"scVI_with_hvg_MDE_2"                  "scVI_with_hvg_UMAP_1"                 "scVI_with_hvg_UMAP_2"
+"scVI_with_hvg_paper_leiden_cluster"   "scVI_with_hvg_paper_MDE_1"            "scVI_with_hvg_paper_MDE_2"
+"scVI_with_hvg_paper_UMAP_1"           "scVI_with_hvg_paper_UMAP_2"           "nCount_RNA"
+"nFeature_RNA"                         "CellID"                               "doubletCluster"
+"doubletCell"                          "doublet"                              "mt_ratio"
+"scVI_with_hvg_leiden_scVI_1.5_subset" "TRAV"                                 "TRBV"
+"TRGV"                                 "TRDV"                                 "TRAJ"
+"TRBJ"                                 "TRGJ"                                 "TRDJ"
+"contigCount_T"                        "file_T"                               "h_cdr3"
+"k_cdr3"                               "l_cdr3"                               "IGHV"
+"IGKV"                                 "IGLV"                                 "IGHJ"
+"IGKJ"                                 "IGLJ"                                 "contigCount_B"
+"file_B"                               "imm_receptor"                         "cluster"
+"clone_size_ab"                        "clone_size_gd"                        "clone_size_bucket_gd"
 "clone_size_bucket_ab"
 ```
 
----
----
+</details>
+
 ---
 
 ## Part 1: Metadata Cleaning
 
-Due to some technical noise in the metadata, several cleaning steps were performed to ensure data consistency before downstream analyses.
+To ensure consistency and reliability of downstream analyses, several metadata cleaning steps were performed:
 
----
-### Step 1: Corrected Typo in Column Values
+### ✅ Step 1: Corrected Typo in Column Values  
+Fixed a typo in the `imm_receptor` column and renamed it to `imm_receptor_Jerome`.
 
-Fixed a typo in the imm_receptor column values and renamed the column to imm_receptor_Jerome.
----
-### Step 2: Updated Clusters
+### ✅ Step 2: Updated Clusters  
+Updated the `cluster` column in `full_metadata` based on `CellID` matches from `updated_clusters.xlsx`.
 
-Updated the cluster column in full_metadata based on matching CellID entries from updated_clusters.xlsx.
----
-### Step 3: Combined TCR α and β Chains
+### ✅ Step 3: Combined TCR α and β Chains  
+Created `cdr_Full_ab` by combining `a_cdr3` and `b_cdr3` when both were present.
 
-Created a new column cdr_Full_ab by concatenating a_cdr3 and b_cdr3 when both values are present.
----
-### Step 4: Combined TCR γ and δ Chains
+### ✅ Step 4: Combined TCR γ and δ Chains  
+Created `cdr_Full_gd` by combining `g_cdr3` and `d_cdr3` when both were present.
 
-Created a new column cdr_Full_gd by concatenating g_cdr3 and d_cdr3 when both values are present.
----
-### Step 5: Combined Ig Heavy and Kappa Chains
+### ✅ Step 5: Combined Ig Heavy and Kappa Chains  
+Created `cdr_Full_ig_hk` by combining `h_cdr3` and `k_cdr3` when both were present.
 
-Created a new column cdr_Full_ig_hk by concatenating h_cdr3 and k_cdr3 when both values are present.
----
-### Step 6: Combined Ig Heavy and Lambda Chains
+### ✅ Step 6: Combined Ig Heavy and Lambda Chains  
+Created `cdr_Full_ig_hL` by combining `h_cdr3` and `l_cdr3` when both were present.
 
-Created a new column cdr_Full_ig_hL by concatenating h_cdr3 and l_cdr3 when both values are present.
----
-### Step 7: Reordered Columns
+### ✅ Step 7: Reordered Columns  
+Reorganized the metadata columns to a predefined, logical order.
 
-Rearranged columns in the metadata file according to a predefined order for clarity and consistency.
----
-
-### Step 8: Clean B cell clusters
-
-We identified B cell-related clusters using:
+### ✅ Step 8: Cleaned B Cell Clusters  
+Identified and filtered B cell-related clusters using:
 
 ```r
 target_clusters <- c(
@@ -94,71 +83,59 @@ target_clusters <- c(
 )
 ```
 
-Then, we removed rows where `imm_receptor` was one of:
-
+Removed rows where `imm_receptor` was one of:
 ```r
-target_receptors <- c("Aberant ab", "Aberrant g", "gd", "ab")
+c("Aberant ab", "Aberrant g", "gd", "ab")
 ```
 
-- ✅ **The number of B cells that were removed: 775**
+**📌 Removed B cells:** `775`
+
+### ✅ Step 9: Cleaned Non-B Cell Clusters (T Cells)  
+Removed rows in non-B cell clusters where `imm_receptor == "hkl"`.
+
+**📌 Removed T cells:** `1459`
+
+### ✅ Step 10: Removed Ambiguous Immune Receptor Assignments  
+Filtered out cells with ambiguous `imm_receptor == "T and B"`.
+
+**📌 Removed ambiguous cells:** `1116`
+
+### ✅ Step 11: Computed Clone Size for ab TCRs  
+Calculated `clone_size_ab` and `clone_size_bucket_ab` based on the frequency of each `cdr_Full_ab` sequence.
+
+### ✅ Step 12: Computed Clone Size for gd TCRs  
+Calculated `clone_size_gd` and `clone_size_bucket_gd` based on the frequency of each `cdr_Full_gd` sequence.
 
 ---
 
-### Step 9: Clean non-B cell clusters (T cells)
+## Part 2: Immune Receptor Distribution
 
-For clusters not in the above list, we found rows where `imm_receptor == "hkl"` and removed those entries.
+We analyzed how each immune receptor type (`imm_receptor2`) is distributed across different clusters.  
+Bar plots were generated to visualize the counts of each receptor type within clusters.  
+This analysis helps characterize the immune landscape and receptor usage across cell populations.
 
-- ✅ **The number of T cells that were removed: 1459**
-
----
-
-### Step 10: Remove ambiguous "T and B" values
-
-Some cells had `imm_receptor == "T and B"` — these were ambiguous and removed as well.
-
-- ✅ **The number of cells with imm_receptor == "T and B" that were removed: 1116**
-
----
-### Step 11: Computed Clone Size for ab Chains
-
-Populated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence.
----
-### Step 12: Computed Clone Size for gd Chains
-
-Populated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence.
-
----
----
----
-
-## Part 2: Immune Receptors Distribution
-In this part, we analyzed how each immune receptor type (imm_receptor2) is distributed across different clusters. To visualize this, we generated bar plots showing the count of each immune receptor within each cluster. This analysis helps to better understand the composition of clusters based on immune receptor types and provides insights into their distribution patterns.
-
----
----
 ---
 
 ## Part 3: TCR Analysis
 
+In this section, we explored the diversity, clonality, and distribution of T cell receptors (TCRs) across clusters.
 
-In this part, we performed T cell receptor (TCR) analysis to investigate the diversity, clonality, and distribution of T cells across clusters. For this analysis, the main columns from the metadata that were required are described below:
+Key metadata columns used:
 
-1. **PatientName / Patient**: Identifier of the patient/sample; useful for grouping or stratifying TCR results.
-2. **a_cdr3, b_cdr3, g_cdr3, d_cdr3, h_cdr3, k_cdr3, l_cdr3**: Complementarity-determining region 3 (CDR3) sequences of various TCR and BCR chains. These are the most informative regions for identifying T cell clones and assessing repertoire diversity.
-3. **TRAV, TRBV, TRGV, TRDV**: Variable (V) gene segments for the α, β, γ, and δ chains of TCRs.
-4. **TRAJ, TRBJ, TRGJ, TRDJ**: Joining (J) gene segments for the same TCR chains.
-5. **contigCount_T**: Number of TCR contigs detected per cell, used as a measure of confidence in TCR identification.
-6. **file_T**: Original file from which the TCR data was extracted.
-7. **imm_receptor2**: The refined immune receptor assignment used as the main label to distinguish between αβ, γδ, and ambiguous or noisy TCRs.
-8. **cluster**: Cell cluster assignment used to relate TCR properties to specific cell populations or phenotypes.
-9. **clone_size_ab, clone_size_gd, clone_size_bucket_ab, clone_size_bucket_gd**: Measures of clonal expansion for αβ and γδ TCRs, used in clonality analysis.
+- `PatientName`, `Patient`: Sample identifiers
+- `a_cdr3`, `b_cdr3`, `g_cdr3`, `d_cdr3`, `h_cdr3`, `k_cdr3`, `l_cdr3`: CDR3 sequences
+- `TRAV`, `TRBV`, `TRGV`, `TRDV`: V gene usage
+- `TRAJ`, `TRBJ`, `TRGJ`, `TRDJ`: J gene usage
+- `contigCount_T`, `file_T`: TCR detection stats and sources
+- `imm_receptor2`: Final receptor assignment label
+- `cluster`: Cell groupings
+- `clone_size_ab`, `clone_size_gd`, `clone_size_bucket_ab`, `clone_size_bucket_gd`: Clonality measures
 
-These columns allow us to analyze:
-1. The distribution of specific TCR clones across cell clusters
-2. The gene usage diversity of V and J segments
-3. The level of clonal expansion (e.g., in inflamed vs. control samples)
-4. The mapping of immune receptor identity (imm_receptor2) to cell types
+TCR analysis included:
 
----
----
+1. Clone distribution across clusters  
+2. V/J gene segment usage  
+3. Clonal expansion in disease vs. control  
+4. Mapping receptor identity to cell phenotypes
+
 ---

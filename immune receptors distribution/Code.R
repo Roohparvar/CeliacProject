@@ -1,6 +1,6 @@
-filtered_data <- full_metadata[!is.na(full_metadata$imm_receptor2) & full_metadata$imm_receptor2 != "", ]
+filtered_data <- full_metadata[!is.na(full_metadata$imm_receptor_Esmaeil) & full_metadata$imm_receptor_Esmaeil != "", ]
 
-table_data <- table(filtered_data$cluster, filtered_data$imm_receptor2)
+table_data <- table(filtered_data$cluster, filtered_data$imm_receptor_Esmaeil)
 count_df <- as.data.frame.matrix(table_data)
 
 receptor_types <- colnames(count_df)

@@ -132,3 +132,7 @@ This analysis helps characterize the immune landscape and receptor usage across 
 ---
 ---
 ---
+
+## Part 5: T and B (Ambiguous) Immune Receptor Distribution
+
+In previous steps, we created a new column named imm_receptor_Esmaeil, derived from the original imm_receptor_Jerome, in which we removed cells with ambiguous immune receptor assignments — specifically those labeled as "T and B". While these ambiguous cells were excluded from the final cleaned metadata, this section focuses on analyzing their distribution before removal. The goal is to understand how these "T and B" cells were distributed across clusters and to identify whether they were concentrated in specific regions or broadly spread throughout the dataset.

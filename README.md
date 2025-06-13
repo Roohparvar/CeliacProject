@@ -91,18 +91,15 @@ Removed rows where `imm_receptor` was one of:
 ```r
 c("Aberrant ab", "Aberrant g", "gd", "ab")
 ```
-
-**📌 Removed B cells:** `775`
+Removed B cells:** `775`
 
 ### Step 9: Cleaned Non-B Cell Clusters (T Cells)  
 Removed rows in non-B cell clusters where `imm_receptor == "hkl"`.
-
-**📌 Removed T cells:** `1459`
+Removed T cells:** `1459`
 
 ### Step 10: Removed Ambiguous Immune Receptor Assignments  
 Filtered out cells with ambiguous `imm_receptor == "T and B"`.
-
-**📌 Removed ambiguous cells:** `1116`
+Removed ambiguous cells:** `1116`
 
 ### Step 11: Computed Clone Size for ab TCRs  
 Calculated `clone_size_ab` and `clone_size_bucket_ab` based on the frequency of each `cdr_Full_ab` sequence.

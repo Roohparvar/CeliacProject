@@ -1,69 +1,60 @@
-########################################################### Start | libraries
+########################################################### libraries
 library(dplyr)
 library(ggplot2)
 library(readxl)
-########################################################### End | libraries
 
 
 
-########################################################### Start | Corrects a typo in 'imm_receptor' values and renames the column to 'imm_receptor_Jerome'
+###########################################################  Corrects a typo in 'imm_receptor' values and renames the column to 'imm_receptor_Jerome'
 full_metadata$imm_receptor[full_metadata$imm_receptor == "Aberant ab"] <- "Aberrant ab"
 names(full_metadata)[names(full_metadata) == "imm_receptor"] <- "imm_receptor_Jerome"
-########################################################### End | Corrects a typo in 'imm_receptor' values and renames the column to 'imm_receptor_Jerome'
 
 
 
-########################################################### Start | # Update the 'cluster' column in full_metadata based on matching CellID from updated_clusters.xlsx
+########################################################### Update the 'cluster' column in full_metadata based on matching CellID from updated_clusters.xlsx
 new_clusters <- read_excel("new_cell_clusters.xlsx")
 idx <- match(full_metadata$CellID, new_clusters$CellID)
 full_metadata$cluster[!is.na(idx)] <- new_clusters$cluster[idx[!is.na(idx)]]
-########################################################### End | # Update the 'cluster' column in full_metadata based on matching CellID from updated_clusters.xlsx
 
 
 
-########################################################### Start | Combine 'a_cdr3' and 'b_cdr3' into 'cdr_Full_ab' if both are non-empty
+########################################################### Combine 'a_cdr3' and 'b_cdr3' into 'cdr_Full_ab' if both are non-empty
 full_metadata <- full_metadata %>%
   mutate(cdr_Full_ab = ifelse(!is.na(a_cdr3) & a_cdr3 != "" &
                                 !is.na(b_cdr3) & b_cdr3 != "",
                               paste(a_cdr3, b_cdr3, sep = "+"),
                               NA))
-########################################################### End | Combine 'a_cdr3' and 'b_cdr3' into 'cdr_Full_ab' if both are non-empty
 
 
 
-
-########################################################### Start | Combine 'g_cdr3' and 'd_cdr3' into 'cdr_Full_gd' if both are non-empty
+########################################################### Combine 'g_cdr3' and 'd_cdr3' into 'cdr_Full_gd' if both are non-empty
 full_metadata <- full_metadata %>%
   mutate(cdr_Full_gd = ifelse(!is.na(g_cdr3) & g_cdr3 != "" &
                                 !is.na(d_cdr3) & d_cdr3 != "",
                               paste(g_cdr3, d_cdr3, sep = "+"),
                               NA))
-########################################################### End | Combine 'g_cdr3' and 'd_cdr3' into 'cdr_Full_gd' if both are non-empty
 
 
 
-
-########################################################### Start | Combine 'h_cdr3' and 'k_cdr3' into 'cdr_Full_ig_hk' if both are non-empty
+########################################################### Combine 'h_cdr3' and 'k_cdr3' into 'cdr_Full_ig_hk' if both are non-empty
 full_metadata <- full_metadata %>%
   mutate(cdr_Full_ig_hk = ifelse(!is.na(h_cdr3) & h_cdr3 != "" &
                                    !is.na(k_cdr3) & k_cdr3 != "",
                                  paste(h_cdr3, k_cdr3, sep = "+"),
                                  NA))
-########################################################### End | Combine 'h_cdr3' and 'k_cdr3' into 'cdr_Full_ig_hk' if both are non-empty
 
 
 
-########################################################### Start | Combine 'h_cdr3' and 'l_cdr3' into 'cdr_Full_ig_hL' if both are non-empty
+########################################################### Combine 'h_cdr3' and 'l_cdr3' into 'cdr_Full_ig_hL' if both are non-empty
 full_metadata <- full_metadata %>%
   mutate(cdr_Full_ig_hL = ifelse(!is.na(h_cdr3) & h_cdr3 != "" &
                                    !is.na(l_cdr3) & l_cdr3 != "",
                                  paste(h_cdr3, l_cdr3, sep = "+"),
                                  NA))
-########################################################### End | Combine 'h_cdr3' and 'l_cdr3' into 'cdr_Full_ig_hL' if both are non-empty
 
 
 
-########################################################### Start | Rearranging the columns of a metadata according to the specified order.
+########################################################### Rearranging the columns of a metadata according to the specified order.
 desired_order <- c("PatientName", "Patient", "Diagnosis", "CellID", "cluster",
                    "scVI_with_hvg_UMAP_1", "scVI_with_hvg_UMAP_2", "imm_receptor_Jerome",
                    "TRAV", "TRAJ", "a_cdr3", "TRBV", "TRBJ", "b_cdr3", "cdr_Full_ab",
@@ -91,11 +82,10 @@ desired_order <- c("PatientName", "Patient", "Diagnosis", "CellID", "cluster",
                    "doublet", "scVI_with_hvg_leiden_scVI_1.5_subset", "file_T", "file_B")
 
 full_metadata <- full_metadata %>% select(all_of(desired_order))
-########################################################### End | Rearranging the columns of a metadata according to the specified order.
 
 
 
-########################################################### Start | Plot UMAP colored by cluster
+########################################################### Plot UMAP colored by cluster
 plot_data <- full_metadata %>%
   filter(!is.na(cluster))  
 
@@ -120,11 +110,10 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
         plot.background = element_rect(fill = "white", color = NA))
 
 ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "white")
-########################################################### End | Plot UMAP colored by cluster
 
 
 
-########################################################### Start | Duplicate the 'imm_receptor_Jerome' column as 'imm_receptor_Esmaeil'
+########################################################### Duplicate the 'imm_receptor_Jerome' column as 'imm_receptor_Esmaeil'
 full_metadata$imm_receptor_Esmaeil <- full_metadata$imm_receptor_Jerome
 
 cols <- colnames(full_metadata)
@@ -134,11 +123,10 @@ new_order <- append(cols, "imm_receptor_Esmaeil", after = i)
 new_order <- new_order[!duplicated(new_order)]
 
 full_metadata <- full_metadata[, new_order]
-########################################################### End | Duplicate the 'imm_receptor_Jerome' column as 'imm_receptor_Esmaeil'
 
 
 
-########################################################### Start | Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
+########################################################### Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
 target_clusters <- c(
   "Mast cells", "Plasma cells_1", "B cells_1", "B cells_2",
   "B cells MZB1+", "Plasma cells_2", "Macrophages", "Plasmablast",
@@ -153,11 +141,10 @@ rows_to_clean <- which(
 )
 full_metadata$imm_receptor_Esmaeil[rows_to_clean] <- ""
 # The number of B cells that were removed: 775
-########################################################### End | Remove "gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters
 
 
 
-########################################################### Start | Remove hkl values from imm_receptor_Esmaeil in selected T cell clusters
+########################################################### Remove hkl values from imm_receptor_Esmaeil in selected T cell clusters
 target_clusters <- c(
   "Mast cells", "Plasma cells_1", "B cells_1", "B cells_2",
   "B cells MZB1+", "Plasma cells_2", "Macrophages", "Plasmablast",
@@ -172,18 +159,16 @@ rows_to_clear <- which(
 
 full_metadata$imm_receptor_Esmaeil[rows_to_clear] <- ""
 # The number of T cells that were removed: 1459
-########################################################### End | Remove hkl values from imm_receptor_Esmaeil in selected T cell clusters
 
 
 
-########################################################### Start | Clear "T and B" values from imm_receptor_Esmaeil
+########################################################### Clear "T and B" values from imm_receptor_Esmaeil
 full_metadata$imm_receptor_Esmaeil[full_metadata$imm_receptor_Esmaeil == "T and B"] <- ""
 # The number of cells with imm_receptor_Esmaeil == "T and B" that were removed: 1116
-########################################################### End | Clear "T and B" values from imm_receptor_Esmaeil
 
 
 
-########################################################### Start | Updated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence
+########################################################### Updated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence
 clone_sizes <- table(full_metadata$cdr_Full_ab)
 full_metadata$clone_size_ab <- clone_sizes[full_metadata$cdr_Full_ab]
 
@@ -201,11 +186,10 @@ full_metadata$clone_size_bucket_ab <- ifelse(
     )
   )
 )
-########################################################### End | Updated clone_size_ab and clone_size_bucket_ab columns with the frequency of each cdr_Full_ab sequence
 
 
 
-########################################################### Start | Updated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence
+########################################################### Updated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence
 clone_sizes <- table(full_metadata$cdr_Full_gd)
 full_metadata$clone_size_gd <- clone_sizes[full_metadata$cdr_Full_gd]
 
@@ -223,11 +207,10 @@ full_metadata$clone_size_bucket_gd <- ifelse(
     )
   )
 )
-########################################################### End | Updated clone_size_gd and clone_size_bucket_gd columns with the frequency of each cdr_Full_gd sequence
 
 
 
-########################################################### Start | Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
+########################################################### Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
 full_metadata$imm_receptor_Esmaeil_clean <- ifelse(
   full_metadata$imm_receptor_Esmaeil == "" | is.na(full_metadata$imm_receptor_Esmaeil),
   "None",
@@ -289,10 +272,66 @@ ggplot(full_metadata, aes(
   guides(color = guide_legend(override.aes = list(size = 4)))
 
 dev.off()
-########################################################### End | Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
 
 
 
-########################################################### Start | Save MetaData
-save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "MetaData_V2_Esmaeil.Rdata")
-########################################################### End | Save MetaData
+########################################################### Update Patient column
+full_metadata = full_metadata %>%
+  mutate(Patient = case_when(
+    PatientName == "1912" & Timepoint == "T1" ~ "RCD1-1a",
+    PatientName == "1912" & Timepoint == "T2" ~ "RCD1-1b",
+    PatientName == "1912" & Timepoint == "T3" ~ "RCD1-1c",
+    PatientName == "1912" ~ "RCD1-1",
+    PatientName == "1996" ~ "RCD1-2",
+    PatientName == "6016" ~ "RCD1-3",
+    PatientName == "6024" ~ "RCD1-4",
+    PatientName == "2025" & Timepoint == "T1" ~ "RCD1-5a",
+    PatientName == "2025" & Timepoint == "T2" ~ "RCD1-5b",
+    PatientName == "2025" ~ "RCD1-5",
+    PatientName == "1960" & Timepoint == "T1" ~ "RCD1-6a",
+    PatientName == "1960" & Timepoint == "T2" ~ "RCD1-6b",
+    PatientName == "1960" & Timepoint == "NA" ~ "RCD1-6NA",
+    PatientName == "1960" ~ "RCD1-6",
+    PatientName == "2088" ~ "RCD1-7",
+    PatientName == "4562" ~ "RCD1-8",
+    PatientName == "6183" ~ "RCD1-9",
+    PatientName == "2091" ~ "RCD1-10",
+    PatientName == "1935" ~ "RCD1-11",
+    PatientName == "1937" ~ "RCD1-12",
+    PatientName == "1986" ~ "RCD1-13",
+    PatientName == "2020" ~ "RCD1-14",
+    PatientName == "1906" ~ "RCD1-15",
+    PatientName == "P1" ~ "ACD-1",
+    PatientName == "1918" ~ "ACD-2",
+    PatientName == "2054" ~ "ACD-3",
+    PatientName == "2074" ~ "ACD-4",
+    PatientName == "CD10" ~ "ACD-5",
+    PatientName == "P2" ~ "ACD-6",
+    PatientName == "1670" ~ "ACD-7",
+    PatientName == "1872" ~ "ACD-8",
+    PatientName == "1902" ~ "ACD-9",
+    PatientName == "CD1632" ~ "ACD-10",
+    PatientName == "ACD20" ~ "ACD-11",
+    PatientName == "8GM" ~ "H-1",
+    PatientName == "9HH" ~ "H-2",
+    PatientName == "CD11" ~ "H-3",
+    PatientName == "CD12" ~ "H-4", 
+    PatientName == "CD13" ~ "H-5",
+    PatientName == "CD21" ~ "H-6",
+    PatientName == "2080" ~ "H-7",
+    PatientName == "P5" ~ "H-8",
+    PatientName == "P6" ~ "H-9",
+    PatientName == "P7" ~ "H-10",
+    PatientName == "P8" ~ "H-11",
+    PatientName == "P9" ~ "H-12",
+    PatientName == "2046" & Timepoint == "T1" ~ "RCD2-1a",
+    PatientName == "2046" & Timepoint == "T2" ~ "RCD2-1b",
+    PatientName == "2046" ~ "RCD2-1",
+    PatientName == "ItalyRCDII" ~ "RCD2-2",
+    TRUE ~ NA_character_
+  ))
+
+
+
+########################################################### Save MetaData
+save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "MetaData_Esmaeil.Rdata")

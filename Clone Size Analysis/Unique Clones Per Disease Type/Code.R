@@ -3,22 +3,22 @@ library(ggplot2)
 
 
 clone_per_id <- full_metadata %>%
-  filter(!is.na(Patient) & Patient != "") %>%
+  filter(!is.na(Diagnosis) & Diagnosis != "") %>%
   droplevels() %>%
-  group_by(Patient) %>%
+  group_by(Diagnosis) %>%
   summarise(unique_clones = n_distinct(cdr_Full_ab)) %>%
   ungroup() %>%
   arrange(desc(unique_clones)) %>%
-  mutate(Patient = factor(Patient, levels = Patient)) 
+  mutate(Diagnosis = factor(Diagnosis, levels = Diagnosis)) 
 
 
 
-png("Unique Clones Per Disease Type.png", width = 2800, height = 2000, res = 300)
-ggplot(clone_per_id, aes(x = Patient, y = unique_clones)) +
+png("Unique Clones Per Diagnosis.png", width = 2800, height = 2000, res = 300)
+ggplot(clone_per_id, aes(x = Diagnosis, y = unique_clones)) +
   geom_bar(stat = "identity", fill = "#984ea3") +
   labs(
-    title = "Number of Unique Clones per Disease",
-    x = "Disease Type",
+    title = "Number of Unique Clones per Diagnosis",
+    x = "Diagnosis",
     y = "Unique Clones"
   ) +
   theme_minimal(base_size = 16) +

@@ -21,13 +21,13 @@ calc_diversity <- function(df, group_col) {
 
 diversity_cluster <- calc_diversity(full_metadata, "cluster")
 diversity_patient <- calc_diversity(full_metadata, "Patient")
-diversity_patientName <- calc_diversity(full_metadata, "PatientName")
+diversity_Diagnosis <- calc_diversity(full_metadata, "Diagnosis")
 
 
 
 diversity_cluster_long <- diversity_cluster %>% pivot_longer(cols = c(shannon, simpson), names_to = "Index", values_to = "Value")
 diversity_patient_long <- diversity_patient %>% pivot_longer(cols = c(shannon, simpson), names_to = "Index", values_to = "Value")
-diversity_patientName_long <- diversity_patientName %>% pivot_longer(cols = c(shannon, simpson), names_to = "Index", values_to = "Value")
+diversity_Diagnosis_long <- diversity_Diagnosis %>% pivot_longer(cols = c(shannon, simpson), names_to = "Index", values_to = "Value")
 
 
 
@@ -52,8 +52,8 @@ plot_diversity <- function(data_long, title_text, x_label, axis_text_size = 12) 
 
 
 p1 <- plot_diversity(diversity_cluster_long, "Clonal Diversity Metrics per Cluster", "Cluster", axis_text_size = 6)
-p2 <- plot_diversity(diversity_patient_long, "Clonal Diversity Metrics per Disease Type", "Disease Type", axis_text_size = 10)
-p3 <- plot_diversity(diversity_patientName_long, "Clonal Diversity Metrics per Individual Patient", "Individual Patient", axis_text_size = 8)
+p2 <- plot_diversity(diversity_patient_long, "Clonal Diversity Metrics per patient", "Patient", axis_text_size = 6)
+p3 <- plot_diversity(diversity_Diagnosis_long, "Clonal Diversity Metrics per Diagnosis", "Diagnosis", axis_text_size = 6)
 
 
 
@@ -61,11 +61,11 @@ png("Diversity per Cluster.png", width = 1200, height = 800, res = 150)
 print(p1)
 dev.off()
 
-png("Diversity per Disease Type.png", width = 1200, height = 800, res = 150)
+png("Diversity per Patient.png", width = 1200, height = 800, res = 150)
 print(p2)
 dev.off()
 
-png("Diversity per Individual Patient.png", width = 1200, height = 800, res = 150)
+png("Diversity per Individual Diagnosis.png", width = 1200, height = 800, res = 150)
 print(p3)
 dev.off()
 

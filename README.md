@@ -8,45 +8,7 @@ This repository contains a portion of the data analysis tasks aimed at discoveri
 
 ## Part 0: Input
 
-The primary input was a **metadata table** with **88 columns**, including sample identifiers, immune receptor sequences, clustering results, UMAP coordinates, and various annotations.
-
-<details>
-<summary><strong>Click to view the full list of 88 columns</strong></summary>
-
-```
-"PatientName"                          "g_cdr3"                               "d_cdr3"
-"a_cdr3"                               "b_cdr3"                               "Patient"
-"FolderName"                           "Diagnosis"                            "Timepoint"
-"Run"                                  "Batch"                                "Tissue"
-"Sorted"                               "Type"                                 "Technology"
-"FolderNameMulti"                      "HTONameMulti"                         "scanpy_noint_UMAP_1"
-"scanpy_noint_UMAP_2"                  "seurat_noint_cluster"                 "rPCA_k3_cluster"
-"seurat_noint_UMAP_1"                  "seurat_noint_UMAP_2"                  "rPCA_k3_UMAP_1"
-"rPCA_k3_UMAP_2"                       "rPCA_k5_cluster"                      "rPCA_k5_UMAP_1"
-"rPCA_k5_UMAP_2"                       "rPCA_k10_cluster"                     "rPCA_k10_UMAP_1"
-"rPCA_k10_UMAP_2"                      "rPCA_k20_cluster"                     "rPCA_k20_UMAP_1"
-"rPCA_k20_UMAP_2"                      "scVI_no_hvg_leiden_cluster"           "scVI_no_hvg_MDE_1"
-"scVI_no_hvg_MDE_2"                    "scVI_no_hvg_UMAP_1"                   "scVI_no_hvg_UMAP_2"
-"scVI_with_hvg_leiden_scVI_1"          "scVI_with_hvg_leiden_scVI_1.2"        "scVI_with_hvg_leiden_scVI_1.5"
-"scVI_with_hvg_leiden_scVI_1.8"        "scVI_with_hvg_leiden_scVI_2"          "scVI_with_hvg_MDE_1"
-"scVI_with_hvg_MDE_2"                  "scVI_with_hvg_UMAP_1"                 "scVI_with_hvg_UMAP_2"
-"scVI_with_hvg_paper_leiden_cluster"   "scVI_with_hvg_paper_MDE_1"            "scVI_with_hvg_paper_MDE_2"
-"scVI_with_hvg_paper_UMAP_1"           "scVI_with_hvg_paper_UMAP_2"           "nCount_RNA"
-"nFeature_RNA"                         "CellID"                               "doubletCluster"
-"doubletCell"                          "doublet"                              "mt_ratio"
-"scVI_with_hvg_leiden_scVI_1.5_subset" "TRAV"                                 "TRBV"
-"TRGV"                                 "TRDV"                                 "TRAJ"
-"TRBJ"                                 "TRGJ"                                 "TRDJ"
-"contigCount_T"                        "file_T"                               "h_cdr3"
-"k_cdr3"                               "l_cdr3"                               "IGHV"
-"IGKV"                                 "IGLV"                                 "IGHJ"
-"IGKJ"                                 "IGLJ"                                 "contigCount_B"
-"file_B"                               "imm_receptor"                         "cluster"
-"clone_size_ab"                        "clone_size_gd"                        "clone_size_bucket_gd"
-"clone_size_bucket_ab"
-```
-
-</details>
+The primary input was a **metadata table** with **88 columns**.
 
 ---
 ---
@@ -151,6 +113,13 @@ Large clones (≤ 0.1)
 Hyperexpanded clones (> 0.1)
 
 Each bar in the plot represents a cluster, and shows the percentage of TCR repertoire space occupied by clones in each size category.
+
+---
+---
+---
+
+Part 7: Distribution of Different TCR Combinations
+We analyzed immune receptor types across clusters, counted specific TCR types (ab, gd, aberrant forms), and identified unique CDR3 combination patterns. The results were summarized in a structured table and saved to an Excel file.
 
 ---
 ---

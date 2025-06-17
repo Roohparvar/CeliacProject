@@ -136,3 +136,22 @@ This analysis helps characterize the immune landscape and receptor usage across 
 ## Part 5: T and B (Ambiguous) Immune Receptor Distribution
 
 In previous steps, we created a new column named imm_receptor_Esmaeil, derived from the original imm_receptor_Jerome, in which we removed cells with ambiguous immune receptor assignments — specifically those labeled as "T and B". While these ambiguous cells were excluded from the final cleaned metadata, this section focuses on analyzing their distribution before removal. The goal is to understand how these "T and B" cells were distributed across clusters and to identify whether they were concentrated in specific regions or broadly spread throughout the dataset.
+
+---
+---
+---
+
+Part 6: Clonal Homeostasis Plot
+In this step, we investigate the distribution of T cell clones based on their expansion levels using the Clonal Homeostasis Plot. This plot provides a visual summary of how TCR clones are distributed by size, categorized into five groups based on their relative abundance:
+
+Rare clones (≤ 0.0001)
+Small clones (≤ 0.001)
+Medium clones (≤ 0.01)
+Large clones (≤ 0.1)
+Hyperexpanded clones (> 0.1)
+
+Each bar in the plot represents a cluster, and shows the percentage of TCR repertoire space occupied by clones in each size category.
+
+---
+---
+---

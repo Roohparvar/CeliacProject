@@ -1,0 +1,17 @@
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("scRepertoire")
+suppressMessages(library(scRepertoire))
+
+
+
+metadata_list <- split(full_metadata, full_metadata$cluster)
+
+
+p <- clonalHomeostasis(metadata_list, cloneCall = "cdr_Full_ab") +
+  xlab("Cluster") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1,size = 7),
+        axis.text.y = element_text(size = 7))
+
+
+ggsave("ClonalHomeostasis.png", plot = p, width = 10, height = 4, dpi = 400, units = "in")

@@ -25,8 +25,8 @@ shared_clones_between_groups <- function(df, group_col) {
     shared_clones <- intersect(clones_group1, clones_group2)
     
     data.frame(
-      Diagnosis1 = group1,
-      Diagnosis2 = group2,
+      Group1 = group1,
+      Group2 = group2,
       Shared_Clone_Count = length(shared_clones),
       Shared_Clones = if(length(shared_clones) > 0) paste(shared_clones, collapse = ", ") else ""
     )
@@ -35,7 +35,7 @@ shared_clones_between_groups <- function(df, group_col) {
   bind_rows(results)
 }
 
-# Apply the function to the Diagnosis column
+
 shared_diagnosis <- shared_clones_between_groups(full_metadata, "Diagnosis")
 
 # Write to Excel

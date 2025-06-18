@@ -25,7 +25,7 @@ total_row <- result_table %>%
 
 
 final_table <- bind_rows(result_table, total_row) %>%
-  select(cluster, everything())  # اطمینان از اینکه ستون cluster در ابتدا است
+  select(cluster, everything())
 
 
 write.xlsx(final_table, "TCR_cluster_summary.xlsx", row.names = FALSE)

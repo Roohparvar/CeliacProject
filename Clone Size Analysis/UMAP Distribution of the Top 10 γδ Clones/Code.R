@@ -5,28 +5,28 @@ library(ggplot2)
 umap_df <- full_metadata %>%
   select(UMAP_1 = scVI_with_hvg_UMAP_1,
          UMAP_2 = scVI_with_hvg_UMAP_2,
-         cdr_Full_ab,
-         clone_size_ab,
+         cdr_Full_gd,
+         clone_size_gd,
          cluster)
 
 
 top10_clones <- full_metadata %>%
-  group_by(cdr_Full_ab) %>%
-  summarise(clone_size = unique(clone_size_ab)[1]) %>%
+  group_by(cdr_Full_gd) %>%
+  summarise(clone_size = unique(clone_size_gd)[1]) %>%
   arrange(desc(clone_size)) %>%
   slice_head(n = 10) %>%
-  pull(cdr_Full_ab)
+  pull(cdr_Full_gd)
 
 
 umap_df <- umap_df %>%
-  mutate(group = ifelse(cdr_Full_ab %in% top10_clones, "Top 10 Clones", "Other"))
+  mutate(group = ifelse(cdr_Full_gd %in% top10_clones, "Top 10 Clones", "Other"))
 
 
 top10_df <- umap_df %>% filter(group == "Top 10 Clones")
 other_df <- umap_df %>% filter(group == "Other")
 
 
-png("Top 10 Clones_UMAP Distribution.png", width = 3000, height = 2000, res = 300)
+png("UMAP Distribution of the Top 10 γδ Clones.png", width = 3000, height = 2000, res = 300)
 ggplot() +
   geom_point(data = other_df, aes(x = UMAP_1, y = UMAP_2),
              color = "gray80", size = 0.3, alpha = 0.6, show.legend = FALSE) +
@@ -34,7 +34,7 @@ ggplot() +
              size = 1.2, alpha = 0.9) +
   scale_color_manual(values = c("Top 10 Clones" = "#2171b5")) +
   labs(
-    title = "UMAP Plot – Highlighting Top 10 Clones",
+    title = "UMAP Distribution of the Top 10 γδ Clones",
     x = "UMAP 1",
     y = "UMAP 2",
     color = "Clone Group"

@@ -124,3 +124,9 @@ We analyzed immune receptor types across clusters, counted specific TCR types (a
 ---
 ---
 ---
+
+Part 8: GammaDelta Clone Distribution analysis in BCells
+Normally, gamma-delta (γδ) T cell clones are not expected to appear within B cell clusters, so their presence here may indicate clustering or annotation issues that require further investigation. In this part, we analyze the distribution of gamma-delta T cell clones within B cell clusters. The analysis includes visualization of UMAP embeddings highlighting gamma-delta clones and export of relevant metadata for further inspection and cleaning.
+---
+---
+---

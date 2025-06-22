@@ -61,10 +61,21 @@ Removed rows in non-B cell clusters where `imm_receptor == "hkl"`. Removed T cel
 ### Step 10: Removed Ambiguous Immune Receptor Assignments  
 Filtered out cells with ambiguous `imm_receptor == "T and B"`. Removed ambiguous cells: `1116`
 
-### Step 11: Computed Clone Size for ab TCRs  
+### Step 11: Removed Immune Receptors from Unexpected Cell Types
+Filtered out cells from clusters DC, Macrophages, and Mast cells where imm_receptor was assigned (i.e., not empty or NA).
+Removed unexpected immune receptor entries: 71
+
+### Step 12: Removed B Cell Receptor Mismatches
+Filtered out cells where either cdr_Full_ig_hk or cdr_Full_ig_hL was present, but imm_receptor was not equal to "hkl".
+Removed inconsistent B cell entries: 3438
+
+### Step 13: Updated Patient Identifiers
+Patient names were updated based on newly provided metadata. No filtering or removal was performed in this step.
+
+### Step 14: Computed Clone Size for ab TCRs  
 Calculated `clone_size_ab` and `clone_size_bucket_ab` based on the frequency of each `cdr_Full_ab` sequence.
 
-### Step 12: Computed Clone Size for gd TCRs  
+### Step 15: Computed Clone Size for gd TCRs  
 Calculated `clone_size_gd` and `clone_size_bucket_gd` based on the frequency of each `cdr_Full_gd` sequence.
 
 ---

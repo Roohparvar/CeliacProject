@@ -1,5 +1,4 @@
 # Celiac Project
-
 This repository contains a portion of the data analysis tasks aimed at discovering biologically relevant insights in **Celiac disease**.
 
 ---
@@ -7,7 +6,6 @@ This repository contains a portion of the data analysis tasks aimed at discoveri
 ---
 
 ## Part 0: Input
-
 The primary input was a **metadata table** with **88 columns**.
 
 ---
@@ -15,68 +13,50 @@ The primary input was a **metadata table** with **88 columns**.
 ---
 
 ## Part 1: Metadata Cleaning
-
 To ensure consistency and reliability of downstream analyses, several metadata cleaning steps were performed:
 
-### Step 1: Corrected Typo in Column Values  
-Fixed a typo in the `imm_receptor` column and renamed it to `imm_receptor_Jerome`.
+### Part 1 - Step 1: Initial Data Cleaning and Updates 
+- Corrected some spelling mistakes in the dataset.
+- Fixed a typo in the `imm_receptor` column and renamed it to `imm_receptor_Jerome`.
+- A new column `imm_receptor_Esmaeil` was created to preserve the original data before making any further modifications to receptor annotations.
+- Patient names were updated based on newly provided metadata. 
+- Updated the `cluster` column in `full_metadata` based on `CellID` matches from `updated_clusters.xlsx`.
+- Removed ambiguous cells where imm_receptor_Jerome was "T and B". A total of 1116 cells were affected.
 
-### Step 2: Updated Clusters  
-Updated the `cluster` column in `full_metadata` based on `CellID` matches from `updated_clusters.xlsx`.
+### Part 1 - Step 2: Create combined receptor fields when both chains are available:
+- Created `cdr_Full_ab` by combining `a_cdr3` and `b_cdr3` when both were present. 
+- Created `cdr_Full_gd` by combining `g_cdr3` and `d_cdr3` when both were present. 
+- Created `cdr_Full_ig_hk` by combining `h_cdr3` and `k_cdr3` when both were present. 
+- Created `cdr_Full_ig_hL` by combining `h_cdr3` and `l_cdr3` when both were present.
+- Reordered columns to follow a standardized and organized structure, including clinical, demographic, scRNA-seq, and TCR-related parameters.  
 
-### Step 3: Combined TCR α and β Chains  
-Created `cdr_Full_ab` by combining `a_cdr3` and `b_cdr3` when both were present.
+### Part 1 - Step 3: Removing T cell receptor information that was assigned to B cell clusters
+- Cleaning imm_receptor_Esmaeil Column: Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters. A total of 666 cells were affected.
+- Removing Other TCR-Related Data: TCR-related information assigned to B cell clusters was removed. A total of 17792 cells were affected. For these cells, all TCR-related data were cleared to eliminate contamination or misannotation due to doublets or mapping artifacts.
 
-### Step 4: Combined TCR γ and δ Chains  
-Created `cdr_Full_gd` by combining `g_cdr3` and `d_cdr3` when both were present.
+### Part 1 - Step 4: Removing B cell receptor information that was assigned to T cell clusters  
+- Cleaning imm_receptor_Esmaeil Column: Remove "hkl" values from imm_receptor_Esmaeil in selected T cell clusters. A total of 1459 cells were affected.
+- Removing Other BCR-Related Data: BCR-related information assigned to T cell clusters was removed. A total of 141029 cells were affected. For these cells, all TCR-related data were cleared to eliminate contamination or misannotation due to doublets or mapping artifacts.
 
-### Step 5: Combined Ig Heavy and Kappa Chains  
-Created `cdr_Full_ig_hk` by combining `h_cdr3` and `k_cdr3` when both were present.
+### Part 1 - Step 5: Removing BCR and TCR Information Assigned to "DC", "Macrophages", and "Mast cells"
+- The imm_receptor_Esmaeil column was cleared for affected cells within these clusters.
+- In addition, all BCR- and TCR-related fields were removed from these cells.
+A total of 180 cells were affected in this step.
 
-### Step 6: Combined Ig Heavy and Lambda Chains  
-Created `cdr_Full_ig_hL` by combining `h_cdr3` and `l_cdr3` when both were present.
+### Part 1 - Step 6: Updating imm_receptor_Esmaeil Based on Receptor Sequences
+- ab: Assigned to cells where cdr_Full_ab is present → 5204 cells affected
+- gd: Assigned to cells where cdr_Full_gd is present → 781 cells affected
+- abgd: Assigned to cells where both cdr_Full_ab and cdr_Full_gd are present → 73 cells affected
+- hkl: Assigned to B cell clusters where cdr_Full_ig_hk or cdr_Full_ig_hL is present → 346 cells affected
 
-### Step 7: Reordered Columns  
-Reorganized the metadata columns to a predefined, logical order.
+### Part 1 - Step 7: Managing cells with imm_receptor_Esmaeil annotated as "abgd"
+- Update "abgd" to "gd" for cells in Tgd-related clusters. A total of 113 cells were updated in this step.
+- Update "abgd" to "ab" for cells not in Tgd-related clusters. A total of 635 cells were updated in this step
+- Created a dot plot to visualize expression levels of key immune receptor genes, aiding in the identification of immune receptor types for cells in the Tgd CD8+ cluster with imm_receptor_Esmaeil labeled as "abgd."
 
-### Step 8: Cleaned B Cell Clusters  
-Identified and filtered B cell-related clusters using:
-
-```r
-target_clusters <- c(
-  "Mast cells", "Plasma cells_1", "B cells_1", "B cells_2", "B cells MZB1+",
-  "Plasma cells_2", "Macrophages", "Plasmablast", "B cells BAFFR", "DC"
-)
-```
-
-Removed rows where `imm_receptor` was one of:
-```r
-c("Aberrant ab", "Aberrant g", "gd", "ab")
-```
-Removed B cells: `775`
-
-### Step 9: Cleaned Non-B Cell Clusters (T Cells)  
-Removed rows in non-B cell clusters where `imm_receptor == "hkl"`. Removed T cells: `1459`
-
-### Step 10: Removed Ambiguous Immune Receptor Assignments  
-Filtered out cells with ambiguous `imm_receptor == "T and B"`. Removed ambiguous cells: `1116`
-
-### Step 11: Removed Immune Receptors from Unexpected Cell Types
-Filtered out cells from clusters DC, Macrophages, and Mast cells where imm_receptor was assigned (i.e., not empty or NA).
-Removed unexpected immune receptor entries: 71
-
-### Step 12: Removed B Cell Receptor Mismatches
-Filtered out cells where either cdr_Full_ig_hk or cdr_Full_ig_hL was present, but imm_receptor was not equal to "hkl".
-Removed inconsistent B cell entries: 3438
-
-### Step 13: Updated Patient Identifiers
-Patient names were updated based on newly provided metadata. No filtering or removal was performed in this step.
-
-### Step 14: Computed Clone Size for ab TCRs  
-Calculated `clone_size_ab` and `clone_size_bucket_ab` based on the frequency of each `cdr_Full_ab` sequence.
-
-### Step 15: Computed Clone Size for gd TCRs  
-Calculated `clone_size_gd` and `clone_size_bucket_gd` based on the frequency of each `cdr_Full_gd` sequence.
+### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
+- Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.
+- Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.
 
 ---
 ---

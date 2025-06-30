@@ -843,13 +843,12 @@ ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "whi
 #--------------------------------------------------------------------------------- Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
 library(ggplot2)
 
-# تعریف رنگ‌ها برای هر گروه
 receptor_colors <- c(
-  "ab" = "#1f77b4",
-  "gd" = "#ff7f0e",
-  "hkl" = "#d62728",
-  "Aberrant ab" = "#9467bd",
-  "Aberrant g" = "#8c564b",
+  "ab" = "#ee1819",
+  "gd" = "#fd7d00",
+  "hkl" = "#fcd919",
+  "Aberrant ab" = "#3a78ce",
+  "Aberrant g" = "#47ad45",
   "None" = "gray80"
 )
 
@@ -859,20 +858,19 @@ full_metadata$imm_receptor_Esmaeil <- factor(
   levels = c("", "hkl", "Aberrant ab", "Aberrant g", "ab", "gd")
 )
 
-# Create UMAP plot
 p <- ggplot() +
   geom_point(
     data = full_metadata %>% filter(imm_receptor_Esmaeil == ""),
     aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor_Esmaeil),
-    size = 0.3, alpha = 0.5
+    size = 0.2, alpha = 0.5
   ) +
   geom_point(
     data = full_metadata %>% filter(imm_receptor_Esmaeil != ""),
     aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor_Esmaeil),
-    size = 0.3, alpha = 0.8
+    size = 0.2, alpha = 0.8
   ) +
   scale_color_manual(values = receptor_colors) +
-  guides(color = guide_legend(override.aes = list(size = 4))) +  # بزرگ کردن دایره‌های لگند
+  guides(color = guide_legend(override.aes = list(size = 4))) +  
   labs(
     title = "UMAP Colored by imm_receptor_Esmaeil",
     x = "UMAP 1",
@@ -881,7 +879,6 @@ p <- ggplot() +
   ) +
   theme_minimal()
 
-# Save as PNG
 ggsave("umap_receptor_highlighted.png", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
 
 

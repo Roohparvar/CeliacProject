@@ -10,11 +10,11 @@ clone_per_cluster <- full_metadata %>%
   mutate(cluster = factor(cluster, levels = cluster))
 
 
-png("Unique Clones Per Clusters.png", width = 2800, height = 2000, res = 300)
+png("Unique ab Clones Per Clusters.png", width = 2800, height = 2000, res = 300)
 ggplot(clone_per_cluster, aes(x = cluster, y = unique_clones)) +
   geom_bar(stat = "identity", fill = "#2171b5") +
   labs(
-    title = "Number of Unique Clones per Cluster",
+    title = "Number of Unique ab Clones per Cluster",
     x = "Cluster",
     y = "Unique Clones"
   ) +

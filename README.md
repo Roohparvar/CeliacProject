@@ -58,7 +58,7 @@ Final classification based on gene expression levels:
 
 - **67 cells were confidently labeled as "ab"**.
 - **6 cells were confidently labeled as "gd"**.
-- **31 cells remained ambiguous and were labeled as "" **.
+- **31 cells remained ambiguous and were labeled as ""**.
 
 ### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.

@@ -21,7 +21,7 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 - A new column `imm_receptor_Esmaeil` was created to preserve the original data before making any further modifications to receptor annotations.
 - Patient names were updated based on newly provided metadata. 
 - Updated the `cluster` column in `full_metadata` based on `CellID` matches from `updated_clusters.xlsx`.
-- Removed ambiguous cells where imm_receptor_Jerome was "T and B". A total of 1116 cells were affected.
+- Removed ambiguous cells where imm_receptor_Jerome was "T and B". **A total of 1116 cells were affected**.
 
 ### Part 1 - Step 2: Create combined receptor fields when both chains are available:
 - Created `cdr_Full_ab` by combining `a_cdr3` and `b_cdr3` when both were present. 
@@ -31,34 +31,34 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 - Reordered columns to follow a standardized and organized structure, including clinical, demographic, scRNA-seq, and TCR-related parameters.  
 
 ### Part 1 - Step 3: Removing T cell receptor information that was assigned to B cell clusters
-- Cleaning imm_receptor_Esmaeil Column: Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters. A total of 666 cells were affected.
-- Removing Other TCR-Related Data: TCR-related information assigned to B cell clusters was removed. A total of 17792 cells were affected. For these cells, all TCR-related data were cleared to eliminate contamination or misannotation due to doublets or mapping artifacts.
+- Cleaning imm_receptor_Esmaeil Column: Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters. **A total of 666 cells were affected**.
+- Removing Other TCR-Related Data: TCR-related information assigned to B cell clusters was removed. **A total of 17792 cells were affected**. For these cells, all TCR-related data were cleared to eliminate contamination or misannotation due to doublets or mapping artifacts.
 
 ### Part 1 - Step 4: Removing B cell receptor information that was assigned to T cell clusters  
-- Cleaning imm_receptor_Esmaeil Column: Remove "hkl" values from imm_receptor_Esmaeil in selected T cell clusters. A total of 1459 cells were affected.
-- Removing Other BCR-Related Data: BCR-related information assigned to T cell clusters was removed. A total of 141029 cells were affected. For these cells, all TCR-related data were cleared to eliminate contamination or misannotation due to doublets or mapping artifacts.
+- Cleaning imm_receptor_Esmaeil Column: Remove "hkl" values from imm_receptor_Esmaeil in selected T cell clusters. **A total of 1459 cells were affected**.
+- Removing Other BCR-Related Data: BCR-related information assigned to T cell clusters was removed. **A total of 141029 cells were affected**. For these cells, all TCR-related data were cleared to eliminate contamination or misannotation due to doublets or mapping artifacts.
 
 ### Part 1 - Step 5: Removing BCR and TCR Information Assigned to "DC", "Macrophages", and "Mast cells"
 - The imm_receptor_Esmaeil column was cleared for affected cells within these clusters.
 - In addition, all BCR- and TCR-related fields were removed from these cells.
-A total of 180 cells were affected in this step.
+**A total of 180 cells were affected in this step**.
 
 ### Part 1 - Step 6: Updating imm_receptor_Esmaeil Based on Receptor Sequences
-- ab: Assigned to cells where cdr_Full_ab is present → 5204 cells affected
-- gd: Assigned to cells where cdr_Full_gd is present → 781 cells affected
-- abgd: Assigned to cells where both cdr_Full_ab and cdr_Full_gd are present → 73 cells affected
-- hkl: Assigned to B cell clusters where cdr_Full_ig_hk or cdr_Full_ig_hL is present → 346 cells affected
+- ab: Assigned to cells where cdr_Full_ab is present → **5204 cells affected**.
+- gd: Assigned to cells where cdr_Full_gd is present → **781 cells affected**.
+- abgd: Assigned to cells where both cdr_Full_ab and cdr_Full_gd are present → **73 cells affected**.
+- hkl: Assigned to B cell clusters where cdr_Full_ig_hk or cdr_Full_ig_hL is present → **346 cells affected**.
 
 ### Part 1 - Step 7: Managing cells with imm_receptor_Esmaeil annotated as "abgd"
-- Update "abgd" to "gd" for cells in Tgd-related clusters. A total of 113 cells were updated in this step.
-- Update "abgd" to "ab" for cells not in Tgd-related clusters. A total of 635 cells were updated in this step
+- Update "abgd" to "gd" for cells in Tgd-related clusters. **A total of 113 cells were updated in this step**.
+- Update "abgd" to "ab" for cells not in Tgd-related clusters. **A total of 635 cells were updated in this step**.
 - Created a dot plot to visualize expression levels of key immune receptor genes, aiding in the identification of immune receptor types for cells in the Tgd CD8+ cluster with imm_receptor_Esmaeil labeled as "abgd."
 
 Final classification based on gene expression levels:
 
-- 67 cells were confidently labeled as "ab"
-- 6 cells were confidently labeled as "gd"
-- 31 cells remained ambiguous and were labeled as ""
+- **67 cells were confidently labeled as "ab"**.
+- **6 cells were confidently labeled as "gd"**.
+- **31 cells remained ambiguous and were labeled as "" **.
 
 ### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.

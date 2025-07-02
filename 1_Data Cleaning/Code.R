@@ -657,7 +657,7 @@ target_ids <- c(
 )
 
 full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- "ab"
-
+# 67 cells were confidently labeled as "ab"
 
 
 
@@ -700,7 +700,7 @@ target_ids <- c(
 )
 
 full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- "gd"
-
+# 6 cells were confidently labeled as "gd"
 
 
 # Ambiguous
@@ -767,7 +767,7 @@ target_ids <- c(
 
 
 full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- ""
-
+# 31 cells remained ambiguous and were labeled as ""
 
 
 #--------------------------------------------------------------------------------- Part 1 - Step 8: Computing Clone Size for ab and gd TCRs 

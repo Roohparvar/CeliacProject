@@ -82,6 +82,28 @@ In this phase, we analyzed the distribution of Aberrant T cells across different
 ---
 ---
 
+## Part 3: Clonal Homeostasis Plot
+In this part, we investigated the clonal homeostasis of both αβ and γδ T cells by examining how clone sizes are distributed across various immune clusters. This analysis helps assess the diversity and expansion patterns of T cell clones in the dataset.
+
+For each T cell type (αβ and γδ), clones were grouped into five size categories:
+- Singleton (clone size = 1)
+- Size 2–10
+- Size 11–50
+- Size 51–100
+- Size 100+
+
+We generated two sets of bar plots for each receptor type:
+1. A **percentage-based plot** showing the proportion of each clone size group within clusters.
+2. A **raw count plot** displaying the actual number of cells in each clone size group per cluster.
+
+These visualizations help highlight the extent of clonal expansion and the balance of T cell diversity across immune environments.
+
+
+
+---
+---
+---
+
 ## Part 3: G_CDR3 Combination Analysis
 In this section, we explored the distribution of cells that contain the **CDR3_G** sequence and how their combinations with **CDR3_A** and **CDR3_B** are spread across different clusters. This analysis provides insights into the immune receptor pairing patterns and how they may influence cluster-specific behavior or identity.
 

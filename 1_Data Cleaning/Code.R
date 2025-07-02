@@ -810,8 +810,6 @@ full_metadata$clone_size_bucket_gd <- ifelse(
   )
 )
 
-
-
 #--------------------------------------------------------------------------------- Plot UMAP colored by cluster
 plot_data <- full_metadata %>%
   filter(!is.na(cluster))  
@@ -837,49 +835,6 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
         plot.background = element_rect(fill = "white", color = NA))
 
 ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "white")
-
-
-
-#--------------------------------------------------------------------------------- Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
-library(ggplot2)
-
-receptor_colors <- c(
-  "ab" = "#ee1819",
-  "gd" = "#fd7d00",
-  "hkl" = "#fcd919",
-  "Aberrant ab" = "#3a78ce",
-  "Aberrant g" = "#47ad45",
-  "None" = "gray80"
-)
-
-# Set factor levels ("" = unknown) to be plotted first
-full_metadata$imm_receptor_Esmaeil <- factor(
-  full_metadata$imm_receptor_Esmaeil,
-  levels = c("", "hkl", "Aberrant ab", "Aberrant g", "ab", "gd")
-)
-
-p <- ggplot() +
-  geom_point(
-    data = full_metadata %>% filter(imm_receptor_Esmaeil == ""),
-    aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor_Esmaeil),
-    size = 0.2, alpha = 0.5
-  ) +
-  geom_point(
-    data = full_metadata %>% filter(imm_receptor_Esmaeil != ""),
-    aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor_Esmaeil),
-    size = 0.2, alpha = 0.8
-  ) +
-  scale_color_manual(values = receptor_colors) +
-  guides(color = guide_legend(override.aes = list(size = 4))) +  
-  labs(
-    title = "UMAP Colored by imm_receptor_Esmaeil",
-    x = "UMAP 1",
-    y = "UMAP 2",
-    color = "Receptor Type"
-  ) +
-  theme_minimal()
-
-ggsave("umap_receptor_highlighted.png", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
 
 
 

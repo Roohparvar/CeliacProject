@@ -69,7 +69,14 @@ Final classification based on gene expression levels:
 ---
 
 ## Part 2: Distribution of Aberrant T Cells
-In this phase, we analyzed how Aberrant T cells are distributed across the different clusters. This step helps to better understand the localization and potential roles of Aberrant T cells within specific cellular populations.
+In this phase, we analyzed the distribution of Aberrant T cells across different clusters. This step involved generating four plots:
+
+- Distribution of Aberrant cells per cluster
+- Distribution of Aberrant αβ and γδ cells separately per cluster using UMAP
+- Distribution of Aberrant αβ and γδ cells separately per cluster using bar plots
+- Comparison of Aberrant vs. Not Aberrant cells per cluster
+
+
 
 ---
 ---

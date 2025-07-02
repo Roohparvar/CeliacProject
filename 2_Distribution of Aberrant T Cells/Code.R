@@ -41,41 +41,9 @@ ggplot(cluster_summary, aes(x = cluster, y = Aberrant_total)) +
 
 dev.off()
 
+
+
 # ------------------------------------------------------ Part 2: Aberrant ab vs g ---------------------------
-cluster_long <- cluster_summary %>%
-  pivot_longer(
-    cols = c(Aberrant_ab, Aberrant_g),
-    names_to = "Type",
-    values_to = "Count"
-  )
-
-png("2_Cluster_Aberrant_Split_Barplot.png", width = 2500, height = 1600, res = 300)
-
-ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.6) +
-  scale_fill_manual(
-    values = c("Aberrant_ab" = "#3a78ce", "Aberrant_g" = "#47ad45"),
-    name = "Aberrant Cell Type",
-    labels = c("Aberrant ab", "Aberrant g")
-  ) +
-  labs(
-    title = "Aberrant Cell Counts per Cluster",
-    x = "Cluster",
-    y = "Cell Count"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
-    axis.text.y = element_text(size = 7),
-    plot.title = element_text(hjust = 0.5, size = 12),
-    legend.title = element_text(size = 10),
-    legend.text = element_text(size = 9)
-  )
-
-dev.off()
-
-# ------------------------------------------------------ Part 3: Aberrant ab vs g ---------------------------
-
 library(ggplot2)
 library(dplyr)
 
@@ -115,6 +83,39 @@ umap_plot <- ggplot(plot_df, aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMA
 ggsave("3_UMAP_Aberrant_Receptors.png", umap_plot, width = 8, height = 6, dpi = 400, bg = "white")
 
 
+
+# ------------------------------------------------------ Part 3: Aberrant ab vs g ---------------------------
+cluster_long <- cluster_summary %>%
+  pivot_longer(
+    cols = c(Aberrant_ab, Aberrant_g),
+    names_to = "Type",
+    values_to = "Count"
+  )
+
+png("2_Cluster_Aberrant_Split_Barplot.png", width = 2500, height = 1600, res = 300)
+
+ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.6) +
+  scale_fill_manual(
+    values = c("Aberrant_ab" = "#3a78ce", "Aberrant_g" = "#47ad45"),
+    name = "Aberrant Cell Type",
+    labels = c("Aberrant ab", "Aberrant g")
+  ) +
+  labs(
+    title = "Aberrant Cell Counts per Cluster",
+    x = "Cluster",
+    y = "Cell Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 7),
+    plot.title = element_text(hjust = 0.5, size = 12),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9)
+  )
+
+dev.off()
 
 
 

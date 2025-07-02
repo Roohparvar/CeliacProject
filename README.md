@@ -76,8 +76,6 @@ In this phase, we analyzed the distribution of Aberrant T cells across different
 - Distribution of Aberrant αβ and γδ cells separately per cluster using bar plots
 - Comparison of Aberrant vs. Not Aberrant cells per cluster
 
-
-
 ---
 ---
 ---
@@ -98,11 +96,19 @@ We generated two sets of bar plots for each receptor type:
 
 These visualizations help highlight the extent of clonal expansion and the balance of T cell diversity across immune environments.
 
+---
+---
+---
 
+## Part 4: Immune Receptor Distribution
+We analyzed how each immune receptor type is distributed across different clusters.
+- In the first part of this analysis, we visualized the distribution using a UMAP plot, where cells are colored by their assigned immune receptor types. This provided a global view of receptor-specific localization patterns across the cellular landscape.
+- To complement this, we generated bar plots showing the counts of each receptor type within clusters. These bar plots offer a more quantitative perspective, helping to characterize the immune landscape and receptor usage across cell populations.
 
 ---
 ---
 ---
+
 
 ## Part 3: G_CDR3 Combination Analysis
 In this section, we explored the distribution of cells that contain the **CDR3_G** sequence and how their combinations with **CDR3_A** and **CDR3_B** are spread across different clusters. This analysis provides insights into the immune receptor pairing patterns and how they may influence cluster-specific behavior or identity.
@@ -110,35 +116,10 @@ In this section, we explored the distribution of cells that contain the **CDR3_G
 ---
 ---
 ---
-
-
-## Part 4: Immune Receptor Distribution
-We analyzed how each immune receptor type (`imm_receptor2`) is distributed across different clusters.  
-Bar plots were generated to visualize the counts of each receptor type within clusters.  
-This analysis helps characterize the immune landscape and receptor usage across cell populations.
-
----
----
----
-
 ## Part 5: T and B (Ambiguous) Immune Receptor Distribution
 
 In previous steps, we created a new column named imm_receptor_Esmaeil, derived from the original imm_receptor_Jerome, in which we removed cells with ambiguous immune receptor assignments — specifically those labeled as "T and B". While these ambiguous cells were excluded from the final cleaned metadata, this section focuses on analyzing their distribution before removal. The goal is to understand how these "T and B" cells were distributed across clusters and to identify whether they were concentrated in specific regions or broadly spread throughout the dataset.
 
----
----
----
-
-Part 6: Clonal Homeostasis Plot
-In this step, we investigate the distribution of T cell clones based on their expansion levels using the Clonal Homeostasis Plot. This plot provides a visual summary of how TCR clones are distributed by size, categorized into five groups based on their relative abundance:
-
-Rare clones (≤ 0.0001)
-Small clones (≤ 0.001)
-Medium clones (≤ 0.01)
-Large clones (≤ 0.1)
-Hyperexpanded clones (> 0.1)
-
-Each bar in the plot represents a cluster, and shows the percentage of TCR repertoire space occupied by clones in each size category.
 
 ---
 ---

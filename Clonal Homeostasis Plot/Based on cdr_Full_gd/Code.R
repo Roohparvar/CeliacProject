@@ -4,6 +4,16 @@ BiocManager::install("scRepertoire")
 suppressMessages(library(scRepertoire))
 
 
+target_clusters <- c(
+  "Plasma cells_1", "B cells_1", "B cells_2",
+  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
+  "B cells BAFFR", "DC", "Macrophages", "Mast cells"
+)
+
+full_metadata <- full_metadata %>%
+  filter(!cluster %in% target_clusters)
+
+
 
 metadata_list <- split(full_metadata, full_metadata$cluster)
 

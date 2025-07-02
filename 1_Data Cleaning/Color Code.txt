@@ -1,0 +1,5 @@
+"ab" = "#EE1819",
+"gd" = "#FD7D00",
+"hkl" = "#FCD919",
+"Aberrant ab" = "#3A78CE",
+"Aberrant g" = "#47AD45",

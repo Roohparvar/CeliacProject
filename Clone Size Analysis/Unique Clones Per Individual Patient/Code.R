@@ -11,7 +11,7 @@ clone_per_patient <- full_metadata %>%
 
 png("Unique Clones Per Individual Patient.png", width = 2800, height = 2000, res = 300)
 ggplot(clone_per_patient, aes(x = Patient, y = unique_clones)) +
-  geom_bar(stat = "identity", fill = "#238b45") +
+  geom_bar(stat = "identity", fill = "#984ea3") +
   labs(
     title = "Number of Unique Clones per Patient",
     x = "Patient",

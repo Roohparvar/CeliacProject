@@ -54,6 +54,12 @@ A total of 180 cells were affected in this step.
 - Update "abgd" to "ab" for cells not in Tgd-related clusters. A total of 635 cells were updated in this step
 - Created a dot plot to visualize expression levels of key immune receptor genes, aiding in the identification of immune receptor types for cells in the Tgd CD8+ cluster with imm_receptor_Esmaeil labeled as "abgd."
 
+Final classification based on gene expression levels:
+
+- 67 cells were confidently labeled as "ab"
+- 6 cells were confidently labeled as "gd"
+- 31 cells remained ambiguous and were labeled as ""
+
 ### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.
 - Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.

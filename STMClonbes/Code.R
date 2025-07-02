@@ -57,8 +57,8 @@ for (i in 1:nrow(full_metadata)) {
   }
   
   # 5
-  if (safe_equal(row$TRAV, "TRAV8") && safe_equal(row$TRAJ, "TRAJ27") &&
-      safe_equal(row$TRBV, "TRBV19") && safe_equal(row$TRBJ, "TRBJ2-8") &&
+  if (safe_equal(row$TRAV, "TRAV8-1") && safe_equal(row$TRAJ, "TRAJ27") &&
+      safe_equal(row$TRBV, "TRBV19") && safe_equal(row$TRBJ, "TRBJ2-7") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
       is_blank(row$TRDV) && is_blank(row$TRDJ)) {
     full_metadata[i, c("color", "shape")] <- c("#81509f", "circle")
@@ -67,7 +67,7 @@ for (i in 1:nrow(full_metadata)) {
   }
   
   # 6
-  if (safe_equal(row$TRAV, "TRAV8") && safe_equal(row$TRAJ, "TRAJ22") &&
+  if (safe_equal(row$TRAV, "TRAV8-1") && safe_equal(row$TRAJ, "TRAJ22") &&
       safe_equal(row$TRBV, "TRBV19") && safe_equal(row$TRBJ, "TRBJ2-5") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
       is_blank(row$TRDV) && is_blank(row$TRDJ)) {

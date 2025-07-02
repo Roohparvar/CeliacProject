@@ -28,13 +28,14 @@ cluster_long <- filtered_cluster_summary %>%
     values_to = "Count"
   )
 
+
 # رسم نمودار
 png("Cluster_Aberrant_Split_Barplot.png", width = 2500, height = 1600, res = 300)
 
 ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.6) +
   scale_fill_manual(
-    values = c("Aberrant_ab" = "red", "Aberrant_g" = "blue"),
+    values = c("Aberrant_ab" = "#3a78ce", "Aberrant_g" = "#47ad45"),
     name = "Aberrant Cell Type",
     labels = c("Aberrant ab", "Aberrant g")
   ) +

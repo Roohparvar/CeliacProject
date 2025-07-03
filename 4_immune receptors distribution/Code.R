@@ -31,7 +31,7 @@ p <- ggplot() +
   scale_color_manual(values = receptor_colors) +
   guides(color = guide_legend(override.aes = list(size = 4))) +  
   labs(
-    title = "UMAP Colored by imm_receptor",
+    title = "UMAP Colored by immune receptor",
     x = "UMAP 1",
     y = "UMAP 2",
     color = "Receptor Type"

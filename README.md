@@ -109,6 +109,18 @@ We analyzed how each immune receptor type is distributed across different cluste
 ---
 ---
 
+## Part 5: Clone Size and Diversity Analysis
+- Pie Chart of Clone Size Categories: Visualizes the frequency of αβ and γδ T cell clones based on size categories.
+- Bar Plot of Top 10 Clones by Size: Displays the largest clones with annotation of receptor type (αβ or γδ).
+- UMAP Distribution of Top Clones: Shows the spatial distribution of the top 10 αβ and γδ clones in UMAP space.
+- Unique Clones per Cluster: Quantifies the number of unique clones across cell clusters to assess clonal diversity.
+- Unique Clones per Diagnosis: Compares clone diversity between clinical diagnosis groups.
+- Unique Clones per Patient: Evaluates the diversity of TCR repertoires at the individual patient level.
+- Alluvial Plot of Shared Clones: Tracks the distribution and sharing of selected αβ and γδ clones between patients, diagnoses, or clusters.
+
+---
+---
+---
 
 ## Part 3: G_CDR3 Combination Analysis
 In this section, we explored the distribution of cells that contain the **CDR3_G** sequence and how their combinations with **CDR3_A** and **CDR3_B** are spread across different clusters. This analysis provides insights into the immune receptor pairing patterns and how they may influence cluster-specific behavior or identity.

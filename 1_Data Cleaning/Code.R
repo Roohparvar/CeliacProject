@@ -811,6 +811,13 @@ full_metadata$clone_size_bucket_gd <- ifelse(
 )
 
 #--------------------------------------------------------------------------------- Plot UMAP colored by cluster
+full_metadata$cluster <- recode(full_metadata$cluster,
+                                "NK Tgd" = "NK Tγδ",
+                                "Tgd CD8+" = "Tγδ CD8+",
+                                "Tgd INSIG1+" = "Tγδ INSIG1+",
+                                "Tgd" = "Tγδ"
+)
+
 plot_data <- full_metadata %>%
   filter(!is.na(cluster))  
 

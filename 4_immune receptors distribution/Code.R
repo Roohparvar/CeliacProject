@@ -13,12 +13,12 @@ receptor_colors <- c(
 
 full_metadata$imm_receptor_Esmaeil <- factor(
   full_metadata$imm_receptor_Esmaeil,
-  levels = c("", "ab", "Aberrant ab", "Aberrant g", "gd", "hkl")
+  levels = c("", "ab", "gd", "Aberrant ab", "Aberrant g", "hkl")
 )
 
 receptor_labels <- c(
   "ab" = "TCR⍺β",
-  "gd" = "γδ",
+  "gd" = "TCRγδ",
   "hkl" = "hkl",
   "Aberrant ab" = "Aberrant ⍺β",
   "Aberrant g" = "Aberrant γ"
@@ -50,13 +50,6 @@ ggsave("Umap_imm_receptor_highlighted.png", plot = p, width = 8, height = 6, dpi
 
 
 #-------------------------------------------------------------------------------- Bar Plot of Immune Receptor Distribution Across Clusters
-full_metadata$cluster <- recode(full_metadata$cluster,
-                                "NK Tgd" = "NK Tγδ",
-                                "Tgd CD8+" = "Tγδ CD8+",
-                                "Tgd INSIG1+" = "Tγδ INSIG1+",
-                                "Tgd" = "Tγδ"
-)
-
 valid_receptors <- c("ab", "gd", "hkl", "Aberrant ab", "Aberrant g")
 full_metadata <- full_metadata[
   !is.na(full_metadata$imm_receptor_Esmaeil) &
@@ -76,7 +69,7 @@ receptor_types <- colnames(count_df)
 
 barplot_labels <- c(
   "ab" = "TCRαβ",
-  "gd" = "γδ",
+  "gd" = "TCRγδ",
   "hkl" = "hkl",
   "Aberrant ab" = "Aberrant αβ",
   "Aberrant g" = "Aberrant γ"

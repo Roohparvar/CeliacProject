@@ -1,7 +1,6 @@
 library(dplyr)
 library(ggplot2)
 
-# استخراج 10 کلون بزرگ
 top10_clones <- full_metadata %>%
   group_by(cdr_Full_ab) %>%
   summarise(
@@ -15,23 +14,28 @@ top10_clones <- full_metadata %>%
   arrange(desc(clone_size)) %>%
   slice_head(n = 10)
 
-# تنظیم ترتیب عوامل
 top10_clones$cdr_Full_ab <- factor(top10_clones$cdr_Full_ab,
                                    levels = top10_clones$cdr_Full_ab)
 
-# تعریف رنگ‌ها
 color_map <- c(
   "Aberrant ab" = "#3A78CE",
   "Aberrant g"  = "#47AD45",
   "Other"       = "grey60"
 )
 
-# رسم نمودار
 png("Top_10_Clone_Sizes_With_Legend.png", width = 3000, height = 2000, res = 300)
 
 ggplot(top10_clones, aes(x = cdr_Full_ab, y = clone_size, fill = receptor_type)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = color_map, name = "Receptor Type") +
+  scale_fill_manual(
+    values = color_map,
+    name = "Receptor Type",
+    labels = c(
+      "Aberrant ab" = "Aberrant αβ",
+      "Aberrant g"  = "Aberrant γ",
+      "Other"       = "Other"
+    )
+  ) +
   labs(
     title = "Top 10 Clones by Clone Size",
     x = "Clone",

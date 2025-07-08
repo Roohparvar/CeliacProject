@@ -1,6 +1,12 @@
 library(dplyr)
 library(ggplot2)
 
+full_metadata$cluster <- recode(full_metadata$cluster,
+                                "NK Tgd" = "NK Tγδ",
+                                "Tgd CD8+" = "Tγδ CD8+",
+                                "Tgd INSIG1+" = "Tγδ INSIG1+",
+                                "Tgd" = "Tγδ"
+)
 
 clone_per_cluster <- full_metadata %>%
   group_by(cluster) %>%

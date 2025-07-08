@@ -163,7 +163,7 @@ count_df$cluster <- factor(count_df$cluster, levels = unique(count_df$cluster))
 p <- ggplot(count_df, aes(x = cluster, y = count, fill = Aberrant_status)) +
   geom_bar(stat = "identity", position = "stack") +
   labs(
-    title = "Number of Aberrant vs Not Aberrant Cells per Cluster (Stacked)",
+    title = "Number of Aberrant vs Not Aberrant Cells per Cluster",
     x = "Cluster",
     y = "Number of Cells",
     fill = "Aberrant Status"

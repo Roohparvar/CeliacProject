@@ -21,6 +21,13 @@ cluster_summary <- full_metadata %>%
 
 
 # ------------------------------------------------------ Part 1: Total Aberrant per cluster ---------------------------
+full_metadata$cluster <- recode(full_metadata$cluster,
+                                "NK Tgd" = "NK Tγδ",
+                                "Tgd CD8+" = "Tγδ CD8+",
+                                "Tgd INSIG1+" = "Tγδ INSIG1+",
+                                "Tgd" = "Tγδ"
+)
+
 png("1_Cluster_Aberrant_Total_Barplot.png", width = 2000, height = 1400, res = 300)
 
 ggplot(cluster_summary, aes(x = cluster, y = Aberrant_total)) +
@@ -68,7 +75,11 @@ umap_plot <- ggplot(plot_df, aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMA
              color = "grey80", size = 0.5, alpha = 0.4) +
   geom_point(data = filter(plot_df, receptor_label != "Other"),
              aes(color = receptor_label), size = 0.2, alpha = 0.8) +
-  scale_color_manual(values = color_map, name = "Immune Receptor") +
+  scale_color_manual(
+    values = color_map,
+    name = "Immune Receptor",
+    labels = c("Other" = "Other", "Aberrant ab" = "Aberrant ⍺β", "Aberrant g" = "Aberrant γ")
+  ) +
   guides(color = guide_legend(override.aes = list(size = 3))) + 
   labs(
     title = "UMAP Plot Colored by Aberrant Immune Receptors",
@@ -80,11 +91,14 @@ umap_plot <- ggplot(plot_df, aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMA
     legend.position = "right"
   )
 
-ggsave("3_UMAP_Aberrant_Receptors.png", umap_plot, width = 8, height = 6, dpi = 400, bg = "white")
-
+ggsave("2_UMAP_Aberrant_Receptors.png", umap_plot, width = 8, height = 6, dpi = 400, bg = "white")
 
 
 # ------------------------------------------------------ Part 3: Aberrant ab vs g ---------------------------
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
 cluster_long <- cluster_summary %>%
   pivot_longer(
     cols = c(Aberrant_ab, Aberrant_g),
@@ -92,14 +106,14 @@ cluster_long <- cluster_summary %>%
     values_to = "Count"
   )
 
-png("2_Cluster_Aberrant_Split_Barplot.png", width = 2500, height = 1600, res = 300)
+png("3_Cluster_Aberrant_Split_Barplot.png", width = 2500, height = 1600, res = 300)
 
 ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.6) +
   scale_fill_manual(
     values = c("Aberrant_ab" = "#3a78ce", "Aberrant_g" = "#47ad45"),
     name = "Aberrant Cell Type",
-    labels = c("Aberrant ab", "Aberrant g")
+    labels = c("Aberrant_ab" = "Aberrant αβ", "Aberrant_g" = "Aberrant γ")
   ) +
   labs(
     title = "Aberrant Cell Counts per Cluster",
@@ -116,7 +130,6 @@ ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
   )
 
 dev.off()
-
 
 
 # ------------------------------------------------------ Part 4: Aberrant vs Not Aberrant per Cluster plot ---------------------------
@@ -161,5 +174,4 @@ p <- ggplot(count_df, aes(x = cluster, y = count, fill = Aberrant_status)) +
     plot.title = element_text(hjust = 0.5, face = "bold")
   )
 
-# ذخیره نمودار به صورت PNG
 ggsave("4_Aberrant_vs_NotAberrant_per_Cluster.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")

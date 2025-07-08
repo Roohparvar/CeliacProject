@@ -1,4 +1,4 @@
-#--------------------------------------------------------------------------------- Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
+#-------------------------------------------------------------------------------- Add UMAP plot colored by imm_receptor_Esmaeil with custom colors
 library(ggplot2)
 library(dplyr)
 
@@ -49,7 +49,7 @@ p <- ggplot() +
 ggsave("Umap_imm_receptor_highlighted.png", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
 
 
-#--------------------------------------------------------------------------------- Bar Plot of Immune Receptor Distribution Across Clusters
+#-------------------------------------------------------------------------------- Bar Plot of Immune Receptor Distribution Across Clusters
 full_metadata$cluster <- recode(full_metadata$cluster,
                                 "NK Tgd" = "NK Tγδ",
                                 "Tgd CD8+" = "Tγδ CD8+",

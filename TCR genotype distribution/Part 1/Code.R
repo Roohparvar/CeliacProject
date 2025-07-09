@@ -7,16 +7,16 @@ cluster_order <- c("Th2/Tfh", "Tregs")
 full_metadata$cluster <- factor(full_metadata$cluster, levels = cluster_order)
 full_metadata <- full_metadata %>% filter(!is.na(cluster))
 
-# سلول‌هایی که TRAV/TRBV خالی یا NA هست رو حذف کن
+
 filtered_data <- full_metadata %>%
   filter(!is.na(TRAV) & TRAV != "" & !is.na(TRBV) & TRBV != "")
 
-# همه سلول‌ها (برای محاسبه کل تعداد در هر کلاستر)
+
 total_counts <- filtered_data %>%
   group_by(cluster) %>%
   summarise(total_cells = n())
 
-# فقط سلول‌های 6 گروه خاص
+
 selected_data <- filtered_data %>%
   mutate(tcr_group = case_when(
     TRAV == "TRAV26-1" & TRBV == "TRBV7-2" ~ "TRAV26-1 + TRBV7-2",
@@ -29,17 +29,17 @@ selected_data <- filtered_data %>%
   )) %>%
   filter(!is.na(tcr_group))
 
-# شمارش سلول‌ها در هر گروه و کلاستر
+
 group_counts <- selected_data %>%
   group_by(cluster, tcr_group) %>%
   summarise(count = n(), .groups = "drop")
 
-# ترکیب با کل تعداد سلول‌ها برای محاسبه درصد واقعی
+
 bar_data <- group_counts %>%
   left_join(total_counts, by = "cluster") %>%
   mutate(freq = count / total_cells * 100)
 
-# رنگ‌ها
+
 tcr_colors <- c(
   "TRAV26-1 + TRBV7-2" = "#ae1e28",
   "TRAV4 + TRBV4"      = "#f78454",
@@ -49,7 +49,7 @@ tcr_colors <- c(
   "TRBV9"              = "#1367b7"
 )
 
-# رسم نمودار
+
 bar_plot <- ggplot(bar_data, aes(x = cluster, y = freq, fill = tcr_group)) +
   geom_bar(stat = "identity", position = "stack") +
   scale_fill_manual(values = tcr_colors, name = "TCR Group") +
@@ -59,9 +59,9 @@ bar_plot <- ggplot(bar_data, aes(x = cluster, y = freq, fill = tcr_group)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# ذخیره نمودار
+
 ggsave(
-  "TCR_barplot_by_cluster_selected_groupsss.png",
+  "TCR_barplot_by_cluster_selected_groups.png",
   plot = bar_plot,
   width = 8,
   height = 6,

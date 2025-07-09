@@ -2,7 +2,6 @@ library(dplyr)
 library(ggplot2)
 library(forcats)
 
-# حذف NA و رشته‌های فقط فاصله‌دار با trimws
 trbv_data <- full_metadata %>%
   filter(!is.na(TRBV) & trimws(TRBV) != "") %>%
   select(Diagnosis, gene = TRBV) %>%
@@ -16,7 +15,7 @@ dot_data <- trbv_data %>%
   ungroup() %>%
   filter(!is.na(gene) & trimws(gene) != "")
 
-# مرتب‌سازی ژن‌ها بر اساس Healthy
+
 gene_order <- dot_data %>%
   filter(Diagnosis == "ACD") %>%
   arrange(freq) %>%

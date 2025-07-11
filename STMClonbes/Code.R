@@ -6,18 +6,17 @@ is_blank <- function(x) {
   is.na(x) || x == ""
 }
 
-
 full_metadata$color <- NA
 full_metadata$shape <- NA
 match_counts <- numeric(12)
-
 
 for (i in 1:nrow(full_metadata)) {
   cat(i,"\n")
   row <- full_metadata[i, ]
   
-  # 1 Ok 238
-  if (safe_equal(row$TRAV, "TRAV29/DV5") && safe_equal(row$TRAJ, "TRAJ36") &&
+  
+  # 1
+  if (safe_equal(row$TRAV, "TRAV25") && safe_equal(row$TRAJ, "TRAJ36") &&
       safe_equal(row$TRBV, "TRBV27") && safe_equal(row$TRBJ, "TRBJ1-5") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ) && 
       is_blank(row$TRDV) && is_blank(row$TRDJ)) {
@@ -26,7 +25,7 @@ for (i in 1:nrow(full_metadata)) {
     next
   }
   
-  # 2 Ok 497
+  # 2
   if (safe_equal(row$TRAV, "TRAV29/DV5") && safe_equal(row$TRAJ, "TRAJ17") &&
       safe_equal(row$TRBV, "TRBV27") && safe_equal(row$TRBJ, "TRBJ1-5") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
@@ -36,7 +35,7 @@ for (i in 1:nrow(full_metadata)) {
     next
   }
   
-  # 3 Ok 41
+  # 3
   if (safe_equal(row$TRAV, "TRAV1-1") && safe_equal(row$TRAJ, "TRAJ4") &&
       safe_equal(row$TRBV, "TRBV29-1") && safe_equal(row$TRBJ, "TRBJ1-2") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
@@ -46,7 +45,7 @@ for (i in 1:nrow(full_metadata)) {
     next
   }
   
-  # 4 Ok 27
+  # 4
   if (safe_equal(row$TRAV, "TRAV29/DV5") && safe_equal(row$TRAJ, "TRAJ49") &&
       safe_equal(row$TRBV, "TRBV7-9") && safe_equal(row$TRBJ, "TRBJ2-1") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
@@ -77,7 +76,7 @@ for (i in 1:nrow(full_metadata)) {
   }
   
   #7
-  if (safe_equal(row$TRAV, "TRAV10") && safe_equal(row$TRAJ, "TRAJ30") &&
+  if (safe_equal(row$TRAV, "TRAV10") && safe_equal(row$TRAJ, "TRAJ39") &&
       safe_equal(row$TRBV, "TRBV6-5") && safe_equal(row$TRBJ, "TRBJ1-4") &&
       is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
       is_blank(row$TRDV) && is_blank(row$TRDJ)) {
@@ -86,7 +85,18 @@ for (i in 1:nrow(full_metadata)) {
     next
   }
   
-  #8
+  # 8
+  if (safe_equal(row$TRAV, "TRAV26-1") && safe_equal(row$TRAJ, "TRAJ17") &&
+      safe_equal(row$TRBV, "TRBV6-5") && safe_equal(row$TRBJ, "TRBJ1-4") &&
+      is_blank(row$TRGV) && is_blank(row$TRGJ)&& 
+      is_blank(row$TRDV) && is_blank(row$TRDJ)) {
+    full_metadata[i, c("color", "shape")] <- c("#b45e3d", "circle")  # رنگ جدید آبی
+    match_counts[8] <- match_counts[8] + 1
+    next
+  }
+  
+  
+  #9
   if (is_blank(row$TRDV) && is_blank(row$TRDJ) && is_blank(row$TRAV) && is_blank(row$TRAJ) &&
       is_blank(row$TRBV) && is_blank(row$TRBJ) &&
       safe_equal(row$TRGV, "TRGV3") && safe_equal(row$TRGJ, "TRGJ1")) {
@@ -94,7 +104,7 @@ for (i in 1:nrow(full_metadata)) {
     match_counts[8] <- match_counts[8] + 1
     next
   }
-  #9
+  #10
   if (is_blank(row$TRDV) && is_blank(row$TRDJ) && is_blank(row$TRAV) && is_blank(row$TRAJ) &&
       is_blank(row$TRBV) && is_blank(row$TRBJ) &&
       safe_equal(row$TRGV, "TRGV8") && safe_equal(row$TRGJ, "TRGJP2")) {
@@ -102,7 +112,7 @@ for (i in 1:nrow(full_metadata)) {
     match_counts[9] <- match_counts[9] + 1
     next
   }
-  #10
+  #11
   if (is_blank(row$TRDV) && is_blank(row$TRDJ) && is_blank(row$TRAV) && is_blank(row$TRAJ) &&
       is_blank(row$TRBV) && is_blank(row$TRBJ) &&
       safe_equal(row$TRGV, "TRGV3") && safe_equal(row$TRGJ, "TRGJP2")) {
@@ -110,7 +120,7 @@ for (i in 1:nrow(full_metadata)) {
     match_counts[10] <- match_counts[10] + 1
     next
   }
-  #11
+  #12
   if (is_blank(row$TRDV) && is_blank(row$TRDJ) && is_blank(row$TRAV) && is_blank(row$TRAJ) &&
       is_blank(row$TRBV) && is_blank(row$TRBJ) &&
       safe_equal(row$TRGV, "TRGV10") && safe_equal(row$TRGJ, "TRGJ1")) {
@@ -119,10 +129,11 @@ for (i in 1:nrow(full_metadata)) {
     next
   }
   
-  # شرط 12 (پیش‌فرض)
   full_metadata[i, c("color", "shape")] <- c("#c7c7c7", "circle")
   match_counts[12] <- match_counts[12] + 1
 }
+
+
 
 # چاپ تعداد دفعاتی که هر شرط برقرار بوده
 for (j in 1:12) {
@@ -132,18 +143,13 @@ for (j in 1:12) {
 
 
 
-
-
-
 library(ggplot2)
 library(dplyr)
 
-# فقط ردیف‌هایی که رنگشان خاکستری نیست را برای legend نگه می‌داریم
 legend_df <- full_metadata %>%
   filter(color != "#c7c7c7") %>%
-  mutate(clone_label = paste0("Clone ", as.numeric(factor(paste(color, shape)))))  # ساخت یک برچسب یکتا برای legend
+  mutate(clone_label = paste0("Clone ", as.numeric(factor(paste(color, shape)))))
 
-# ترکیب دیتا برای داشتن legend درست (بقیه به عنوان 'other')
 full_metadata <- full_metadata %>%
   left_join(
     legend_df %>% select(color, shape, clone_label) %>% distinct(),
@@ -151,25 +157,24 @@ full_metadata <- full_metadata %>%
   ) %>%
   mutate(clone_label = ifelse(is.na(clone_label), "Other", clone_label))
 
-# رسم UMAP
 p <- ggplot(full_metadata, aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2)) +
   geom_point(aes(color = clone_label, shape = clone_label), size = 1, alpha = 0.8) +
   scale_color_manual(
     values = legend_df %>% select(clone_label, color) %>% distinct() %>% deframe()
   ) +
   scale_shape_manual(
-    values = legend_df %>% select(clone_label, shape) %>%
+    values = legend_df %>%
+      select(clone_label, shape) %>%
       distinct() %>%
-      mutate(shape = ifelse(shape == "circle", 16, 17)) %>%  # 16: circle, 17: triangle
+      mutate(shape = ifelse(shape == "circle", 16, 17)) %>%
       deframe()
   ) +
   ggtitle("UMAP of Clonotypes") +
   theme_bw() +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),  # عنوان وسط‌چین
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
     legend.title = element_blank(),
     legend.text = element_text(size = 10)
   )
 
-# ذخیره با کیفیت بالا
 ggsave("UMAP_Clonotypes.png", plot = p, width = 8, height = 6, dpi = 300)

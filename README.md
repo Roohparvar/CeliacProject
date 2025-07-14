@@ -41,7 +41,7 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 ### Part 1 - Step 5: Removing BCR and TCR Information Assigned to "DC", "Macrophages", and "Mast cells"
 - The imm_receptor_Esmaeil column was cleared for affected cells within these clusters.
 - In addition, all BCR- and TCR-related fields were removed from these cells.
-**A total of 180 cells were affected in this step**.
+**A total of 979 cells were affected in this step**.
 
 ### Part 1 - Step 6: Updating imm_receptor_Esmaeil Based on Receptor Sequences
 - ab: Assigned to cells where cdr_Full_ab is present → **5204 cells affected**.

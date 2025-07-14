@@ -96,3 +96,18 @@ for (receptor in receptor_types) {
   
   dev.off()
 }
+
+
+
+
+
+
+
+
+filtered_data <- full_metadata[full_metadata$cluster == "CD4-CD8-", ]
+filtered_data <- filtered_data[filtered_data$imm_receptor_Esmaeil == "" | is.na(filtered_data$imm_receptor_Esmaeil) , ]
+filtered_data <- filtered_data[!is.na(filtered_data$g_cdr3) & !is.na(filtered_data$d_cdr3) , ]
+
+
+
+

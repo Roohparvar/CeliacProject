@@ -268,12 +268,41 @@ if (length(rows_to_clean) > 0) {
 
 #--------------------------------------------------------------------------------- Part 1 - Step 5: Removing B cell receptor (BCR) and T cell receptor (TCR) information mistakenly assigned to the following clusters: "DC", "Macrophages", and "Mast cells".
 target_clusters <- c("DC", "Macrophages", "Mast cells")
-subset_metadata <- full_metadata[full_metadata$cluster %in% target_clusters, ]
 
 rows_to_clean <- which(
-  full_metadata$cluster %in% target_clusters &
-    !is.na(full_metadata$imm_receptor_Esmaeil) &
-    full_metadata$imm_receptor_Esmaeil != ""
+  full_metadata$cluster %in% target_clusters & 
+    (
+      (!is.na(full_metadata$imm_receptor_Esmaeil) & full_metadata$imm_receptor_Esmaeil != "") |
+        (!is.na(full_metadata$TRAV) & full_metadata$TRAV != "") |
+        (!is.na(full_metadata$TRAJ) & full_metadata$TRAJ != "") |
+        (!is.na(full_metadata$a_cdr3) & full_metadata$a_cdr3 != "") |
+        (!is.na(full_metadata$TRBV) & full_metadata$TRBV != "") |
+        (!is.na(full_metadata$TRBJ) & full_metadata$TRBJ != "") |
+        (!is.na(full_metadata$b_cdr3) & full_metadata$b_cdr3 != "") |
+        (!is.na(full_metadata$cdr_Full_ab) & full_metadata$cdr_Full_ab != "") |
+        (!is.na(full_metadata$clone_size_ab) & full_metadata$clone_size_ab != "") |
+        (!is.na(full_metadata$clone_size_bucket_ab) & full_metadata$clone_size_bucket_ab != "") |
+        (!is.na(full_metadata$TRDV) & full_metadata$TRDV != "") |
+        (!is.na(full_metadata$TRDJ) & full_metadata$TRDJ != "") |
+        (!is.na(full_metadata$d_cdr3) & full_metadata$d_cdr3 != "") |
+        (!is.na(full_metadata$TRGV) & full_metadata$TRGV != "") |
+        (!is.na(full_metadata$TRGJ) & full_metadata$TRGJ != "") |
+        (!is.na(full_metadata$g_cdr3) & full_metadata$g_cdr3 != "") |
+        (!is.na(full_metadata$cdr_Full_gd) & full_metadata$cdr_Full_gd != "") |
+        (!is.na(full_metadata$clone_size_gd) & full_metadata$clone_size_gd != "") |
+        (!is.na(full_metadata$clone_size_bucket_gd) & full_metadata$clone_size_bucket_gd != "") |
+        (!is.na(full_metadata$IGHV) & full_metadata$IGHV != "") |
+        (!is.na(full_metadata$IGHJ) & full_metadata$IGHJ != "") |
+        (!is.na(full_metadata$h_cdr3) & full_metadata$h_cdr3 != "") |
+        (!is.na(full_metadata$IGKV) & full_metadata$IGKV != "") |
+        (!is.na(full_metadata$IGKJ) & full_metadata$IGKJ != "") |
+        (!is.na(full_metadata$k_cdr3) & full_metadata$k_cdr3 != "") |
+        (!is.na(full_metadata$IGLV) & full_metadata$IGLV != "") |
+        (!is.na(full_metadata$IGLJ) & full_metadata$IGLJ != "") |
+        (!is.na(full_metadata$l_cdr3) & full_metadata$l_cdr3 != "") |
+        (!is.na(full_metadata$cdr_Full_ig_hk) & full_metadata$cdr_Full_ig_hk != "") |
+        (!is.na(full_metadata$cdr_Full_ig_hL) & full_metadata$cdr_Full_ig_hL != "")
+    )
 )
 
 
@@ -319,7 +348,7 @@ if (length(rows_to_clean) > 0) {
   full_metadata$cdr_Full_ig_hk[rows_to_clean] <- ""
   full_metadata$cdr_Full_ig_hL[rows_to_clean] <- ""
 }
-# A total of 180 cells were affected.
+# A total of 979 cells were affected.
 
 
 

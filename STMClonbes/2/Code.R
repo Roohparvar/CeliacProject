@@ -1,41 +1,3 @@
-full_metadata <- subset(full_metadata,
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV25" & TRAJ == "TRAJ36" & TRBV == "TRBV27" & TRBJ == "TRBJ1-5") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV29/DV5" & TRAJ == "TRAJ17" & TRBV == "TRBV27" & TRBJ == "TRBJ1-5") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV1-1" & TRAJ == "TRAJ4" & TRBV == "TRBV29-1" & TRBJ == "TRBJ1-2") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV29/DV5" & TRAJ == "TRAJ49" & TRBV == "TRBV7-9" & TRBJ == "TRBJ2-1") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV8-1" & TRAJ == "TRAJ27" & TRBV == "TRBV19" & TRBJ == "TRBJ2-7") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV8-1" & TRAJ == "TRAJ22" & TRBV == "TRBV19" & TRBJ == "TRBJ2-5") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV10" & TRAJ == "TRAJ39" & TRBV == "TRBV6-5" & TRBJ == "TRBJ1-4") |
-                              (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV26-1" & TRAJ == "TRAJ17" & TRBV == "TRBV6-5" & TRBJ == "TRBJ1-4") |
-                              (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV3" & TRGJ == "TRGJ1") |
-                              (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV8" & TRGJ == "TRGJP2") |
-                              (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV3" & TRGJ == "TRGJP2") |
-                              (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV10" & TRGJ == "TRGJ1")
-)
-
-
-conditions <- list(
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV25" & full_metadata$TRAJ == "TRAJ36" & full_metadata$TRBV == "TRBV27" & full_metadata$TRBJ == "TRBJ1-5",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV29/DV5" & full_metadata$TRAJ == "TRAJ17" & full_metadata$TRBV == "TRBV27" & full_metadata$TRBJ == "TRBJ1-5",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV1-1" & full_metadata$TRAJ == "TRAJ4" & full_metadata$TRBV == "TRBV29-1" & full_metadata$TRBJ == "TRBJ1-2",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV29/DV5" & full_metadata$TRAJ == "TRAJ49" & full_metadata$TRBV == "TRBV7-9" & full_metadata$TRBJ == "TRBJ2-1",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV8-1" & full_metadata$TRAJ == "TRAJ27" & full_metadata$TRBV == "TRBV19" & full_metadata$TRBJ == "TRBJ2-7",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV8-1" & full_metadata$TRAJ == "TRAJ22" & full_metadata$TRBV == "TRBV19" & full_metadata$TRBJ == "TRBJ2-5",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV10" & full_metadata$TRAJ == "TRAJ39" & full_metadata$TRBV == "TRBV6-5" & full_metadata$TRBJ == "TRBJ1-4",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV26-1" & full_metadata$TRAJ == "TRAJ17" & full_metadata$TRBV == "TRBV6-5" & full_metadata$TRBJ == "TRBJ1-4",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV3" & full_metadata$TRGJ == "TRGJ1",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV8" & full_metadata$TRGJ == "TRGJP2",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV3" & full_metadata$TRGJ == "TRGJP2",
-  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV10" & full_metadata$TRGJ == "TRGJ1"
-)
-
-for (i in seq_along(conditions)) {
-  count <- sum(conditions[[i]], na.rm = TRUE)
-  cat("condition", i, ":", count, "Cells\n")
-}
-
-
-
 # Set default values
 full_metadata$color <- "#CBCBCB"
 full_metadata$shape <- "circle"
@@ -252,3 +214,62 @@ final_plot <- main_plot / legend_combined + patchwork::plot_layout(heights = c(4
 # 9. ذخیره عکس
 ggsave("umap_tcr_signatures_ordered_legend.png", plot = final_plot,
        width = 14, height = 12, dpi = 300, bg = "white")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+full_metadata <- subset(full_metadata,
+                        (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV25" & TRAJ == "TRAJ36" & TRBV == "TRBV27" & TRBJ == "TRBJ1-5") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV29/DV5" & TRAJ == "TRAJ17" & TRBV == "TRBV27" & TRBJ == "TRBJ1-5") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV1-1" & TRAJ == "TRAJ4" & TRBV == "TRBV29-1" & TRBJ == "TRBJ1-2") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV29/DV5" & TRAJ == "TRAJ49" & TRBV == "TRBV7-9" & TRBJ == "TRBJ2-1") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV8-1" & TRAJ == "TRAJ27" & TRBV == "TRBV19" & TRBJ == "TRBJ2-7") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV8-1" & TRAJ == "TRAJ22" & TRBV == "TRBV19" & TRBJ == "TRBJ2-5") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV10" & TRAJ == "TRAJ39" & TRBV == "TRBV6-5" & TRBJ == "TRBJ1-4") |
+                          (imm_receptor_Esmaeil == "Aberrant ab" & TRAV == "TRAV26-1" & TRAJ == "TRAJ17" & TRBV == "TRBV6-5" & TRBJ == "TRBJ1-4") |
+                          (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV3" & TRGJ == "TRGJ1") |
+                          (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV8" & TRGJ == "TRGJP2") |
+                          (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV3" & TRGJ == "TRGJP2") |
+                          (imm_receptor_Esmaeil == "Aberrant g" & TRGV == "TRGV10" & TRGJ == "TRGJ1")
+)
+
+
+conditions <- list(
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV25" & full_metadata$TRAJ == "TRAJ36" & full_metadata$TRBV == "TRBV27" & full_metadata$TRBJ == "TRBJ1-5",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV29/DV5" & full_metadata$TRAJ == "TRAJ17" & full_metadata$TRBV == "TRBV27" & full_metadata$TRBJ == "TRBJ1-5",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV1-1" & full_metadata$TRAJ == "TRAJ4" & full_metadata$TRBV == "TRBV29-1" & full_metadata$TRBJ == "TRBJ1-2",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV29/DV5" & full_metadata$TRAJ == "TRAJ49" & full_metadata$TRBV == "TRBV7-9" & full_metadata$TRBJ == "TRBJ2-1",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV8-1" & full_metadata$TRAJ == "TRAJ27" & full_metadata$TRBV == "TRBV19" & full_metadata$TRBJ == "TRBJ2-7",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV8-1" & full_metadata$TRAJ == "TRAJ22" & full_metadata$TRBV == "TRBV19" & full_metadata$TRBJ == "TRBJ2-5",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV10" & full_metadata$TRAJ == "TRAJ39" & full_metadata$TRBV == "TRBV6-5" & full_metadata$TRBJ == "TRBJ1-4",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant ab" & full_metadata$TRAV == "TRAV26-1" & full_metadata$TRAJ == "TRAJ17" & full_metadata$TRBV == "TRBV6-5" & full_metadata$TRBJ == "TRBJ1-4",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV3" & full_metadata$TRGJ == "TRGJ1",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV8" & full_metadata$TRGJ == "TRGJP2",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV3" & full_metadata$TRGJ == "TRGJP2",
+  full_metadata$imm_receptor_Esmaeil == "Aberrant g" & full_metadata$TRGV == "TRGV10" & full_metadata$TRGJ == "TRGJ1"
+)
+
+for (i in seq_along(conditions)) {
+  count <- sum(conditions[[i]], na.rm = TRUE)
+  cat("condition", i, ":", count, "Cells\n")
+}
+

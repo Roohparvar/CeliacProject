@@ -94,7 +94,7 @@ umap_plot <- ggplot(plot_df, aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMA
 ggsave("2_UMAP_Aberrant_Receptors.png", umap_plot, width = 8, height = 6, dpi = 400, bg = "white")
 
 
-# ------------------------------------------------------ Part 3: Aberrant ab vs g ---------------------------
+# ------------------------------------------------------ Part 3: Aberrant ab vs g  (Version 1) ---------------------------
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -131,8 +131,46 @@ ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
 
 dev.off()
 
+# ------------------------------------------------------ Part 4: Aberrant ab vs g (Version 1) ---------------------------
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 
-# ------------------------------------------------------ Part 4: Aberrant vs Not Aberrant per Cluster plot ---------------------------
+cluster_long <- cluster_summary %>%
+  pivot_longer(
+    cols = c(Aberrant_ab, Aberrant_g),
+    names_to = "Type",
+    values_to = "Count"
+  )
+
+png("4_Cluster_Aberrant_Split_Barplot.png", width = 2500, height = 1600, res = 300)
+
+ggplot(cluster_long, aes(x = cluster, y = Count, fill = Type)) +
+  geom_bar(stat = "identity", width = 0.6) +  # removed position_dodge to stack bars
+  scale_fill_manual(
+    values = c("Aberrant_ab" = "#3a78ce", "Aberrant_g" = "#47ad45"),
+    name = "Aberrant Cell Type",
+    labels = c("Aberrant_ab" = "Aberrant αβ", "Aberrant_g" = "Aberrant γ")
+  ) +
+  labs(
+    title = "Aberrant Cell Counts per Cluster",
+    x = "Cluster",
+    y = "Cell Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+    axis.text.y = element_text(size = 7),
+    plot.title = element_text(hjust = 0.5, size = 12),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9)
+  )
+
+dev.off()
+
+
+
+# ------------------------------------------------------ Part 5: Aberrant vs Not Aberrant per Cluster plot ---------------------------
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -148,22 +186,22 @@ filtered_df <- full_metadata %>%
   mutate(
     Aberrant_status = ifelse(
       imm_receptor_Esmaeil %in% c("Aberrant ab", "Aberrant g"),
-      "Aberrant",
-      "Not Aberrant"
+      "Aberrant Cell",
+      "Normal Cell"
     )
   )
 
 count_df <- filtered_df %>%
   group_by(cluster, Aberrant_status) %>%
   summarise(count = n(), .groups = "drop") %>%
-  complete(cluster, Aberrant_status = c("Aberrant", "Not Aberrant"), fill = list(count = 0))
+  complete(cluster, Aberrant_status = c("Aberrant Cell", "Normal Cell"), fill = list(count = 0))
 
 count_df$cluster <- factor(count_df$cluster, levels = unique(count_df$cluster))
 
 p <- ggplot(count_df, aes(x = cluster, y = count, fill = Aberrant_status)) +
   geom_bar(stat = "identity", position = "stack") +
   labs(
-    title = "Number of Aberrant vs Not Aberrant Cells per Cluster",
+    title = "Number of Aberrant vs Normal Cells per Cluster",
     x = "Cluster",
     y = "Number of Cells",
     fill = "Aberrant Status"
@@ -174,4 +212,4 @@ p <- ggplot(count_df, aes(x = cluster, y = count, fill = Aberrant_status)) +
     plot.title = element_text(hjust = 0.5, face = "bold")
   )
 
-ggsave("4_Aberrant_vs_NotAberrant_per_Cluster.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave("5_Aberrant_vs_NotAberrant_per_Cluster.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")

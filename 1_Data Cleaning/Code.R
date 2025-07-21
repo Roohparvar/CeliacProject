@@ -429,6 +429,17 @@ rows_to_update_gd <- which(
     full_metadata$imm_receptor_Esmaeil == "abgd"
 )
 full_metadata$imm_receptor_Esmaeil[rows_to_update_gd] <- "gd"
+full_metadata$TRAV[rows_to_update_gd] <- ""
+full_metadata$TRAJ[rows_to_update_gd] <- ""
+full_metadata$a_cdr3[rows_to_update_gd] <- ""
+
+full_metadata$TRBV[rows_to_update_gd] <- ""
+full_metadata$TRBJ[rows_to_update_gd] <- ""
+full_metadata$b_cdr3[rows_to_update_gd] <- ""
+
+full_metadata$cdr_Full_ab[rows_to_update_gd] <- ""
+full_metadata$clone_size_ab[rows_to_update_gd] <- ""
+full_metadata$clone_size_bucket_ab[rows_to_update_gd] <- ""
 # A total of 113 cells were updated in this step.
 
 
@@ -440,6 +451,17 @@ rows_to_update_ab <- which(
     full_metadata$imm_receptor_Esmaeil == "abgd"
 )
 full_metadata$imm_receptor_Esmaeil[rows_to_update_ab] <- "ab"
+full_metadata$TRDV[rows_to_update_ab] <- ""
+full_metadata$TRDJ[rows_to_update_ab] <- ""
+full_metadata$d_cdr3[rows_to_update_ab] <- ""
+
+full_metadata$TRGV[rows_to_update_ab] <- ""
+full_metadata$TRGJ[rows_to_update_ab] <- ""
+full_metadata$g_cdr3[rows_to_update_ab] <- ""
+
+full_metadata$cdr_Full_gd[rows_to_update_ab] <- ""
+full_metadata$clone_size_gd[rows_to_update_ab] <- ""
+full_metadata$clone_size_bucket_gd[rows_to_update_ab] <- ""
 # A total of 635 cells were updated in this step.
 
 
@@ -686,6 +708,17 @@ target_ids <- c(
 )
 
 full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- "ab"
+full_metadata$TRDV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRDJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$d_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$TRGV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRGJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$g_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$cdr_Full_gd[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_gd[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_bucket_gd[full_metadata$CellID %in% target_ids] <- ""
 # 67 cells were confidently labeled as "ab"
 
 
@@ -729,6 +762,18 @@ target_ids <- c(
 )
 
 full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- "gd"
+
+full_metadata$TRAV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRAJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$a_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$TRBV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRBJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$b_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$cdr_Full_ab[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_ab[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_bucket_ab[full_metadata$CellID %in% target_ids] <- ""
 # 6 cells were confidently labeled as "gd"
 
 
@@ -796,6 +841,31 @@ target_ids <- c(
 
 
 full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$TRDV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRDJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$d_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$TRGV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRGJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$g_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$cdr_Full_gd[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_gd[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_bucket_gd[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$TRAV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRAJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$a_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$TRBV[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRBJ[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$b_cdr3[full_metadata$CellID %in% target_ids] <- ""
+
+full_metadata$cdr_Full_ab[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_ab[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$clone_size_bucket_ab[full_metadata$CellID %in% target_ids] <- ""
+
 # 31 cells remained ambiguous and were labeled as ""
 
 

@@ -44,10 +44,13 @@ p <- ggplot() +
     color = "Receptor Type"
   ) +
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()
+  )
 
 ggsave("Umap_imm_receptor_highlighted.png", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
-
+ggsave("Umap_imm_receptor_highlighted.pdf", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
 
 #-------------------------------------------------------------------------------- Bar Plot of Immune Receptor Distribution Across Clusters
 valid_receptors <- c("ab", "gd", "hkl", "Aberrant ab", "Aberrant g")

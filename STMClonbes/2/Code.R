@@ -215,6 +215,72 @@ final_plot <- main_plot / legend_combined + patchwork::plot_layout(heights = c(4
 ggsave("umap_tcr_signatures_ordered_legend.png", plot = final_plot,
        width = 14, height = 12, dpi = 300, bg = "white")
 
+ggsave("umap_tcr_signatures_ordered_legend.pdf", plot = final_plot,
+       width = 14, height = 12, dpi = 300, bg = "white")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Plot without legend and without grid lines
+main_plot_clean <- ggplot() +
+  geom_point(data = full_metadata[full_metadata$color == "#CBCBCB", ],
+             aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2),
+             color = "#CBCBCB", size = 0.5, alpha = 0.5, shape = 16) +
+  geom_point(data = full_metadata[full_metadata$color != "#CBCBCB", ],
+             aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2,
+                 color = color, shape = shape),
+             size = 2, alpha = 0.9) +
+  scale_color_identity() +
+  scale_shape_manual(values = c("circle" = 16, "triangle" = 17)) +
+  labs(title = "Distribution of Aberrant clones reported in STM") +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(hjust = 0.5, size = 18)
+  )
+
+# Save the plot as PNG
+ggsave("Umap_imm_receptor_highlighted_no_legend.png",
+       plot = main_plot_clean,
+       width = 8, height = 6, dpi = 300, bg = "white")
+
+# Save the plot as PDF
+ggsave("Umap_imm_receptor_highlighted_no_legend.pdf",
+       plot = main_plot_clean,
+       width = 8, height = 6, dpi = 300, bg = "white")
+
+
+
+
+
+
 
 
 

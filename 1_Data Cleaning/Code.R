@@ -6,7 +6,9 @@ library(writexl)
 library(Matrix)
 library(tidyverse)
 
-#---------------------------------------------------------------------------------  Part 1 - Step 1: Part 1_Step 1: Initial Data Cleaning and Updates 
+
+
+#---------------------------------------------------------------------------------  Part 1 - Step 1: Initial Data Cleaning and Updates 
 # Corrected some spelling mistakes in the dataset.
 full_metadata$imm_receptor[full_metadata$imm_receptor == "Aberant ab"] <- "Aberrant ab"
 
@@ -421,13 +423,105 @@ if (length(rows_hkl) > 0) {
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 7: Managing cells with imm_receptor_Esmaeil annotated as "abgd"
-# Update "abgd" to "gd" for cells in Tgd-related clusters
-target_clusters <- c("NK Tgd", "Tgd INSIG1+", "Tgd")
-rows_to_update_gd <- which(
-  full_metadata$cluster %in% target_clusters &
+#--------------------------------------------------------------------------------- Part 1 - Step 7: Handling cells annotated with imm_receptor_Esmaeil as "abgd" or those containing both cdr_Full_ab and cdr_Full_gd simultaneously
+# Select cells where imm_receptor is annotated as "αβγδ" or cells that simultaneously contain both cdr_Full_ab and cdr_Full_gd
+target_rows <- (
+  (
+    !is.na(full_metadata$cdr_Full_ab) &
+      full_metadata$cdr_Full_ab != "" &
+     !is.na(full_metadata$cdr_Full_gd) &
+      full_metadata$cdr_Full_gd != "" &
+     (full_metadata$imm_receptor_Esmaeil == "ab" | full_metadata$imm_receptor_Esmaeil == "gd" )
+  ) |
     full_metadata$imm_receptor_Esmaeil == "abgd"
 )
+# A total of 1,408 cells met the criteria of having imm_receptor_Esmaeil annotated as 'abgd' or containing both cdr_Full_ab and cdr_Full_gd simultaneously.
+
+
+
+#--------------------------------------- Part 1 - Step 7 - Section 1: cells were found in B cell clusters that express cdr_Full_ig_hL
+hkl_rows <- which(
+  target_rows & 
+    full_metadata$cluster %in% c("B cells_1", "B cells_2", "B cells MZB1+") &
+    (is.na(full_metadata$cdr_Full_ab) | full_metadata$cdr_Full_ab == "") &
+    (is.na(full_metadata$cdr_Full_gd) | full_metadata$cdr_Full_gd == "") &
+    (
+      (!is.na(full_metadata$cdr_Full_ig_hk) & full_metadata$cdr_Full_ig_hk != "") |
+        (!is.na(full_metadata$cdr_Full_ig_hL) & full_metadata$cdr_Full_ig_hL != "")
+    ) 
+)
+
+full_metadata$imm_receptor_Esmaeil[hkl_rows] <- "hkl"
+
+full_metadata$TRDV[hkl_rows] <- ""
+full_metadata$TRDJ[hkl_rows] <- ""
+full_metadata$d_cdr3[hkl_rows] <- ""
+
+full_metadata$TRGV[hkl_rows] <- ""
+full_metadata$TRGJ[hkl_rows] <- ""
+full_metadata$g_cdr3[hkl_rows] <- ""
+
+full_metadata$cdr_Full_gd[hkl_rows] <- ""
+full_metadata$clone_size_gd[hkl_rows] <- ""
+full_metadata$clone_size_bucket_gd[hkl_rows] <- ""
+
+full_metadata$TRAV[hkl_rows] <- ""
+full_metadata$TRAJ[hkl_rows] <- ""
+full_metadata$a_cdr3[hkl_rows] <- ""
+
+full_metadata$TRBV[hkl_rows] <- ""
+full_metadata$TRBJ[hkl_rows] <- ""
+full_metadata$b_cdr3[hkl_rows] <- ""
+
+full_metadata$cdr_Full_ab[hkl_rows] <- ""
+full_metadata$clone_size_ab[hkl_rows] <- ""
+full_metadata$clone_size_bucket_ab[hkl_rows] <- ""
+# A total of 2 cells met the criteria
+
+
+
+#--------------------------------------- Part 1 - Step 7 - Section 2: cells located in B cell clusters lacked both cdr_Full_ig_hL and cdr_Full_ig_hK
+target_rows <- (
+  (
+    !is.na(full_metadata$cdr_Full_ab) &
+      full_metadata$cdr_Full_ab != "" &
+      !is.na(full_metadata$cdr_Full_gd) &
+      full_metadata$cdr_Full_gd != "" &
+      (full_metadata$imm_receptor_Esmaeil == "ab" | full_metadata$imm_receptor_Esmaeil == "gd" )
+  ) |
+    full_metadata$imm_receptor_Esmaeil == "abgd"
+)
+
+rows_to_remove <- which(
+  target_rows &
+    full_metadata$cluster %in% c("B cells_1", "B cells_2") &
+    (is.na(full_metadata$cdr_Full_ig_hk) | full_metadata$cdr_Full_ig_hk == "") &
+    (is.na(full_metadata$cdr_Full_ig_hL) | full_metadata$cdr_Full_ig_hL == "")
+)
+
+full_metadata <- full_metadata[-rows_to_remove, ]
+#  A total of 4 cells met the criteria
+
+
+
+#--------------------------------------- Part 1 - Step 7 - Section 3: Update immune receptor to "gd" for cells in "NK Tgd", "Tgd INSIG1+", or "Tgd" clusters
+target_clusters <- c("NK Tgd", "Tgd INSIG1+", "Tgd")
+rows_to_update_gd <- which(
+  (
+    full_metadata$cluster %in% target_clusters & full_metadata$imm_receptor_Esmaeil == "abgd"
+  )
+  |
+  (
+    full_metadata$cluster %in% target_clusters &
+    !is.na(full_metadata$cdr_Full_ab) & 
+      full_metadata$cdr_Full_ab != "" &
+      !is.na(full_metadata$cdr_Full_gd) &
+      full_metadata$cdr_Full_gd != "" &
+      (full_metadata$imm_receptor_Esmaeil == "ab" | full_metadata$imm_receptor_Esmaeil == "gd" )
+  )
+)
+
+
 full_metadata$imm_receptor_Esmaeil[rows_to_update_gd] <- "gd"
 full_metadata$TRAV[rows_to_update_gd] <- ""
 full_metadata$TRAJ[rows_to_update_gd] <- ""
@@ -440,15 +534,22 @@ full_metadata$b_cdr3[rows_to_update_gd] <- ""
 full_metadata$cdr_Full_ab[rows_to_update_gd] <- ""
 full_metadata$clone_size_ab[rows_to_update_gd] <- ""
 full_metadata$clone_size_bucket_ab[rows_to_update_gd] <- ""
-# A total of 113 cells were updated in this step.
+# A total of 187 cells were updated in this step.
 
 
 
-# Update "abgd" to "ab" for cells not in Tgd-related clusters
+#--------------------------------------- Part 1 - Step 7 - Section 4: Update immune receptor to "ab" for cells not in "NK Tgd", "Tgd INSIG1+", "Tgd" or "Tgd CD8+" clusters
 excluded_clusters <- c("NK Tgd", "Tgd INSIG1+", "Tgd", "Tgd CD8+")
 rows_to_update_ab <- which(
-  !(full_metadata$cluster %in% excluded_clusters) &
-    full_metadata$imm_receptor_Esmaeil == "abgd"
+  (!(full_metadata$cluster %in% excluded_clusters) &  full_metadata$imm_receptor_Esmaeil == "abgd") |
+    (
+      !(full_metadata$cluster %in% excluded_clusters) &
+      !is.na(full_metadata$cdr_Full_ab) & 
+        full_metadata$cdr_Full_ab != "" &
+        !is.na(full_metadata$cdr_Full_gd) &
+        full_metadata$cdr_Full_gd != "" &
+        (full_metadata$imm_receptor_Esmaeil == "ab" | full_metadata$imm_receptor_Esmaeil == "gd" )
+    )
 )
 full_metadata$imm_receptor_Esmaeil[rows_to_update_ab] <- "ab"
 full_metadata$TRDV[rows_to_update_ab] <- ""
@@ -462,20 +563,25 @@ full_metadata$g_cdr3[rows_to_update_ab] <- ""
 full_metadata$cdr_Full_gd[rows_to_update_ab] <- ""
 full_metadata$clone_size_gd[rows_to_update_ab] <- ""
 full_metadata$clone_size_bucket_gd[rows_to_update_ab] <- ""
-# A total of 635 cells were updated in this step.
+# A total of 1030 cells were updated in this step.
 
 
 
-# Dot plot to identify immune receptor types in Tgd CD8+ cells labeled "abgd"
-# Saving all cells where imm_receptor_Esmaeil == "abgd" and cluster == "Tgd CD8+"
-abgd_cells <- full_metadata[full_metadata$imm_receptor_Esmaeil == "abgd", ]
-write_xlsx(abgd_cells, "1_abgdCells.xlsx")
+#--------------------------------------- Part 1 - Step 7 - Section 5: expression of key immune receptor genes
+abgd_cells <- full_metadata[
+  (
+    !is.na(full_metadata$cdr_Full_ab) & 
+      full_metadata$cdr_Full_ab != "" &
+      !is.na(full_metadata$cdr_Full_gd) &
+      full_metadata$cdr_Full_gd != "" &
+      (full_metadata$imm_receptor_Esmaeil == "ab" | full_metadata$imm_receptor_Esmaeil == "gd" )
+  ) |
+    full_metadata$imm_receptor_Esmaeil == "abgd", ]
 
 
-# Extract main_keys and sub_keys from abgd_cells to analyze the gene expression of these cells
-abgd_data <- read_excel("1_abgdCells.xlsx")
-main_keys <- abgd_data$FolderName
-sub_keys <- gsub("[/-]", ".", abgd_data$CellID)
+original_sub_keys <- abgd_cells$CellID
+main_keys <- abgd_cells$FolderName
+sub_keys <- gsub("[/-]", ".", abgd_cells$CellID)
 
 
 
@@ -517,23 +623,15 @@ for (i in seq_along(main_keys)) {
   }
 }
 
-abgd_data$CellID <- sub_keys_updated
-write_xlsx(abgd_data, "2_abgdCells_updated.xlsx")
+
+abgd_cells$CellID <- sub_keys_updated
+main_keys <- abgd_cells$FolderName
+sub_keys <- abgd_cells$CellID
 
 
-
-
-
-# Extract gene expression of selected markers to prepare for dot plot visualization
-abgd_data <- read_excel("2_abgdCells_updated.xlsx")
-
-main_keys <- abgd_data$FolderName
-sub_keys <- abgd_data$CellID
 
 target_columns <- tolower(c("Trac", "trbc1", "trbc2", "trgc1", "trgc2", "trdc"))
-
 row_list <- list()
-
 for (i in seq_along(main_keys)) {
   main_key <- main_keys[i]
   sub_key <- sub_keys[i]
@@ -566,307 +664,60 @@ for (i in seq_along(main_keys)) {
 }
 
 final_df <- as.data.frame(do.call(rbind, row_list), stringsAsFactors = FALSE)
-
 cols_to_convert <- setdiff(names(final_df), "SubKey")
 final_df[cols_to_convert] <- lapply(final_df[cols_to_convert], as.numeric)
-
 final_df <- final_df[order(-final_df$trac), ]
 
-write_xlsx(final_df, "3_selected_gene_columns_with_subkeys.xlsx")
-# Ready to use for dot plot visualization
 
-
-
-
-
-# Generate a dot plot to visualize the expression levels of key immune receptor genes to help infer the immune receptor type of each cell
-df <- read_xlsx("3_selected_gene_columns_with_subkeys.xlsx")
-df$SubKey <- factor(df$SubKey, levels = rev(unique(df$SubKey)))
-
-df_long <- df %>%
-  pivot_longer(
-    cols = -SubKey,
-    names_to = "Gene",
-    values_to = "Expression"
-  )
-
-df_long$Expression <- as.numeric(df_long$Expression)
-
-p <- ggplot(df_long, aes(x = Gene, y = SubKey)) +
-  geom_point(aes(size = Expression, color = Expression)) +
-  scale_color_viridis_c() +
-  scale_size_continuous(range = c(1, 6)) +
-  labs(title = "Dot Plot of Gene Expression",
-       x = "Gene",
-       y = "Cell (SubKey)") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 6))
-
-ggsave("Dotplot_gene_expression.pdf", plot = p, width = 8, height = 15, dpi = 300)
-
-
-
-
-
-# After creating a dot plot for all cells labeled "abgd," we separated alpha-beta, gamma-delta, and ambiguous cells, updated their receptor labels accordingly, and plotted each group separately.
-# alpha-beta (ab)
-df <- read_xlsx("5_ab.xlsx")
-
-df$SubKey <- factor(df$SubKey, levels = rev(unique(df$SubKey)))
-
-df_long <- df %>%
-  pivot_longer(
-    cols = -SubKey,
-    names_to = "Gene",
-    values_to = "Expression"
-  )
-
-df_long$Expression <- as.numeric(df_long$Expression)
-
-p <- ggplot(df_long, aes(x = Gene, y = SubKey)) +
-  geom_point(aes(size = Expression, color = Expression)) +
-  scale_color_viridis_c() +
-  scale_size_continuous(range = c(1, 6)) +
-  labs(title = "Dot Plot of Gene Expression (ab)",
-       x = "Gene",
-       y = "Cell (SubKey)") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 6))
-
-ggsave("6_alpha_beta_dotplot.pdf", plot = p, width = 8, height = 15, dpi = 300)
-
-
-
-target_ids <- c(
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TTTGTTGGTTCGGTCG-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TCATGCCTCTGCCTCA-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/GACCAATGTTCCTACC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/CACCGTTAGTGAACAT-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/GCGATCGCAATAGGAT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AGGAGGTGTGATCGTT-1",
-  "P1_NA_Gut_Lymph_10x_r1_bNA/AGAGAGCCAACTTGGT-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/CTCCATGTCTCATGGA-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/CAACAGTAGCAGTACG-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/TTCGATTCAGACAAGC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/ACAAGCTCAACACTAC-1",
-  "P1_NA_Gut_Lymph_10x_r1_bNA/GATTCTTGTCCTCATC-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/CCACAAAAGCCGTTAT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TATTGCTCAAGGGTCA-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AATAGAGAGAAGGATG-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/AATCGTGGTCCAAGAG-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AGGGTTTGTCTTCCGT-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/AGGTCATCAGGTGTTT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AGGACTTAGAGATCGC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/GTGGTTACACTGCGAC-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AGGTTACAGATACATG-1",
-  "P8_NA_Gut_Lymph_10x_r1_bA/CCGATCTCACTGCATA-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/GTAATCGAGCTCCATA-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/GCACTAATCTTTGGAG-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/GCATCGGGTTAGAGAT-1",
-  "P7_NA_Gut_Lymph_10x_r1_bA/AGTGACTCACTGCGAC-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TTATTGCCAAAGGTTA-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TGTCCTGGTCCACATA-1",
-  "P8_NA_Gut_Lymph_10x_r1_bA/CATGGTACATGGGAAC-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/GAAGTAAGTTAAGGGC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/CCTAACCAGTGTAGTA-1",
-  "P7_NA_Gut_Lymph_10x_r1_bA/ATTGGGTGTGTCTTAG-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/AGTCTCCAGAAGCCTG-1",
-  "P7_NA_Gut_Lymph_10x_r1_bA/GGCTTTCCAGCTCTGG-1",
-  "1906_NA_Gut_Lymph_10x_r1_bNA/CCGATCTAGAGGCCAT-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/GTTCCGTTCCTGTTGC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/GTAGTACTCTCCCTAG-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/TGGGTTAAGGAAGAAC-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/TTCCACGAGCCTCAGC-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/ATCACGAAGTGTTGAA-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TACCCGTAGTGCACCC-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/CTTCCGATCTATCGCC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/CTTCCGATCCAAGCAT-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TTCTGTAAGTCACTAC-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TACCGGGAGCTAATGA-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TGAGCGCAGGCGCTCT-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TCTTCCTTCAGCTGAT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/GGTCACGTCAAAGGTA-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/GCCAGGTTCCAAGCAT-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TAGACTGAGGCAGCTA-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/TAACCAGGTGATTAGA-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/GAGTGTTCAGGTTCCG-1",
-  "P7_NA_Gut_Lymph_10x_r1_bA/CTCAGAAAGAGTACCG-1",
-  "1986_NA_Gut_Lymph_10x_r1_bNA/TTTCATGGTCTCTCCA-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/TACCCGTCACCGCTGA-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/CCGCAAGGTACGTGAG-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/GTGTGGCAGTATGGCG-1",
-  "1937_NA_Gut_Lymph_10x_r2_bNA/GGGATGACAAGACCGA-1",
-  "P7_NA_Gut_Lymph_10x_r1_bA/CTGCAGGAGCTGTTCA-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/GAAGTAATCCACTGAA-1",
-  "P7_NA_Gut_Lymph_10x_r1_bA/CAGCAGCAGGTTTACC-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/TCAGGTATCCGATGCG-1",
-  "P9_NA_Gut_Lymph_10x_r2_bB/ATCCCTGAGATTGATG-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/GATAGCTTCGTTCAGA-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/GTGGAGAAGCTCATAC-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TTCACGCTCTCCGATC-1",
-  "P8_NA_Gut_Lymph_10x_r1_bA/TGTTGGAAGAACTGAT-1"
-)
-
-full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- "ab"
-full_metadata$TRDV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRDJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$d_cdr3[full_metadata$CellID %in% target_ids] <- ""
-
-full_metadata$TRGV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRGJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$g_cdr3[full_metadata$CellID %in% target_ids] <- ""
-
-full_metadata$cdr_Full_gd[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_gd[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_bucket_gd[full_metadata$CellID %in% target_ids] <- ""
-# 67 cells were confidently labeled as "ab"
-
-
-
-
-# gamma-delta (gd)
-df <- read_xlsx("7_gd.xlsx")
-
-df$SubKey <- factor(df$SubKey, levels = rev(unique(df$SubKey)))
-
-df_long <- df %>%
-  pivot_longer(
-    cols = -SubKey,
-    names_to = "Gene",
-    values_to = "Expression"
-  )
-
-df_long$Expression <- as.numeric(df_long$Expression)
-
-p <- ggplot(df_long, aes(x = Gene, y = SubKey)) +
-  geom_point(aes(size = Expression, color = Expression)) +
-  scale_color_viridis_c() +
-  scale_size_continuous(range = c(1, 6)) +
-  labs(title = "Dot Plot of Gene Expression (gd)",
-       x = "Gene",
-       y = "Cell (SubKey)") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 6))
-
-ggsave("8_gamma-delta_dotplot.pdf", plot = p, width = 6, height = 4, dpi = 300)
-
-
-#Edit immune receptoer
-target_ids <- c(
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TCCTGCACAGGAATAT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/GCAACCGCATGTTCGA-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/GGTAGAGTCTCTCCGA-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/TTACAGGAGTCGGCCT-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/CATGCAACACGTCGGT-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/ATCTTCACAGTGTGGA-1"
-)
-
-full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- "gd"
-
-full_metadata$TRAV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRAJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$a_cdr3[full_metadata$CellID %in% target_ids] <- ""
-
-full_metadata$TRBV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRBJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$b_cdr3[full_metadata$CellID %in% target_ids] <- ""
-
-full_metadata$cdr_Full_ab[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_ab[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_bucket_ab[full_metadata$CellID %in% target_ids] <- ""
-# 6 cells were confidently labeled as "gd"
-
-
-# Ambiguous
-df <- read_xlsx("9_Ambiguous.xlsx")
-
-df$SubKey <- factor(df$SubKey, levels = rev(unique(df$SubKey)))
-
-df_long <- df %>%
-  pivot_longer(
-    cols = -SubKey,
-    names_to = "Gene",
-    values_to = "Expression"
-  )
-
-df_long$Expression <- as.numeric(df_long$Expression)
-
-p <- ggplot(df_long, aes(x = Gene, y = SubKey)) +
-  geom_point(aes(size = Expression, color = Expression)) +
-  scale_color_viridis_c() +
-  scale_size_continuous(range = c(1, 6)) +
-  labs(title = "Dot Plot of Gene Expression (Ambiguous)",
-       x = "Gene",
-       y = "Cell (SubKey)") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 6))
-
-ggsave("10_Ambiguous.pdf", plot = p, width = 8, height = 10, dpi = 300)
-
-
-
-target_ids <- c(
-  "1872_NA_Gut_Lymph_10x_r1_bNA/TACTTACAGCGTTACT-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/ATCACTTAGCGGATCA-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/TGGGAGAAGGTAAACT-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/CAGATTGAGAGCAGCT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AGTCTCCCAAGCTGCC-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/AGCTACACAAGCGATG-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/CCAAGCGCAGTTGGTT-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/CTCCCAACATGGAACG-1",
-  "1918_NA_Gut_Lymph_10x_r1_bNA/GCGAGAAAGCGGTAGT-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/TCTTTGATCAAAGAAC-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/TCTGCCATCGCTATTT-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/AACCATGCAACTTGGT-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/TGTGGCGGTGCTGTCG-1",
-  "P1_NA_Gut_Lymph_10x_r1_bNA/CCTTTGGCACGCTATA-1",
-  "P7_NA_Gut_Lymph_10x_r2_bB/TGGAGAGAGACATATG-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/ACATCGAAGTATGACA-1",
-  "1872_NA_Gut_Lymph_10x_r1_bNA/TCCCACACAGACGATG-1",
-  "1986_NA_Gut_Lymph_10x_r1_bNA/GCAGCTGAGCGTTAGG-1",
-  "1960_T1_Gut_Lymph_10x_r1_bC/CGTTCTGTCTTCCTAA-1",
-  "P9_NA_Gut_Lymph_10x_r2_bB/AAAGGGCTCTGTTCAT-1",
-  "6016_NA_Gut_Lymph_10x_r1_bNA/TCAGCAAGTATACAGA-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/CTCCACAAGAGCAGTC-1",
-  "1986_NA_Gut_Lymph_10x_r1_bNA/CTTGATTTCTAGTTCT-1",
-  "P5_NA_Gut_Lymph_10x_r2_bB/TGTGCGGCAGCTTTCC-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/ATTACCTTCGCTCTAC-1",
-  "1906_NA_Gut_Lymph_10x_r2_bNA/AGCGATTCAGGGAGAG-1",
-  "P6_NA_Gut_Lymph_10x_r1_bA/CATACTTAGCATGATA-1",
-  "P5_NA_Gut_Lymph_10x_r1_bA/GGCTGTGAGTCTCGTA-1",
-  "P2_NA_Gut_Lymph_10x_r1_bNA/CAGATACCAGATTTCG-1",
-  "P5_NA_Gut_Lymph_10x_r2_bB/AAGTTCGCAACGGCCT-1",
-  "P6_NA_Gut_Lymph_10x_r2_bB/GTGTTAGTCACAAGGG-1"
+final_df$imm_receptor <- ifelse(
+  (final_df$trgc1 + final_df$trgc2 + final_df$trdc) > (final_df$trac + final_df$trbc1 + final_df$trbc2),
+  "gd",
+  "ab"
 )
 
 
-full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% target_ids] <- ""
+final_df$SubKey <- original_sub_keys
+ab_cells <- final_df[final_df$imm_receptor == "ab", ]
+gd_cells <- final_df[final_df$imm_receptor == "gd", ]
 
-full_metadata$TRDV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRDJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$d_cdr3[full_metadata$CellID %in% target_ids] <- ""
+ab_subkeys <- ab_cells$SubKey
+gd_subkeys <- gd_cells$SubKey
 
-full_metadata$TRGV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRGJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$g_cdr3[full_metadata$CellID %in% target_ids] <- ""
 
-full_metadata$cdr_Full_gd[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_gd[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_bucket_gd[full_metadata$CellID %in% target_ids] <- ""
+# ab
+full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% ab_subkeys] <- "ab"
 
-full_metadata$TRAV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRAJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$a_cdr3[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRDV[full_metadata$CellID %in% ab_subkeys] <- ""
+full_metadata$TRDJ[full_metadata$CellID %in% ab_subkeys] <- ""
+full_metadata$d_cdr3[full_metadata$CellID %in% ab_subkeys] <- ""
 
-full_metadata$TRBV[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$TRBJ[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$b_cdr3[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$TRGV[full_metadata$CellID %in% ab_subkeys] <- ""
+full_metadata$TRGJ[full_metadata$CellID %in% ab_subkeys] <- ""
+full_metadata$g_cdr3[full_metadata$CellID %in% ab_subkeys] <- ""
 
-full_metadata$cdr_Full_ab[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_ab[full_metadata$CellID %in% target_ids] <- ""
-full_metadata$clone_size_bucket_ab[full_metadata$CellID %in% target_ids] <- ""
+full_metadata$cdr_Full_gd[full_metadata$CellID %in% ab_subkeys] <- ""
+full_metadata$clone_size_gd[full_metadata$CellID %in% ab_subkeys] <- ""
+full_metadata$clone_size_bucket_gd[full_metadata$CellID %in% ab_subkeys] <- ""
+# 157 cells were re-annotated as ab
 
-# 31 cells remained ambiguous and were labeled as ""
+
+
+#gd
+full_metadata$imm_receptor_Esmaeil[full_metadata$CellID %in% gd_subkeys] <- "gd"
+
+full_metadata$TRAV[full_metadata$CellID %in% gd_subkeys] <- ""
+full_metadata$TRAJ[full_metadata$CellID %in% gd_subkeys] <- ""
+full_metadata$a_cdr3[full_metadata$CellID %in% gd_subkeys] <- ""
+
+full_metadata$TRBV[full_metadata$CellID %in% gd_subkeys] <- ""
+full_metadata$TRBJ[full_metadata$CellID %in% gd_subkeys] <- ""
+full_metadata$b_cdr3[full_metadata$CellID %in% gd_subkeys] <- ""
+
+full_metadata$cdr_Full_ab[full_metadata$CellID %in% gd_subkeys] <- ""
+full_metadata$clone_size_ab[full_metadata$CellID %in% gd_subkeys] <- ""
+full_metadata$clone_size_bucket_ab[full_metadata$CellID %in% gd_subkeys] <- ""
+# 28 cells were re-annotated as gd
+
 
 
 #--------------------------------------------------------------------------------- Part 1 - Step 8: Computing Clone Size for ab and gd TCRs 
@@ -938,6 +789,8 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
   theme_minimal() +
   theme(legend.position = "none",
         plot.title = element_text(hjust = 0.5),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
         plot.background = element_rect(fill = "white", color = NA))
 
 ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "white")
@@ -945,4 +798,5 @@ ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "whi
 
 
 #--------------------------------------------------------------------------------- Save MetaData
+full_metadata[full_metadata == ""] <- NA
 save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "MetaData_Esmaeil.Rdata")

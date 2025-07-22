@@ -49,20 +49,18 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 - abgd: Assigned to cells where both cdr_Full_ab and cdr_Full_gd are present → **73 cells affected**.
 - hkl: Assigned to B cell clusters where cdr_Full_ig_hk or cdr_Full_ig_hL is present → **346 cells affected**.
 
-### Part 1 - Step 7: Managing cells with imm_receptor_Esmaeil annotated as "abgd"
-- Update "abgd" to "gd" for cells in Tgd-related clusters. **A total of 113 cells were updated in this step**.
-- Update "abgd" to "ab" for cells not in Tgd-related clusters. **A total of 635 cells were updated in this step**.
-- Created a dot plot to visualize expression levels of key immune receptor genes, aiding in the identification of immune receptor types for cells in the Tgd CD8+ cluster with imm_receptor_Esmaeil labeled as "abgd."
-
-Final classification based on gene expression levels:
-
-- **67 cells were confidently labeled as "ab"**.
-- **6 cells were confidently labeled as "gd"**.
-- **31 cells remained ambiguous and were labeled as ""**.
+### Part 1 - Step 7: Managing Cells with imm_receptor_Esmaeil Annotated as "abgd" or Containing Both cdr_Full_ab and cdr_Full_gd
+A total of 1,408 cells met the criteria of having imm_receptor_Esmaeil annotated as "abgd" or simultaneously containing both cdr_Full_ab and cdr_Full_gd. This step focuses on refining the immune receptor annotation for these ambiguous or dual-feature cells:
+- 2 cells were found in B cell clusters that express cdr_Full_ig_hL. Their immune receptor was defined as "hkl".
+- 4 cells located in B cell clusters lacked both cdr_Full_ig_hL and cdr_Full_ig_hK. These were excluded from further analysis.
+- Updated to "gd" for cells located in the "NK Tgd", "Tgd INSIG1+", or "Tgd" clusters. Total updated: 187 cells
+- Updated to "ab" for cells not located in "NK Tgd", "Tgd INSIG1+", "Tgd", or "Tgd CD8+" clusters. Total updated: 1,030 cells
+- To resolve remaining ambiguous cases in the "Tgd CD8+" cluster, we examined the expression of key immune receptor genes (Trac, Trbc1, Trbc2, Trgc1, Trgc2, Trdc) and confidently re-annotated 157 cells as "ab" and 28 cells as "gd" based on their gene expression profiles.
 
 ### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.
 - Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.
+
 
 ---
 ---

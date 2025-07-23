@@ -61,6 +61,14 @@ A total of 1,408 cells met the criteria of having imm_receptor_Esmaeil annotated
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.
 - Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.
 
+---
+---
+---
+
+## Part 2: Immune Receptor Distribution
+We analyzed how each immune receptor type is distributed across different clusters.
+- In the first part of this analysis, we visualized the distribution using a UMAP plot, where cells are colored by their assigned immune receptor types. This provided a global view of receptor-specific localization patterns across the cellular landscape.
+- To complement this, we generated bar plots showing the counts of each receptor type within clusters. These bar plots offer a more quantitative perspective, helping to characterize the immune landscape and receptor usage across cell populations.
 
 ---
 ---
@@ -94,14 +102,6 @@ We generated two sets of bar plots for each receptor type:
 
 These visualizations help highlight the extent of clonal expansion and the balance of T cell diversity across immune environments.
 
----
----
----
-
-## Part 4: Immune Receptor Distribution
-We analyzed how each immune receptor type is distributed across different clusters.
-- In the first part of this analysis, we visualized the distribution using a UMAP plot, where cells are colored by their assigned immune receptor types. This provided a global view of receptor-specific localization patterns across the cellular landscape.
-- To complement this, we generated bar plots showing the counts of each receptor type within clusters. These bar plots offer a more quantitative perspective, helping to characterize the immune landscape and receptor usage across cell populations.
 
 ---
 ---

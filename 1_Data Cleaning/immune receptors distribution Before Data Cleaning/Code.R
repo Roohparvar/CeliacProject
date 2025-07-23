@@ -40,7 +40,7 @@ main_plot <- ggplot() +
   ) +
   scale_color_manual(values = receptor_colors, labels = receptor_labels) +
   labs(
-    title = "UMAP Colored by Immune Receptor",
+    title = "Distributions of Cells Colored by Immune Receptor",
     x = "UMAP 1",
     y = "UMAP 2"
   ) +
@@ -96,7 +96,7 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
   geom_point(size = 0.6, alpha = 0.8) +
   geom_text(data = cluster_centers, aes(x = x, y = y, label = cluster),
             color = "black", size = 3, hjust = 0.5, vjust = 0.5) +
-  labs(title = "UMAP of Cells Colored by Cluster",
+  labs(title = "Distributions of Cells Colored by Cluster",
        x = "UMAP 1",
        y = "UMAP 2",
        color = "Cluster") +

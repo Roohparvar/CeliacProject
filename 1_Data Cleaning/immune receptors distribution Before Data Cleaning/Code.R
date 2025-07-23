@@ -1,7 +1,9 @@
 #--------------------------------------------------------------------------------- Add UMAP plot colored by imm_receptor with custom colors
 library(ggplot2)
 library(dplyr)
+library(cowplot)
 
+# Define receptor colors and labels
 receptor_colors <- c(
   "ab" = "#ee1819",
   "gd" = "#fd7d00",
@@ -11,11 +13,6 @@ receptor_colors <- c(
   "Aberant ab" = "#3a78ce",
   "Aberrant g" = "#47ad45",
   "None" = "#eeeeee"
-)
-
-full_metadata$imm_receptor <- factor(
-  full_metadata$imm_receptor,
-  levels = c("", "ab", "gd", "Aberant ab", "Aberrant g", "hkl", "abgd", "T and B")
 )
 
 receptor_labels <- c(
@@ -28,29 +25,52 @@ receptor_labels <- c(
   "Aberrant g" = "Aberrant γ"
 )
 
-p <- ggplot() +
-  geom_point(
-    data = full_metadata %>% filter(imm_receptor == ""),
-    aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor),
-    size = 0.2, alpha = 0.5
-  ) +
+# Factor levels
+full_metadata$imm_receptor <- factor(
+  full_metadata$imm_receptor,
+  levels = c("ab", "gd", "Aberant ab", "Aberrant g", "hkl", "abgd", "T and B", "None")
+)
+
+# Plot without legend
+main_plot <- ggplot() +
   geom_point(
     data = full_metadata %>% filter(imm_receptor != ""),
     aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor),
     size = 0.2, alpha = 0.8
   ) +
   scale_color_manual(values = receptor_colors, labels = receptor_labels) +
-  guides(color = guide_legend(override.aes = list(size = 4))) +  
   labs(
-    title = "UMAP Colored by immune receptor",
+    title = "UMAP Colored by Immune Receptor",
     x = "UMAP 1",
-    y = "UMAP 2",
-    color = "Receptor Type"
+    y = "UMAP 2"
   ) +
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "none",
+    panel.grid = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
 
-ggsave("Umap_imm_receptor_highlighted.png", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
+# Extract legend with custom title
+legend_plot <- ggplot() +
+  geom_point(
+    data = full_metadata %>% filter(imm_receptor != ""),
+    aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMAP_2, color = imm_receptor)
+  ) +
+  scale_color_manual(values = receptor_colors, labels = receptor_labels) +
+  labs(color = "immune receptor") + 
+  guides(color = guide_legend(override.aes = list(size = 4))) +
+  theme_void()
+
+legend <- cowplot::get_legend(legend_plot)
+
+# Combine plot + legend (UMAP = 8in wide, legend = 2in)
+final_plot <- cowplot::plot_grid(main_plot, legend, ncol = 2, rel_widths = c(1, 0.25))
+
+# Save image — total width = 10in, height = 6in
+ggsave("Umap_imm_receptor_highlighted.png", plot = final_plot, width = 10, height = 6, dpi = 300, bg = "white")
+
 
 
 
@@ -83,6 +103,8 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
   theme_minimal() +
   theme(legend.position = "none",
         plot.title = element_text(hjust = 0.5),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
         plot.background = element_rect(fill = "white", color = NA))
 
 ggsave("Umap_cluster_highlighted.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "white")

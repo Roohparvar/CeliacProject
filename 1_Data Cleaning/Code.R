@@ -1,4 +1,4 @@
-#--------------------------------------------------------------------------------- libraries
+#------------------------------------------------------------------------------- libraries
 library(dplyr)
 library(ggplot2)
 library(readxl)
@@ -8,7 +8,7 @@ library(tidyverse)
 
 
 
-#---------------------------------------------------------------------------------  Part 1 - Step 1: Initial Data Cleaning and Updates 
+#-------------------------------------------------------------------------------  Part 1 - Step 1: Initial Data Cleaning and Updates 
 # Corrected some spelling mistakes in the dataset.
 full_metadata$imm_receptor[full_metadata$imm_receptor == "Aberant ab"] <- "Aberrant ab"
 
@@ -94,7 +94,7 @@ full_metadata <- full_metadata[full_metadata$imm_receptor_Jerome != "T and B", ]
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 2: Create combined receptor fields when both chains are available:
+#------------------------------------------------------------------------------- Part 1 - Step 2: Create combined receptor fields when both chains are available:
 # Combine 'a_cdr3' and 'b_cdr3' into 'cdr_Full_ab' if both are non-empty
 full_metadata <- full_metadata %>%
   mutate(cdr_Full_ab = ifelse(!is.na(a_cdr3) & a_cdr3 != "" &
@@ -155,7 +155,7 @@ full_metadata <- full_metadata %>% select(all_of(desired_order))
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 3: Removing T cell receptor information that was assigned to B cell clusters 
+#------------------------------------------------------------------------------- Part 1 - Step 3: Removing T cell receptor information that was assigned to B cell clusters 
 # Cleaning imm_receptor_Esmaeil Column
 target_clusters <- c(
   "Plasma cells_1", "B cells_1", "B cells_2",
@@ -217,7 +217,7 @@ if (length(rows_to_clean) > 0) {
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 4: Removing B cell receptor information that was assigned to T cell clusters 
+#------------------------------------------------------------------------------- Part 1 - Step 4: Removing B cell receptor information that was assigned to T cell clusters 
 # Cleaning imm_receptor_Esmaeil Column
 target_clusters <- c(
   "Plasma cells_1", "B cells_1", "B cells_2",
@@ -268,7 +268,7 @@ if (length(rows_to_clean) > 0) {
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 5: Removing B cell receptor (BCR) and T cell receptor (TCR) information mistakenly assigned to the following clusters: "DC", "Macrophages", and "Mast cells".
+#------------------------------------------------------------------------------- Part 1 - Step 5: Removing B cell receptor (BCR) and T cell receptor (TCR) information mistakenly assigned to the following clusters: "DC", "Macrophages", and "Mast cells".
 target_clusters <- c("DC", "Macrophages", "Mast cells")
 
 rows_to_clean <- which(
@@ -354,7 +354,7 @@ if (length(rows_to_clean) > 0) {
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 6: Update imm_receptor_Esmaeil based on presence of TCR and BCR sequences
+#------------------------------------------------------------------------------- Part 1 - Step 6: Update imm_receptor_Esmaeil based on presence of TCR and BCR sequences
 # Define non-B cell clusters to check for T cell receptor information
 target_clusters <- c(
   "Plasma cells_1", "B cells_1", "B cells_2",
@@ -423,7 +423,7 @@ if (length(rows_hkl) > 0) {
 
 
 
-#--------------------------------------------------------------------------------- Part 1 - Step 7: Handling cells annotated with imm_receptor_Esmaeil as "abgd" or those containing both cdr_Full_ab and cdr_Full_gd simultaneously
+#------------------------------------------------------------------------------- Part 1 - Step 7: Handling cells annotated with imm_receptor_Esmaeil as "abgd" or those containing both cdr_Full_ab and cdr_Full_gd simultaneously
 # Select cells where imm_receptor is annotated as "αβγδ" or cells that simultaneously contain both cdr_Full_ab and cdr_Full_gd
 target_rows <- (
   (

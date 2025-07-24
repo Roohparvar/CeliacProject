@@ -86,6 +86,13 @@ In this phase, we analyzed the distribution of Aberrant T cells across different
 ---
 ---
 
+## Part 3: Distribution of Aberrant Clones Reported in STM Paper
+In this phase, we analyzed the distribution of aberrant T cell clones previously reported in the STM paper across different clusters. Specifically, we identified these known clones and visualized their presence and localization on our UMAP projection to assess how they are distributed among the cellular populations in our dataset.
+
+---
+---
+---
+
 ## Part 3: Clonal Homeostasis Plot
 In this part, we investigated the clonal homeostasis of both αβ and γδ T cells by examining how clone sizes are distributed across various immune clusters. This analysis helps assess the diversity and expansion patterns of T cell clones in the dataset.
 

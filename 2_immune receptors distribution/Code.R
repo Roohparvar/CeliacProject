@@ -59,13 +59,11 @@ legend_plot <- ggplot() +
   guides(color = guide_legend(override.aes = list(size = 4))) +
   theme_void()
 
-# Extract the legend object
 legend <- cowplot::get_legend(legend_plot)
 
 # Combine plot and legend side by side
 final_plot <- cowplot::plot_grid(main_plot, legend, ncol = 2, rel_widths = c(1, 0.25))
 
-# Save image: total width = 10in, height = 6in
 ggsave("Umap_imm_receptor_highlighted.png", plot = final_plot, width = 10, height = 6, dpi = 300, bg = "white")
 
 

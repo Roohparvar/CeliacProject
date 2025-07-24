@@ -88,10 +88,13 @@ umap_plot <- ggplot(plot_df, aes(x = scVI_with_hvg_UMAP_1, y = scVI_with_hvg_UMA
   theme_minimal(base_size = 12) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold", size = 12),
-    legend.position = "right"
+    legend.position = "right",
+    panel.grid = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA)
   )
 
-ggsave("2_UMAP_Aberrant_Receptors.png", umap_plot, width = 8, height = 6, dpi = 400, bg = "white")
+ggsave("2_UMAP_Aberrant_Receptors.png", umap_plot, width = 10, height = 6, dpi = 300, bg = "white")
+
 
 
 # ------------------------------------------------------ Part 3: Aberrant ab vs g  (Version 1) ---------------------------

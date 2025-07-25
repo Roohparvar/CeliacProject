@@ -11,4 +11,6 @@
 "Clones with size 2–10" = "#FDBF6F",
 "Clones with size 11–50" = "#CAB2D6",
 "Clones with size 51–100" = "#F781BF",
-"Clones with size 100+" = "#1B9E77"
+"Clones with size 100+" = "#1B9E77",
+"TCR αβγ" = "#264653",
+  "TCR γ" = "#D95F02"

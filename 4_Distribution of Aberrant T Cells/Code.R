@@ -216,3 +216,50 @@ p <- ggplot(count_df, aes(x = cluster, y = count, fill = Aberrant_status)) +
   )
 
 ggsave("5_Aberrant_vs_NotAberrant_per_Cluster.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
+
+
+# ------------------------------------------------------ Part 6: Large Not Aberrant clones ---------------------------
+library(dplyr)
+library(tidyr)
+
+
+target_clusters <- c(
+  "Plasma cells_1", "B cells_1", "B cells_2",
+  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
+  "B cells BAFFR", "DC", "Macrophages", "Mast cells"
+)
+
+
+filtered_data <- full_metadata %>%
+  filter(!is.na(cdr_Full_ab)) %>%
+  filter(!is.na(clone_size_bucket_ab)) %>%
+  filter(!cluster %in% target_clusters)
+
+
+unique_clones <- filtered_data %>%
+  distinct(cluster, cdr_Full_ab, imm_receptor_Esmaeil, clone_size_bucket_ab) %>%
+  mutate(ReceptorGroup = case_when(
+    imm_receptor_Esmaeil == "Aberrant ab" ~ "Aberrant ab",
+    imm_receptor_Esmaeil == "Aberrant g" ~ "Aberrant g",
+    TRUE ~ "Non-Aberrant"
+  ))
+
+
+count_table <- unique_clones %>%
+  group_by(cluster) %>%
+  summarise(
+    unique_clones = n(),
+    
+    Aberrant_ab_Large = sum(ReceptorGroup == "Aberrant ab" & clone_size_bucket_ab == "Large clone (10+)"),
+    Aberrant_g_Large = sum(ReceptorGroup == "Aberrant g" & clone_size_bucket_ab == "Large clone (10+)"),
+    Non_Aberrant_Large = sum(ReceptorGroup == "Non-Aberrant" & clone_size_bucket_ab == "Large clone (10+)"),
+    
+    Aberrant_ab_Small = sum(ReceptorGroup == "Aberrant ab" & clone_size_bucket_ab == "Small clone (2+)"),
+    Aberrant_g_Small = sum(ReceptorGroup == "Aberrant g" & clone_size_bucket_ab == "Small clone (2+)"),
+    Non_Aberrant_Small = sum(ReceptorGroup == "Non-Aberrant" & clone_size_bucket_ab == "Small clone (2+)"),
+    
+    Aberrant_ab_Singleton = sum(ReceptorGroup == "Aberrant ab" & clone_size_bucket_ab == "Singleton"),
+    Aberrant_g_Singleton = sum(ReceptorGroup == "Aberrant g" & clone_size_bucket_ab == "Singleton"),
+    Non_Aberrant_Singleton = sum(ReceptorGroup == "Non-Aberrant" & clone_size_bucket_ab == "Singleton")
+  ) %>%
+  arrange(cluster)

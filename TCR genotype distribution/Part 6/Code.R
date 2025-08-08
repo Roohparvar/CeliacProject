@@ -39,4 +39,4 @@ p <- ggplot(normalized_data, aes(x = Diagnosis, y = norm_expr, fill = Diagnosis)
 print(p)
 
 # ذخیره به صورت تصویر
-ggsave("TRBV28_expression_boxplot.png", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
+ggsave("TRBV28_expression_boxplotArman.png", plot = p, width = 4, height = 3, dpi = 300, bg = "white")

@@ -6,13 +6,14 @@ library(readr)
 cluster_order <- c("Th1 Mem", "Th17", "Th2/Tfh", "Tregs")
 full_metadata$cluster <- factor(full_metadata$cluster, levels = cluster_order)
 
+cluster_Diagnosis <- c("Healthy")
+
 full_metadata <- full_metadata %>%
-  filter(!is.na(cluster) & !is.na(TRAV) & TRAV != "" & !is.na(TRBV) & TRBV != "") %>%
+  filter(!is.na(cluster) & !is.na(TRAV) & TRAV != "" & !is.na(TRBV) & TRBV != "", Diagnosis %in% cluster_Diagnosis) %>%
   distinct(cdr_Full_ab, .keep_all = TRUE)
 
 # ----------TRAV + TRBV----------
-combo_counts <- full_metadata %>%
-  count(TRAV, TRBV, name = "repeat_time")
+combo_counts <- full_metadata %>% count(TRAV, TRBV, name = "repeat_time")
 
 cluster_counts <- full_metadata %>%
   count(TRAV, TRBV, cluster) %>%

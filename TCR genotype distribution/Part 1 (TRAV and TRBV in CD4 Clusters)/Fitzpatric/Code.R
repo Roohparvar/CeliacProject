@@ -219,9 +219,12 @@ long_result <- result %>%
 # رسم پلات
 p <- ggplot(long_result, aes(x = Cluster, y = Percent, fill = Combination)) +
   geom_bar(stat = "identity") +
-  labs(x = "Cluster", y = "Percentage", title = "TCR Combinations per Cluster") +
+  labs(x = "", y = "Proportion of CD4+ T cells (%)", title = "Based TRAV/TRBV usage") +
   theme_minimal(base_size = 14) +
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5),
+    plot.title = element_text(hjust = 0.5) # center the title
+  ) +
   scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   scale_fill_manual(
     values = tcr_colors,
@@ -229,7 +232,9 @@ p <- ggplot(long_result, aes(x = Cluster, y = Percent, fill = Combination)) +
   )
 
 
+
 ggsave("Cluster_Stacked_by_Combination.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
+
 
 
 
@@ -260,6 +265,6 @@ p <- ggplot(long_result_filtered, aes(x = Cluster, y = Percent, fill = Combinati
   )
 
 
-ggsave("Cluster_Stacked_by_Combination_Selected2.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave("Cluster_Stacked_by_Combination_Selected.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
 
 

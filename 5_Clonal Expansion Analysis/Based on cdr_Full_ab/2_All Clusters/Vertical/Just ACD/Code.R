@@ -104,3 +104,14 @@ p2 <- ggplot(df, aes(y = cluster, x = n_cells, fill = clone_category)) +
 
 # Save as PNG and PDF
 ggsave("CloneSize_ab_RawCounts_Vertical.png", p2, width = 6, height = 10, dpi = 400, bg = "white")
+
+
+
+
+
+# برای ذخیره PDF با فونت Unicode پشتیبانی شده
+ggsave("CloneSize_ab_Percentage_Vertical.pdf", p1, width = 6, height = 10, dpi = 400,
+       bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
+
+ggsave("CloneSize_ab_RawCounts_Vertical.pdf", p2, width = 6, height = 10, dpi = 400,
+       bg = "white", device = cairo_pdf, family = "Arial Unicode MS")

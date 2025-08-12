@@ -7,9 +7,10 @@ cluster_order <- c("Th1 Mem", "Th17", "Th2/Tfh", "Tregs")
 full_metadata$cluster <- factor(full_metadata$cluster, levels = cluster_order)
 full_metadata <- full_metadata %>% filter(!is.na(cluster))
 
+cluster_Diagnosis <- c("ACD")
 
 filtered_data <- full_metadata %>%
-  filter(!is.na(TRAV) & TRAV != "" & !is.na(TRBV) & TRBV != "")
+  filter(!is.na(TRAV) & TRAV != "" & !is.na(TRBV) & TRBV != "", Diagnosis %in% cluster_Diagnosis)
 
 
 total_counts <- filtered_data %>%
@@ -19,12 +20,11 @@ total_counts <- filtered_data %>%
 
 selected_data <- filtered_data %>%
   mutate(tcr_group = case_when(
-    TRAV == "TRAV13-1" & TRBV == "TRBV20-1" ~ "TRAV13-1 + TRBV20-1",
-    TRAV == "TRAV9-2" & TRBV == "TRBV20-1" ~ "TRAV9-2 + TRBV20-1",
-    TRAV == "TRAV12-2" & TRBV == "TRBV20-1" ~ "TRAV12-2 + TRBV20-1",
-    TRAV == "TRAV29/DV5" & TRBV == "TRBV5-1" ~ "TRAV29/DV5 + TRBV5-1",
-    TRAV == "TRAV13-1" & TRBV == "TRBV5-1" ~ "TRAV13-1 + TRBV5-1",
-    TRAV == "TRAV13-1" & TRBV == "TRBV7-2" ~ "TRAV13-1 + TRBV7-2",
+    #TRAV == "TRAV13-1" & TRBV == "TRBV20-1" ~ "TRAV13-1 + TRBV20-1",
+    TRAV == "TRAV9-2" ~ "TRAV9-2",
+    TRAV == "TRAV13-1" ~ "TRAV13-1",
+    TRAV == "TRAV29/DV5" ~ "TRAV29/DV5",
+    TRBV == "TRBV5-1" ~ "TRBV5-1",
     TRUE ~ NA_character_
   )) %>%
   filter(!is.na(tcr_group))
@@ -39,15 +39,18 @@ bar_data <- group_counts %>%
   left_join(total_counts, by = "cluster") %>%
   mutate(freq = count / total_cells * 100)
 
+# تنظیم ترتیب لجند
+bar_data$tcr_group <- factor(bar_data$tcr_group, levels = c("TRAV9-2", "TRAV13-1", "TRAV29/DV5", "TRBV5-1"))
+
 
 tcr_colors <- c(
-  "TRAV13-1 + TRBV20-1" = "#ae1e28",
-  "TRAV9-2 + TRBV20-1"      = "#f78454",
-  "TRAV12-2 + TRBV20-1"    = "#ffd8c5",
-  "TRAV29/DV5 + TRBV5-1"           = "#cfe3f6",
-  "TRAV13-1 + TRBV5-1"           = "#5eaada",
-  "TRAV13-1 + TRBV7-2"              = "#1367b7"
+  #"TRAV13-1 + TRBV20-1" = "#cfe3f6",
+  "TRAV9-2"    = "#79A9A9",  # خاکستری متوسط
+  "TRAV13-1"   = "#CFE3F6",  # آبی خیلی ملایم
+  "TRAV29/DV5" = "#8FAADC",  # آبی متمایل به خاکستری
+  "TRBV5-1"    = "#4A708B"   # آبی تیره مایل به خاکستری
 )
+
 
 
 bar_plot <- ggplot(bar_data, aes(x = cluster, y = freq, fill = tcr_group)) +
@@ -55,9 +58,10 @@ bar_plot <- ggplot(bar_data, aes(x = cluster, y = freq, fill = tcr_group)) +
   scale_fill_manual(values = tcr_colors, name = "TCR Group") +
   scale_y_continuous(labels = label_percent(scale = 1)) +
   labs(x = "Cluster", y = "Percentage of Cells",
-       title = "Proportion of Specific TCR Gene Combinations Across CD4 Clusters") +
+       title = "Proportion of Specific TCR Genes Across CD4 Clusters") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 
 
 ggsave(

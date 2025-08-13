@@ -44,8 +44,8 @@ count_matrix$negLog10P <- -log10(count_matrix$pvalue)
 
 
 
-top2_genes <- head(count_matrix[order(count_matrix$pvalue), ], 2)
-top2_names <- rownames(top2_genes)
+top_genes <- head(count_matrix[order(count_matrix$pvalue), ], 2)
+top_names <- rownames(top_genes)
 colors <- c("red", "blue", "green", "purple", "orange")
 
 png("volcano_plot_pvalue_top5_legend_outside.png", width = 1300, height = 1600, res = 300)
@@ -65,8 +65,8 @@ abline(v = 0, lty = 2, col = "gray40")
 
 title(main = "Volcano plot of TRGV segment usage", line = 2, adj = 0.5)
 
-for (i in seq_along(top2_names)) {
-  gene <- top2_names[i]
+for (i in seq_along(top_names)) {
+  gene <- top_names[i]
   points(
     count_matrix[gene, "log2FC"],
     count_matrix[gene, "negLog10P"],
@@ -80,11 +80,11 @@ par(xpd = TRUE)
 
 legend(
   x = max(count_matrix$log2FC) + 1.5, y = max(count_matrix$negLog10P),
-  legend = top2_names,
+  legend = top_names,
   col = colors,
   pch = 20,
   cex = 1,
-  title = "Top 5 Genes"
+  title = "Top Genes"
 )
 
 dev.off()

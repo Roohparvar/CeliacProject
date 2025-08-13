@@ -1,39 +1,40 @@
 clean_data <- full_metadata[
-  !is.na(full_metadata$TRAV) &
+  !is.na(full_metadata$TRGV) &
     !is.na(full_metadata$Patient) &
-    full_metadata$Diagnosis %in% c("Healthy", "RCD-I"),
+    full_metadata$cluster %in% c("Th1 Mem", "Th17", "Th2/Tfh", "Tregs") &
+    full_metadata$Diagnosis %in% c("ACD", "RCD-I"),
 ]
 
 
-count_matrix <- as.data.frame.matrix(table(clean_data$TRAV, clean_data$Patient))
+count_matrix <- as.data.frame.matrix(table(clean_data$TRGV, clean_data$Patient))
 
 percent_matrix <- sweep(count_matrix, 2, colSums(count_matrix), FUN = "/") * 100
 count_matrix = percent_matrix
 
 
-healthy_samples <- colnames(count_matrix)[colnames(count_matrix) %in% unique(clean_data$Patient[clean_data$Diagnosis == "Healthy"])]
+ACD_samples <- colnames(count_matrix)[colnames(count_matrix) %in% unique(clean_data$Patient[clean_data$Diagnosis == "ACD"])]
 RCD1_samples <- colnames(count_matrix)[colnames(count_matrix) %in% unique(clean_data$Patient[clean_data$Diagnosis == "RCD-I"])]
 
 
-mean_healthy <- rowMeans(count_matrix[, healthy_samples, drop = FALSE])
+mean_ACD <- rowMeans(count_matrix[, ACD_samples, drop = FALSE])
 mean_RCD1 <- rowMeans(count_matrix[, RCD1_samples, drop = FALSE])
 
 
-log2fc <- log2( (mean_RCD1 + 1) / (mean_healthy + 1) )
+log2fc <- log2( (mean_ACD + 1) / (mean_RCD1 + 1) )
 count_matrix$log2FC <- log2fc
 
 
 
-pvals <- apply(count_matrix[, c(healthy_samples, RCD1_samples), drop = FALSE], 1, function(x) {
-  healthy_values <- as.numeric(x[healthy_samples])
+pvals <- apply(count_matrix[, c(ACD_samples, RCD1_samples), drop = FALSE], 1, function(x) {
+  ACD_values <- as.numeric(x[ACD_samples])
   RCD1_values <- as.numeric(x[RCD1_samples])
   
   
-  if(length(healthy_values) < 2 || length(RCD1_values) < 2) {
+  if(length(ACD_values) < 2 || length(RCD1_values) < 2) {
     return(NA)
   }
   
-  test <- t.test(healthy_values, RCD1_values)
+  test <- t.test(ACD_values, RCD1_values)
   return(test$p.value)
 })
 
@@ -44,8 +45,8 @@ count_matrix$negLog10P <- -log10(count_matrix$pvalue)
 
 
 
-top4_genes <- head(count_matrix[order(count_matrix$pvalue), ], 4)
-top4_names <- rownames(top4_genes)
+top3_genes <- head(count_matrix[order(count_matrix$pvalue), ], 3)
+top3_names <- rownames(top3_genes)
 colors <- c("red", "blue", "green", "purple", "orange")
 
 png("volcano_plot_pvalue_top5_legend_outside.png", width = 1300, height = 1600, res = 300)
@@ -53,7 +54,7 @@ png("volcano_plot_pvalue_top5_legend_outside.png", width = 1300, height = 1600, 
 plot(
   count_matrix$log2FC,
   count_matrix$negLog10P,
-  xlab = "% difference TRAV gene use(RCD1 versus Healthy)",
+  xlab = "% difference TRGV gene use(ACD versus RCD1)",
   ylab = "-log10(p-value)",
   pch = 20,
   col = "black",
@@ -63,10 +64,10 @@ plot(
 abline(h = 1.3, lty = 2, col = "gray40")   
 abline(v = 0, lty = 2, col = "gray40")
 
-title(main = "Volcano plot of TRAV segment usage", line = 2, adj = 0.5)
+title(main = "Volcano plot of TRGV segment usage", line = 2, adj = 0.5)
 
-for (i in seq_along(top4_names)) {
-  gene <- top4_names[i]
+for (i in seq_along(top3_names)) {
+  gene <- top3_names[i]
   points(
     count_matrix[gene, "log2FC"],
     count_matrix[gene, "negLog10P"],
@@ -80,7 +81,7 @@ par(xpd = TRUE)
 
 legend(
   x = max(count_matrix$log2FC) + 1.5, y = max(count_matrix$negLog10P),
-  legend = top4_names,
+  legend = top3_names,
   col = colors,
   pch = 20,
   cex = 1,

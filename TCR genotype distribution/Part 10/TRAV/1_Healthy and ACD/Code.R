@@ -84,7 +84,7 @@ legend(
   col = colors,
   pch = 20,
   cex = 1,
-  title = "Top 5 Genes"
+  title = "Top Genes"
 )
 
 dev.off()

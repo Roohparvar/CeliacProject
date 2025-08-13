@@ -55,9 +55,9 @@ tcr_colors <- c(
 
 bar_plot <- ggplot(bar_data, aes(x = cluster, y = freq, fill = tcr_group)) +
   geom_bar(stat = "identity", position = "stack") +
-  scale_fill_manual(values = tcr_colors, name = "TCR Group") +
+  scale_fill_manual(values = tcr_colors, name = "") +
   scale_y_continuous(labels = label_percent(scale = 1)) +
-  labs(x = "Cluster", y = "Percentage of Cells",
+  labs(x = "", y = "Proportion of CD4+ T cells (%)",
        title = "Proportion of Specific TCR Genes Across CD4 Clusters") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),

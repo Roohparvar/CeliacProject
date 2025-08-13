@@ -1,7 +1,7 @@
 clean_data <- full_metadata[
   !is.na(full_metadata$TRGV) &
     !is.na(full_metadata$Patient) &
-    full_metadata$Diagnosis %in% c("Healthy", "RCD-I"),
+    full_metadata$Diagnosis %in% c("ACD", "RCD-I"),
 ]
 
 
@@ -11,21 +11,21 @@ percent_matrix <- sweep(count_matrix, 2, colSums(count_matrix), FUN = "/") * 100
 count_matrix = percent_matrix
 
 
-healthy_samples <- colnames(count_matrix)[colnames(count_matrix) %in% unique(clean_data$Patient[clean_data$Diagnosis == "Healthy"])]
+ACD_samples <- colnames(count_matrix)[colnames(count_matrix) %in% unique(clean_data$Patient[clean_data$Diagnosis == "ACD"])]
 RCD1_samples <- colnames(count_matrix)[colnames(count_matrix) %in% unique(clean_data$Patient[clean_data$Diagnosis == "RCD-I"])]
 
 
-mean_healthy <- rowMeans(count_matrix[, healthy_samples, drop = FALSE])
+ACD_healthy <- rowMeans(count_matrix[, ACD_samples, drop = FALSE])
 mean_RCD1 <- rowMeans(count_matrix[, RCD1_samples, drop = FALSE])
 
 
-log2fc <- log2( (mean_RCD1 + 1) / (mean_healthy + 1) )
+log2fc <- log2( (mean_RCD1 + 1) / (ACD_healthy + 1) )
 count_matrix$log2FC <- log2fc
 
 
 
-pvals <- apply(count_matrix[, c(healthy_samples, RCD1_samples), drop = FALSE], 1, function(x) {
-  healthy_values <- as.numeric(x[healthy_samples])
+pvals <- apply(count_matrix[, c(ACD_samples, RCD1_samples), drop = FALSE], 1, function(x) {
+  healthy_values <- as.numeric(x[ACD_samples])
   RCD1_values <- as.numeric(x[RCD1_samples])
   
   
@@ -44,8 +44,8 @@ count_matrix$negLog10P <- -log10(count_matrix$pvalue)
 
 
 
-top3_genes <- head(count_matrix[order(count_matrix$pvalue), ], 3)
-top3_names <- rownames(top3_genes)
+top_genes <- head(count_matrix[order(count_matrix$pvalue), ], 1)
+top_names <- rownames(top_genes)
 colors <- c("red", "blue", "green", "purple", "orange")
 
 png("volcano_plot_pvalue_top5_legend_outside.png", width = 1300, height = 1600, res = 300)
@@ -65,8 +65,8 @@ abline(v = 0, lty = 2, col = "gray40")
 
 title(main = "Volcano plot of TRGV segment usage", line = 2, adj = 0.5)
 
-for (i in seq_along(top3_names)) {
-  gene <- top3_names[i]
+for (i in seq_along(top_names)) {
+  gene <- top_names[i]
   points(
     count_matrix[gene, "log2FC"],
     count_matrix[gene, "negLog10P"],
@@ -80,11 +80,11 @@ par(xpd = TRUE)
 
 legend(
   x = max(count_matrix$log2FC) + 1.5, y = max(count_matrix$negLog10P),
-  legend = top3_names,
+  legend = top_names,
   col = colors,
   pch = 20,
   cex = 1,
-  title = "Top 4 Genes"
+  title = "Top Gene"
 )
 
 dev.off()

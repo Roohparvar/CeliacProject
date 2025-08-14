@@ -32,7 +32,7 @@ df <- metadata_filtered %>%
 df$clone_category <- factor(df$clone_category, levels = rev(c("Singleton", "Size 2-10", "Size 11-50", "Size 51-100", "Size 100+")))
 
 # Colors and theme
-clone_colors <- rev(c("#1B263B", "#2E4057", "#355C7D", "#3A7BD5", "#1E90FF"))
+clone_colors <- rev(c("#B3B3B3", "#F0CCFF", "#F8766D", "#619CFF", "#F032E6"))
 
 white_theme <- theme_minimal(base_size = 12) +
   theme(

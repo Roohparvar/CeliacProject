@@ -3,17 +3,17 @@ library(tidyr)
 library(ggplot2)
 library(scRepertoire)
 
-full_metadata = full_metadata[full_metadata$cluster == "CD4-CD8-" | full_metadata$cluster == "Cyt. IEL", ]
+full_metadata = full_metadata[full_metadata$cluster == "Tγδ" | full_metadata$cluster == "Trm IEL", ]
 
 # Filter by diagnosis if needed
 metadata_filtered <- full_metadata %>%
-  filter(!is.na(clone_size_ab)) %>%
+  filter(!is.na(clone_size_gd)) %>%
   mutate(clone_category = case_when(
-    clone_size_ab == 1 ~ "Singleton",
-    clone_size_ab >= 2 & clone_size_ab <= 10 ~ "Size 2-10",
-    clone_size_ab >= 11 & clone_size_ab <= 50 ~ "Size 11-50",
-    clone_size_ab >= 51 & clone_size_ab <= 100 ~ "Size 51-100",
-    clone_size_ab >= 101 ~ "Size 100+",
+    clone_size_gd == 1 ~ "Singleton",
+    clone_size_gd >= 2 & clone_size_gd <= 10 ~ "Size 2-10",
+    clone_size_gd >= 11 & clone_size_gd <= 50 ~ "Size 11-50",
+    clone_size_gd >= 51 & clone_size_gd <= 100 ~ "Size 51-100",
+    clone_size_gd >= 101 ~ "Size 100+",
     TRUE ~ NA_character_
   )) %>%
   filter(!is.na(clone_category))
@@ -32,7 +32,7 @@ df <- metadata_filtered %>%
 df$clone_category <- factor(df$clone_category, levels = rev(c("Singleton", "Size 2-10", "Size 11-50", "Size 51-100", "Size 100+")))
 
 # Colors and theme
-clone_colors <- rev(c("#1B263B", "#2E4057", "#355C7D", "#3A7BD5", "#1E90FF"))
+clone_colors <- rev(c("#B3B3B3", "#F0CCFF", "#F8766D", "#619CFF", "#F032E6"))
 
 white_theme <- theme_minimal(base_size = 12) +
   theme(
@@ -50,11 +50,11 @@ p1 <- ggplot(df, aes(x = Diagnosis, y = perc, fill = clone_category)) +
   scale_fill_manual(values = clone_colors) +
   labs(
     x = "Diagnosis", y = "Percentage of Cells", fill = "Clone Size",
-    title = "αβ Clonal Size Distribution by Diagnosis (Percentage)"
+    title = "γδ Clonal Size Distribution by Diagnosis (Percentage)"
   ) +
   white_theme
 
-ggsave("CloneSize_ab_Percentage_ByDiagnosis.png", p1, width = 6, height = 5, dpi = 400, bg = "white")
+ggsave("CloneSize_γδ_Percentage_ByDiagnosis.png", p1, width = 6, height = 5, dpi = 400, bg = "white")
 
 # Plot raw counts
 p2 <- ggplot(df, aes(x = Diagnosis, y = n_cells, fill = clone_category)) +
@@ -62,8 +62,8 @@ p2 <- ggplot(df, aes(x = Diagnosis, y = n_cells, fill = clone_category)) +
   scale_fill_manual(values = clone_colors) +
   labs(
     x = "Diagnosis", y = "Number of Cells", fill = "Clone Size",
-    title = "αβ Clonal Size Distribution by Diagnosis (Raw Counts)"
+    title = "γδ Clonal Size Distribution by Diagnosis (Raw Counts)"
   ) +
   white_theme
 
-ggsave("CloneSize_ab_RawCounts_ByDiagnosis.png", p2, width = 6, height = 5, dpi = 400, bg = "white")
+ggsave("CloneSize_γδ_RawCounts_ByDiagnosis.png", p2, width = 6, height = 5, dpi = 400, bg = "white")

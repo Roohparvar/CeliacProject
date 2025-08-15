@@ -54,6 +54,7 @@ p1 <- ggplot(df, aes(x = Diagnosis, y = perc, fill = clone_category)) +
   ) +
   white_theme
 
+ggsave("CloneSize_ab_Percentage_ByDiagnosis.pdf", p1, width = 6, height = 5, dpi = 400, bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
 ggsave("CloneSize_ab_Percentage_ByDiagnosis.png", p1, width = 6, height = 5, dpi = 400, bg = "white")
 
 # Plot raw counts
@@ -66,4 +67,5 @@ p2 <- ggplot(df, aes(x = Diagnosis, y = n_cells, fill = clone_category)) +
   ) +
   white_theme
 
+ggsave("CloneSize_ab_RawCounts_ByDiagnosis.pdf", p2, width = 6, height = 5, dpi = 400, bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
 ggsave("CloneSize_ab_RawCounts_ByDiagnosis.png", p2, width = 6, height = 5, dpi = 400, bg = "white")

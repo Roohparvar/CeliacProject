@@ -3,7 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(ggalluvial)
 library(tidyr)
-library(scales)  # برای percent_format
+library(scales)
 
 
 target_clusters <- c("IEL GZMK+", "Trm IEL", "Prolif. IEL", "Cyt. IEL", "IEL CCL4+", "nIEL")
@@ -77,8 +77,9 @@ p <- ggplot(long_data,
                 y = Freq, fill = id)) +
   geom_flow(alpha = 0.7, color = "grey50") +
   geom_stratum(width = 0.3, color = "black") +
-  geom_text(stat = "stratum", aes(label = paste0(round(Freq, 1), "%")),
-            size = 2.5, color = "black") +
+  geom_text(stat = "stratum",
+            aes(label = ifelse(Freq >= 0.4, paste0(round(Freq, 1), "%"), "")),
+            size = 2, color = "black") +
   scale_x_discrete(expand = c(0.1, 0.1)) +
   scale_fill_manual(values = cluster_colors) +
   scale_y_continuous(labels = percent_format(scale = 1)) +
@@ -88,7 +89,7 @@ p <- ggplot(long_data,
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
-print(p)
+
 
 # ذخیره نمودار به PNG
 ggsave("IEL_alluvial_percentages_Healthy_ACD_RCDI_RCDII.png",

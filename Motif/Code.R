@@ -33,8 +33,8 @@ colnames(dist_matrix) <- paste(pairs$a_cdr3, pairs$b_cdr3, sep = "+")
 
 saveRDS(dist_matrix, file = "dist_matrix.rds")
 
-# .............................................................................. distribution of node degrees
-thresholds <- 0:20
+# .............................................................................. threshold
+thresholds <- 0:25
 num_nonzero_nodes <- numeric(length(thresholds))
 
 
@@ -73,8 +73,9 @@ ggplot(df, aes(x = Threshold, y = Nonzero_Nodes)) +
 dev.off()
 
 
-# .............................................................................. 
+# .............................................................................. binary_matrix
 binary_matrix <- ifelse(dist_matrix < 10, 1, 0)
+diag(binary_matrix) <- 0
 storage.mode(binary_matrix) <- storage.mode(dist_matrix)
 saveRDS(binary_matrix, file = "binary_matrix.rds")
 

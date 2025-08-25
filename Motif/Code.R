@@ -2,7 +2,7 @@
 library(stringdist)
 library(dplyr)
 library(ggplot2)
-
+library(igraph)
 
 # .............................................................................. Distance matrix
 metadata <- full_metadata
@@ -69,9 +69,11 @@ dev.off()
 
 # .............................................................................. binary_matrix | threshold <= 9
 binary_matrix <- ifelse(dist_matrix < 10, 1, 0)
+
 diag(binary_matrix) <- 0
-binary_matrix <- binary_matrix[rowSums(binary_matrix) > 0, ]
-storage.mode(binary_matrix) <- storage.mode(dist_matrix)
+
+keep <- rowSums(binary_matrix) > 0
+binary_matrix <- binary_matrix[keep, keep]
 
 # 2
 saveRDS(binary_matrix, file = "binary_matrix.rds")
@@ -83,7 +85,6 @@ num_edges <- sum(binary_matrix[upper.tri(binary_matrix)])
 # .............................................................................. degree_matrix
 # Calculate how many connections (degree) each clone has in the network,
 # then map each clone to the cluster(s) it belongs to based on metadata.
-
 
 node_degrees <- rowSums(binary_matrix)
 degree_matrix <- cbind(Node = 1:length(node_degrees), Degree = node_degrees)
@@ -148,3 +149,87 @@ ggplot(df, aes(x = Cluster, y = Count)) +
     axis.text.y = element_text(size = 5)
     )
 dev.off()
+
+# .............................................................................. Eigenvector Centrality
+g <- graph_from_adjacency_matrix(binary_matrix, mode = "undirected", diag = FALSE)
+
+eig_centrality <- eigen_centrality(g)$vector
+
+Eigenvector <- data.frame(
+  Node = V(g)$name,
+  Eigenvector_Centrality = eig_centrality
+)
+
+Eigenvector <- Eigenvector %>%
+  left_join(cluster_map, by = c("Node" = "cdr_Full_ab"))
+
+Eigenvector_sorted <- Eigenvector %>%
+  arrange(desc(Eigenvector_Centrality))
+
+top <- ceiling(0.01 * nrow(Eigenvector_sorted))
+top_nodes <- Eigenvector_sorted[1:top, ]
+
+clusters <- unlist(strsplit(top_nodes$Cluster, split = ","))
+clusters <- trimws(clusters)
+
+
+cluster_counts <- table(clusters)
+df <- as.data.frame(cluster_counts)
+colnames(df) <- c("Cluster", "Count")
+
+
+png("Clusters_of_Top_Eigenvector_Hubs.png", width = 5000, height = 3000, res = 600)
+ggplot(df, aes(x = Cluster, y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  theme_minimal() +
+  labs(title = "Cluster Distribution of Top 1% Nodes by Eigenvector Centrality",
+       x = "Cluster",
+       y = "Count") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12),
+    axis.title.x = element_text(size = 10), 
+    axis.title.y = element_text(size = 10), 
+    axis.text.x = element_text(size = 8, angle = 45, hjust = 1),  
+    axis.text.y = element_text(size = 8)
+  )
+dev.off()
+
+# .............................................................................. Betweenness Centrality
+
+# betweenness_centrality <- betweenness(g, directed = FALSE, normalized = TRUE)
+# 
+# Betweenness <- data.frame(
+#   Node = V(g)$name,
+#   Betweenness_Centrality = betweenness_centrality
+# )
+# 
+# Betweenness <- Betweenness %>%
+#   left_join(cluster_map, by = c("Node" = "cdr_Full_ab"))
+# 
+# Betweenness <- Betweenness %>%
+#   arrange(desc(Betweenness_Centrality))
+# 
+# top <- ceiling(0.01 * nrow(Betweenness))
+# top_nodes <- Betweenness[1:top, ]
+# 
+# clusters <- unlist(strsplit(top_nodes$Cluster, split = ","))
+# clusters <- trimws(clusters)
+# cluster_counts <- table(clusters)
+# df <- as.data.frame(cluster_counts)
+# colnames(df) <- c("Cluster", "Count")
+# 
+# png("Clusters_of_Top_Betweenness_Hubs.png", width = 5000, height = 3000, res = 600)
+# ggplot(df, aes(x = Cluster, y = Count)) +
+#   geom_bar(stat = "identity", fill = "darkorange") +
+#   theme_minimal() +
+#   labs(title = "Cluster Distribution of Top 1% Nodes by Betweenness Centrality",
+#        x = "Cluster",
+#        y = "Count") +
+#   theme(
+#     plot.title = element_text(hjust = 0.5, size = 12),
+#     axis.title.x = element_text(size = 10), 
+#     axis.title.y = element_text(size = 10), 
+#     axis.text.x = element_text(size = 8, angle = 45, hjust = 1),  
+#     axis.text.y = element_text(size = 8)
+#   )
+# dev.off()

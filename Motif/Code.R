@@ -4,36 +4,28 @@ library(dplyr)
 library(ggplot2)
 
 # .............................................................................. Distance matrix
-# Keep a copy of the full metadata separately
 metadata <- full_metadata
 
 # Cluster selection
 # metadata <- metadata[metadata$cluster == "ILC2/ILTi",]
 
-# Keep only rows where a_cdr3 and b_cdr3 are not NA
 metadata <- metadata[!is.na(metadata$a_cdr3) & !is.na(metadata$b_cdr3), ]
 
 # Keep only unique pairs of (a_cdr3, b_cdr3)
 pairs <- unique(metadata[, c("a_cdr3", "b_cdr3")])
 
-# dist_a[i, j] = Levenshtein distance between a_cdr3[i] and a_cdr3[j]
 dist_a <- stringdistmatrix(pairs$a_cdr3, pairs$a_cdr3, method = "lv")
-
-# dist_b[i, j] = Levenshtein distance between b_cdr3[i] and b_cdr3[j]
 dist_b <- stringdistmatrix(pairs$b_cdr3, pairs$b_cdr3, method = "lv")
 
-# Final distance = sum of the two
 dist_matrix <- dist_a + dist_b
 dist_matrix <- as.matrix(dist_matrix)
 
-# Set rownames and colnames using combined sequences
 rownames(dist_matrix) <- paste(pairs$a_cdr3, pairs$b_cdr3, sep = "+")
 colnames(dist_matrix) <- paste(pairs$a_cdr3, pairs$b_cdr3, sep = "+")
 
-
 saveRDS(dist_matrix, file = "dist_matrix.rds")
 
-# .............................................................................. threshold
+# .............................................................................. Distance threshold | 0-25
 thresholds <- 0:25
 num_nonzero_nodes <- numeric(length(thresholds))
 
@@ -73,44 +65,36 @@ ggplot(df, aes(x = Threshold, y = Nonzero_Nodes)) +
 dev.off()
 
 
-# .............................................................................. binary_matrix
+# .............................................................................. binary_matrix | threshold <= 9
 binary_matrix <- ifelse(dist_matrix < 10, 1, 0)
 diag(binary_matrix) <- 0
+binary_matrix <- binary_matrix[rowSums(binary_matrix) > 0, ]
 storage.mode(binary_matrix) <- storage.mode(dist_matrix)
 saveRDS(binary_matrix, file = "binary_matrix.rds")
 
-# Calculate node degrees (sum of each row or column, since matrix is symmetric)
+num_nodes <- nrow(binary_matrix)
+num_edges <- sum(binary_matrix[upper.tri(binary_matrix)])
+
+# .............................................................................. degree_matrix
+# Calculate how many connections (degree) each clone has in the network,
+# then map each clone to the cluster(s) it belongs to based on metadata.
+
+
 node_degrees <- rowSums(binary_matrix)
-
-# Create result matrix: node ID + degree
 degree_matrix <- cbind(Node = 1:length(node_degrees), Degree = node_degrees)
-
-# Sort by degree descending (most connected nodes first)
 degree_matrix <- degree_matrix[order(-degree_matrix[,2]), ]
 
-# Save as a matrix
-degree_matrix <- as.matrix(degree_matrix)
 
-
-
-
-# Make degree_matrix a data frame
 degree_matrix <- as.data.frame(degree_matrix)
-
-# Assume rownames(degree_matrix) are the clones
 degree_matrix$Clone <- rownames(degree_matrix)
-
-# For each clone, get all unique clusters in full_metadata and collapse into one string
 cluster_map <- full_metadata %>%
   group_by(cdr_Full_ab) %>%
   summarise(Cluster = paste(unique(cluster), collapse = ","), .groups = "drop")
 
-# Join with degree_matrix by clone name
 degree_matrix <- degree_matrix %>% left_join(cluster_map, by = c("Clone" = "cdr_Full_ab"))
 
-
+saveRDS(degree_matrix, file = "degree_matrix.rds")
 # .............................................................................. Degree Distribution bar plot
-
 
 degree_counts <- degree_matrix %>% count(Degree, name = "Frequency")
 
@@ -123,10 +107,10 @@ ggplot(degree_filtered, aes(x = Degree, y = Frequency)) +
   labs(x = "Degree", y = "Frequency", title = "Degree Distribution") +
   scale_x_continuous(breaks = seq(0, 200, by = 5)) +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 8),   # Center the title
-    axis.title.x = element_text(size = 8),   # X-axis label
-    axis.title.y = element_text(size = 8),   # Y-axis label
-    axis.text.x = element_text(size = 7),    # X-axis numbers
-    axis.text.y = element_text(size = 7)     # Y-axis numbers
+    plot.title = element_text(hjust = 0.5, size = 8),
+    axis.title.x = element_text(size = 8), 
+    axis.title.y = element_text(size = 8), 
+    axis.text.x = element_text(size = 7),  
+    axis.text.y = element_text(size = 7)
   )
 dev.off()

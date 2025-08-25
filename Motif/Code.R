@@ -3,6 +3,7 @@ library(stringdist)
 library(dplyr)
 library(ggplot2)
 
+
 # .............................................................................. Distance matrix
 metadata <- full_metadata
 
@@ -23,7 +24,9 @@ dist_matrix <- as.matrix(dist_matrix)
 rownames(dist_matrix) <- paste(pairs$a_cdr3, pairs$b_cdr3, sep = "+")
 colnames(dist_matrix) <- paste(pairs$a_cdr3, pairs$b_cdr3, sep = "+")
 
+# 1
 saveRDS(dist_matrix, file = "dist_matrix.rds")
+
 
 # .............................................................................. Distance threshold | 0-25
 thresholds <- 0:25
@@ -64,16 +67,18 @@ ggplot(df, aes(x = Threshold, y = Nonzero_Nodes)) +
 
 dev.off()
 
-
 # .............................................................................. binary_matrix | threshold <= 9
 binary_matrix <- ifelse(dist_matrix < 10, 1, 0)
 diag(binary_matrix) <- 0
 binary_matrix <- binary_matrix[rowSums(binary_matrix) > 0, ]
 storage.mode(binary_matrix) <- storage.mode(dist_matrix)
+
+# 2
 saveRDS(binary_matrix, file = "binary_matrix.rds")
 
 num_nodes <- nrow(binary_matrix)
 num_edges <- sum(binary_matrix[upper.tri(binary_matrix)])
+
 
 # .............................................................................. degree_matrix
 # Calculate how many connections (degree) each clone has in the network,
@@ -93,6 +98,7 @@ cluster_map <- full_metadata %>%
 
 degree_matrix <- degree_matrix %>% left_join(cluster_map, by = c("Clone" = "cdr_Full_ab"))
 
+# 3
 saveRDS(degree_matrix, file = "degree_matrix.rds")
 # .............................................................................. Degree Distribution bar plot
 
@@ -100,17 +106,45 @@ degree_counts <- degree_matrix %>% count(Degree, name = "Frequency")
 
 degree_filtered <- subset(degree_counts, Degree < 100)
 
-png("degree_distribution.png", width = 2800, height = 2600, res = 600)
+png("degree_distribution.png", width = 5000, height = 3000, res = 1200)
 ggplot(degree_filtered, aes(x = Degree, y = Frequency)) +
   geom_bar(stat = "identity", width = 0.8, fill = "steelblue") +
   theme_minimal() +
   labs(x = "Degree", y = "Frequency", title = "Degree Distribution") +
   scale_x_continuous(breaks = seq(0, 200, by = 5)) +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 8),
-    axis.title.x = element_text(size = 8), 
-    axis.title.y = element_text(size = 8), 
-    axis.text.x = element_text(size = 7),  
-    axis.text.y = element_text(size = 7)
+    plot.title = element_text(hjust = 0.5, size = 6),
+    axis.title.x = element_text(size = 5), 
+    axis.title.y = element_text(size = 5), 
+    axis.text.x = element_text(size = 4),  
+    axis.text.y = element_text(size = 4)
   )
+dev.off()
+
+
+# .............................................................................. clusters corresponding to the hubs in the network.
+
+degree_matrix <- degree_matrix[order(-degree_matrix$Degree), ]
+top <- degree_matrix[1:100, ]
+clusters <- unlist(strsplit(top$Cluster, split = ","))
+cluster_counts <- table(trimws(clusters))
+
+df <- as.data.frame(cluster_counts)
+colnames(df) <- c("Cluster", "Count")
+
+
+png("Clusters Associated with Network Hubs.png", width = 5000, height = 3000, res = 600)
+ggplot(df, aes(x = Cluster, y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  theme_minimal() +
+  labs(title = "Cluster Distribution of Top CDRs (hubs) by Degree",
+       x = "Cluster",
+       y = "Count") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 8),
+    axis.title.x = element_text(size = 7), 
+    axis.title.y = element_text(size = 7), 
+    axis.text.x = element_text(size = 5, angle = 45),  
+    axis.text.y = element_text(size = 5)
+    )
 dev.off()

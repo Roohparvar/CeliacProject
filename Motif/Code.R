@@ -163,12 +163,23 @@ Eigenvector <- data.frame(
 Eigenvector <- Eigenvector %>%
   left_join(cluster_map, by = c("Node" = "cdr_Full_ab"))
 
-Eigenvector_sorted <- Eigenvector %>%
+Eigenvector <- Eigenvector %>%
   arrange(desc(Eigenvector_Centrality))
 
-top <- ceiling(0.01 * nrow(Eigenvector_sorted))
-top_nodes <- Eigenvector_sorted[1:top, ]
+top <- ceiling(0.01 * nrow(Eigenvector))
+top_nodes <- Eigenvector[1:top, ]
 
+
+# imm_receptor
+top_nodes <- top_nodes %>%
+  left_join(full_metadata %>% select(cdr_Full_ab, imm_receptor_Esmaeil),
+            by = c("Node" = "cdr_Full_ab")) %>%
+  group_by(Node, Eigenvector_Centrality, Cluster) %>%
+  summarise(Imm_Receptor = paste(unique(imm_receptor_Esmaeil), collapse = ","), .groups = "drop")
+
+
+
+# 1 bar plot
 clusters <- unlist(strsplit(top_nodes$Cluster, split = ","))
 clusters <- trimws(clusters)
 
@@ -193,6 +204,37 @@ ggplot(df, aes(x = Cluster, y = Count)) +
     axis.text.y = element_text(size = 8)
   )
 dev.off()
+
+# 2 sub graph
+top_node_names <- top_nodes$Node
+
+neighbors_list <- lapply(top_node_names, function(n) {
+  names(which(binary_matrix[n, ] == 1))
+})
+neighbors <- unique(unlist(neighbors_list))
+
+sub_nodes <- unique(c(top_node_names, neighbors))
+
+binary_matrix_sub <- binary_matrix[sub_nodes, sub_nodes]
+
+keep <- rowSums(binary_matrix_sub) > 0
+binary_matrix_sub <- binary_matrix_sub[keep, keep]
+
+g_sub <- graph_from_adjacency_matrix(binary_matrix_sub, mode = "undirected", diag = FALSE)
+V(g_sub)$color <- ifelse(V(g_sub)$name %in% top_node_names, "red", "skyblue")  # top nodes قرمز
+V(g_sub)$size <- ifelse(V(g_sub)$name %in% top_node_names, 2, 1)              # top nodes بزرگتر
+
+
+png("Top1_Nodes_with_Neighbors.png", width = 23000, height = 23000, res = 1300)
+plot(g_sub,
+     #vertex.label = V(g_sub)$name,
+     vertex.label.cex = 0.5,
+     vertex.label = NA,
+     vertex.frame.color = "gray",
+     edge.color = "gray70",
+     layout = layout_with_fr)
+dev.off()
+
 
 # .............................................................................. Betweenness Centrality
 

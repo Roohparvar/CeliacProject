@@ -67,8 +67,8 @@ ggplot(df, aes(x = Threshold, y = Nonzero_Nodes)) +
 
 dev.off()
 
-# .............................................................................. binary_matrix | threshold <= 9
-binary_matrix <- ifelse(dist_matrix < 10, 1, 0)
+# .............................................................................. binary_matrix | threshold <= 5
+binary_matrix <- ifelse(dist_matrix < 6, 1, 0)
 
 diag(binary_matrix) <- 0
 
@@ -160,27 +160,56 @@ Eigenvector <- data.frame(
   Eigenvector_Centrality = eig_centrality
 )
 
+cluster_map <- full_metadata %>%
+  group_by(cdr_Full_ab) %>%
+  summarise(Cluster = paste(unique(cluster), collapse = ","), .groups = "drop")
+
 Eigenvector <- Eigenvector %>%
   left_join(cluster_map, by = c("Node" = "cdr_Full_ab"))
 
 Eigenvector <- Eigenvector %>%
   arrange(desc(Eigenvector_Centrality))
 
-top <- ceiling(0.01 * nrow(Eigenvector))
-top_nodes <- Eigenvector[1:top, ]
+topEigenvector <- ceiling(0.01 * nrow(Eigenvector))
+topEigenvector_nodes <- Eigenvector[1:topEigenvector, ]
 
 
-# imm_receptor
-top_nodes <- top_nodes %>%
-  left_join(full_metadata %>% select(cdr_Full_ab, imm_receptor_Esmaeil),
+# imm_receptor + clone_size
+topEigenvector_nodes <- topEigenvector_nodes %>%
+  left_join(full_metadata %>% 
+              select(cdr_Full_ab, imm_receptor_Esmaeil, clone_size_ab),
             by = c("Node" = "cdr_Full_ab")) %>%
   group_by(Node, Eigenvector_Centrality, Cluster) %>%
-  summarise(Imm_Receptor = paste(unique(imm_receptor_Esmaeil), collapse = ","), .groups = "drop")
+  summarise(
+    Imm_Receptor = paste(unique(imm_receptor_Esmaeil), collapse = ","),
+    Clone_Size   = paste(unique(clone_size_ab), collapse = ","),
+    .groups = "drop"
+  )
 
+
+topEigenvector_nodes <- topEigenvector_nodes %>%
+  arrange(desc(Eigenvector_Centrality))
+
+
+# 4
+saveRDS(topEigenvector_nodes, file = "topEigenvector_nodes.rds")
+
+
+nodes <- topEigenvector_nodes$Node
+top_nodes <- "topEigenvector_nodes.txt"
+con <- file(top_nodes, "w")
+
+for(i in seq_along(nodes)) {
+  #writeLines(paste0(">", i, ": ", nodes[i]), con)
+  writeLines(paste0(">", i, " "), con)
+  writeLines(nodes[i], con)
+}
+
+close(con)
 
 
 # 1 bar plot
-clusters <- unlist(strsplit(top_nodes$Cluster, split = ","))
+clusters <- unlist(strsplit(topEigenvector_nodes$Cluster, split = ","))
 clusters <- trimws(clusters)
 
 
@@ -206,7 +235,7 @@ ggplot(df, aes(x = Cluster, y = Count)) +
 dev.off()
 
 # 2 sub graph
-top_node_names <- top_nodes$Node
+top_node_names <- topEigenvector_nodes$Node
 
 neighbors_list <- lapply(top_node_names, function(n) {
   names(which(binary_matrix[n, ] == 1))
@@ -221,8 +250,8 @@ keep <- rowSums(binary_matrix_sub) > 0
 binary_matrix_sub <- binary_matrix_sub[keep, keep]
 
 g_sub <- graph_from_adjacency_matrix(binary_matrix_sub, mode = "undirected", diag = FALSE)
-V(g_sub)$color <- ifelse(V(g_sub)$name %in% top_node_names, "red", "skyblue")  # top nodes قرمز
-V(g_sub)$size <- ifelse(V(g_sub)$name %in% top_node_names, 2, 1)              # top nodes بزرگتر
+V(g_sub)$color <- ifelse(V(g_sub)$name %in% top_node_names, "red", "skyblue") 
+V(g_sub)$size <- ifelse(V(g_sub)$name %in% top_node_names, 2, 1)
 
 
 png("Top1_Nodes_with_Neighbors.png", width = 23000, height = 23000, res = 1300)

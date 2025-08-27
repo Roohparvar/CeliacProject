@@ -3,6 +3,8 @@ library(stringdist)
 library(dplyr)
 library(ggplot2)
 library(igraph)
+library(Biostrings)
+library(tidyr)
 
 # .............................................................................. Distance matrix
 metadata <- full_metadata
@@ -138,7 +140,7 @@ png("Clusters Associated with Network Hubs.png", width = 5000, height = 3000, re
 ggplot(df, aes(x = Cluster, y = Count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_minimal() +
-  labs(title = "Cluster Distribution of Top CDRs (hubs) by Degree",
+  labs(title = "Cluster Distribution of Top CDRs by Degree",
        x = "Cluster",
        y = "Count") +
   theme(
@@ -189,6 +191,11 @@ topEigenvector_nodes <- topEigenvector_nodes %>%
 
 topEigenvector_nodes <- topEigenvector_nodes %>%
   arrange(desc(Eigenvector_Centrality))
+
+
+
+topEigenvector_nodes <- topEigenvector_nodes %>%
+  separate(Node, into = c("a_cdr3", "b_cdr3"), sep = "\\+", remove = FALSE)
 
 
 # 4
@@ -304,3 +311,74 @@ dev.off()
 #     axis.text.y = element_text(size = 8)
 #   )
 # dev.off()
+
+# .............................................................................. Motif
+
+# Install packages if not already installed
+if (!requireNamespace("Biostrings", quietly = TRUE)) BiocManager::install("Biostrings")
+if (!requireNamespace("msa", quietly = TRUE)) BiocManager::install("msa")
+if (!requireNamespace("ggseqlogo", quietly = TRUE)) devtools::install_github("omarwagih/ggseqlogo")
+
+library(Biostrings)
+library(msa)
+library(ggseqlogo)
+
+
+
+
+
+# alpha unique
+seqs <- topEigenvector_nodes$a_cdr3
+seqs <- unique(seqs)
+# Convert character vector to AAStringSet (required by msa)
+seqs <- AAStringSet(seqs)
+
+# Remove sequences with invalid characters
+seqs <- seqs[!grepl("[^A-Z]", as.character(seqs))]
+
+# Perform multiple sequence alignment
+alignment <- msa(seqs, method = "ClustalW")  # or "Muscle", "ClustalOmega"
+
+# Convert aligned sequences to character vector
+aligned_seqs <- as.character(unmasked(alignment))
+
+p <- ggseqlogo(aligned_seqs, method = "prob") +
+  ggtitle("Logo plots of the CDR3α") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16)  # center the title
+  )
+
+# Save as high-quality PNG
+ggsave("Logo plots of the CDR3α.png", plot = p,
+       width = 10, height = 6, dpi = 300, bg = "white")
+
+
+
+
+
+
+# beta
+
+seqs <- topEigenvector_nodes$b_cdr3
+seqs <- unique(seqs)
+# Convert character vector to AAStringSet (required by msa)
+seqs <- AAStringSet(seqs)
+
+# Remove sequences with invalid characters
+seqs <- seqs[!grepl("[^A-Z]", as.character(seqs))]
+
+# Perform multiple sequence alignment
+alignment <- msa(seqs, method = "ClustalW")  # or "Muscle", "ClustalOmega"
+
+# Convert aligned sequences to character vector
+aligned_seqs <- as.character(unmasked(alignment))
+
+p <- ggseqlogo(aligned_seqs, method = "prob") +
+  ggtitle("Logo plots of the CDR3β") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16)  # center the title
+  )
+
+# Save as high-quality PNG
+ggsave("Logo plots of the CDR3β.png", plot = p,
+       width = 10, height = 6, dpi = 300, bg = "white")

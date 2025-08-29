@@ -69,7 +69,7 @@ legend <- cowplot::get_legend(legend_plot)
 final_plot <- cowplot::plot_grid(main_plot, legend, ncol = 2, rel_widths = c(1, 0.25))
 
 # Save image — total width = 10in, height = 6in
-ggsave("Umap_imm_receptor_highlighted.png", plot = final_plot, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave("Umap_imm_receptor_highlighted.png", plot = final_plot, width = 8, height = 6, dpi = 600, bg = "white")
 
 
 
@@ -107,4 +107,4 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
         panel.grid.minor = element_blank(),
         plot.background = element_rect(fill = "white", color = NA))
 
-ggsave("Umap_cluster_highlighted.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "white")
+ggsave("Umap_cluster_highlighted.png", plot = umap_plot, width = 8, height = 6, dpi = 600, bg = "white")

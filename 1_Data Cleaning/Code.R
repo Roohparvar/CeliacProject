@@ -761,34 +761,6 @@ full_metadata$clone_size_bucket_gd <- ifelse(
 )
 
 
-# Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each g_cdr3 sequence among "Aberrant g" cells only
-aberrant_g_idx <- which(full_metadata$imm_receptor_Esmaeil == "Aberrant g")
-full_metadata$cdr_Full_gd[aberrant_g_idx] <- NA
-full_metadata$clone_size_gd[aberrant_g_idx] <- NA
-full_metadata$clone_size_bucket_gd[aberrant_g_idx] <- NA
-
-
-aberrant_g_cdr3 <- full_metadata$g_cdr3[aberrant_g_idx]
-cdr3_counts <- table(aberrant_g_cdr3)
-clone_sizes <- cdr3_counts[as.character(aberrant_g_cdr3)]
-full_metadata$clone_size_gd[aberrant_g_idx] <- as.numeric(clone_sizes)
-
-full_metadata$clone_size_bucket_gd[aberrant_g_idx] <- ifelse(
-  is.na(clone_sizes),
-  NA,
-  ifelse(
-    clone_sizes == 1,
-    "Singleton",
-    ifelse(
-      clone_sizes >= 2 & clone_sizes < 10,
-      "Small clone (2+)",
-      "Large clone (10+)"
-    )
-  )
-)
-
-
-
 #--------------------------------------------------------------------------------- Plot UMAP colored by cluster
 full_metadata$cluster <- recode(full_metadata$cluster,
                                 "NK Tgd" = "NK Tγδ",

@@ -391,6 +391,8 @@ ggsave("Logo plots of the CDR3d.png", plot = p,
 
 
 
+
+
 # gama | Top nodes and abberant g only
 seqs <- topEigenvector_nodes$g_cdr3
 seq2 = full_metadata[full_metadata$imm_receptor_Esmaeil == "Aberrant g" & !is.na(full_metadata$imm_receptor_Esmaeil) & is.na(full_metadata$d_cdr3), ]

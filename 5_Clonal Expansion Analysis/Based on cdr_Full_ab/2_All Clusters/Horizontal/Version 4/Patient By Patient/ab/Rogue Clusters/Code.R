@@ -37,6 +37,19 @@ df <- metadata_filtered %>%
 # Order clone categories
 df$clone_category <- factor(df$clone_category, levels = rev(c("Singleton", "Size 2-10", "Size 11-50", "Size 51-100", "Size 100+")))
 
+
+# Define the desired patient order
+patient_order_Lymph <- c(
+  "H-3", "H-8", "H-9", "H-10", "H-11", "H-12",
+  "ACD-1", "ACD-2", "ACD-5", "ACD-6", "ACD-7", "ACD-8", "ACD-9",
+  "RCD1-1a", "RCD1-2", "RCD1-3", "RCD1-6a", "RCD1-11", "RCD1-12",
+  "RCD1-13", "RCD1-14", "RCD1-15", "RCD2-1b", "RCD2-2"
+)
+
+# Convert Patient to a factor with specified order
+df$Patient <- factor(df$Patient, levels = patient_order_Lymph)
+
+
 library(writexl)
 write_xlsx(df, "df.xlsx")
 
@@ -72,8 +85,8 @@ p1 <- ggplot(df, aes(x = Patient, y = perc, fill = clone_category)) +
     title = "αβ Clonal Size Distribution by Patient (Percentage) | Rogue Clusters"
   ) +
   white_theme +
-  scale_x_discrete(expand = c(0,10)) +   # حذف فاصله اضافی دسته‌ها
-  coord_cartesian(clip = "off")          # اجازه می‌دهد نمودار کامل نشان داده شود بدون فضای اضافه
+  scale_x_discrete(expand = c(0,10)) +  
+  coord_cartesian(clip = "off") 
 
 ggsave("Rogue Clusters (Percentage).pdf", p1, width = 4, height = 2, dpi = 600, bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
 ggsave("Rogue Clusters (Percentage).png", p1, width = 4, height = 2, dpi = 600, bg = "white")
@@ -91,8 +104,8 @@ p2 <- ggplot(df, aes(x = Patient, y = n_cells, fill = clone_category)) +
     title = "αβ Clonal Size Distribution by Patient (Raw Counts) | Rogue Clusters"
   ) +
   white_theme +
-  scale_x_discrete(expand = c(0,10)) +   # حذف فاصله اضافی دسته‌ها
-  coord_cartesian(clip = "off")          # اجازه می‌دهد نمودار کامل نشان داده شود بدون فضای اضافه
+  scale_x_discrete(expand = c(0,10)) +  
+  coord_cartesian(clip = "off") 
 
 ggsave("Rogue Clusters (Raw Counts).pdf", p2, width = 4, height = 2, dpi = 600, bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
 ggsave("Rogue Clusters (Raw Counts).png", p2, width = 4, height = 2, dpi = 600, bg = "white")

@@ -1,10 +1,12 @@
 library(dplyr)
+library(circlize)
+library(ggplot2)
+library(ggalluvial)
+library(scales)
+library(tidyr)
 
 
-full_metadata = full_metadata[full_metadata$cluster == "Tgd" |
-                                full_metadata$cluster == "Tgd CD8+" |
-                                full_metadata$cluster == "NK Tgd" |
-                                full_metadata$cluster == "Tgd CD8+" , ]
+full_metadata = full_metadata[full_metadata$cluster == "Tgd", ]
 
 
 full_metadata <- full_metadata %>% filter( !is.na(full_metadata$TRDV) & !is.na(full_metadata$TRGV) )
@@ -18,48 +20,52 @@ result <- full_metadata %>%
 
 
 
-# install.packages("circlize")
-library(circlize)
-
-# Get list of Diagnosiss
+# chordDiagram
 Diagnosiss <- unique(full_metadata$Diagnosis)
 
-# Loop over each Diagnosis
 for (p in Diagnosiss) {
   
-  # Subset the data for this Diagnosis
   df <- subset(full_metadata, Diagnosis == p, select = c("TRDV", "TRGV"))
   df <- na.omit(df)
   
   if (nrow(df) > 0) {
-    # Save PNG file
-    png(filename = paste0("Circos_", p, ".png"), width = 2000, height = 2000, res = 300)
     
-    # Draw chord diagram
+    ## --- PDF output ---
+    pdf(file = paste0("Circos_", p, ".pdf"), width = 8, height = 8)  
     chordDiagram(df, 
                  transparency = 0.5,
                  annotationTrack = "grid",
                  preAllocateTracks = list(track.height = 0.1))
     
-    # Add labels
     circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
       sector.name = get.cell.meta.data("sector.index")
       circos.text(CELL_META$xcenter, CELL_META$ylim[1], sector.name,
                   facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
     })
+    dev.off()  
+    circos.clear()
     
-    dev.off() 
-    circos.clear()  
+    ## --- PNG output ---
+    png(file = paste0("Circos_", p, ".png"), width = 2000, height = 2000, res = 300)
+    chordDiagram(df, 
+                 transparency = 0.5,
+                 annotationTrack = "grid",
+                 preAllocateTracks = list(track.height = 0.1))
+    
+    circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
+      sector.name = get.cell.meta.data("sector.index")
+      circos.text(CELL_META$xcenter, CELL_META$ylim[1], sector.name,
+                  facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5))
+    })
+    dev.off()
+    circos.clear()
   }
 }
 
 
 
 
-
-
-
-
+# Bar PlotTRDV
 diagnosis_summary <- full_metadata %>%
   group_by(Diagnosis, TRDV) %>%
   summarise(count = n(), .groups = "drop_last") %>%
@@ -71,12 +77,6 @@ diagnosis_summary <- full_metadata %>%
 print(diagnosis_summary)
 
 
-
-
-
-library(ggplot2)
-
-# Plot with dark colors
 p <- ggplot(diagnosis_summary, aes(x = Diagnosis, y = percent, fill = TRDV)) +
   geom_bar(stat = "identity", position = "stack") +
   labs(x = "Diagnosis", y = "Percentage",
@@ -89,56 +89,31 @@ p <- ggplot(diagnosis_summary, aes(x = Diagnosis, y = percent, fill = TRDV)) +
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(hjust = 0.5))
 
-# Save as PNG
-ggsave("TRDV_by_Diagnosis_dark.png", plot = p, width = 8, height = 6, dpi = 600, bg = "white")
+
+ggsave("TRDV_by_Diagnosis.png", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
+ggsave("TRDV_by_Diagnosis.pdf", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-library(ggplot2)
-library(ggalluvial)
-library(scales)
-library(dplyr)
-
-# Prepare the data
+# alluvial plot TRDV
 alluvial_data <- diagnosis_summary %>%
   mutate(Diagnosis = factor(Diagnosis),
          TRDV = factor(TRDV)) %>%
   rename(Stage = Diagnosis, id = TRDV, Freq = percent) %>%
   mutate(alluvium = id)  # Needed for geom_flow
 
-# Define colors
+
+
 trdv_colors <- c(
   "TRDV1" = "#c6ab52",
   "TRDV2" = "#679966",
   "TRDV3" = "#ff6766"
 )
 
-# Plot
+
 p <- ggplot(alluvial_data,
             aes(x = Stage, stratum = id, alluvium = alluvium,
                 y = Freq, fill = id)) +
@@ -155,52 +130,16 @@ p <- ggplot(alluvial_data,
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(hjust = 0.5))
 
-print(p)
 
 # Save as PNG
-ggsave("TRDV_alluvial_percentages.png",
-       plot = p, width = 10, height = 5, dpi = 300, bg = "white")
+ggsave("TRDV_alluvial_percentages.png", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
+ggsave("TRDV_alluvial_percentages.pdf", plot = p, width = 10, height = 5, dpi = 300, bg = "white")
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Bar plot TRGV
 diagnosis_summaryTRGV <- full_metadata %>%
   group_by(Diagnosis, TRGV) %>%
   summarise(count = n(), .groups = "drop_last") %>%
@@ -209,8 +148,10 @@ diagnosis_summaryTRGV <- full_metadata %>%
   ungroup() %>%
   arrange(Diagnosis, TRGV)
 
-print(diagnosis_summaryTRGV)
 
+diagnosis_summaryTRGV$TRGV <- factor(diagnosis_summaryTRGV$TRGV,
+                                     levels = c("TRGV2", "TRGV3", "TRGV4", "TRGV5", 
+                                                "TRGV5P", "TRGV8", "TRGV9", "TRGV10"))
 
 
 dark_colors <- c(
@@ -221,8 +162,7 @@ dark_colors <- c(
   "TRGV5P" = "#f7f7f7",
   "TRGV8"  = "#cce5f6",
   "TRGV9"  = "#8fc3dd",
-  "TRGV10" = "#4790be",
-  "TRGV11" = "#1666aa"
+  "TRGV10" = "#4790be"
 )
 
 # Plot
@@ -235,47 +175,30 @@ p <- ggplot(diagnosis_summaryTRGV, aes(x = Diagnosis, y = percent, fill = TRGV))
   theme(plot.title = element_text(hjust = 0.5))
 
 # Save as PNG
-ggsave("TRGV_by_Diagnosis_dark.png", plot = p, width = 8, height = 6, dpi = 600, bg = "white")
+ggsave("TRGV_by_Diagnosis.png", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
+ggsave("TRGV_by_Diagnosis.pdf", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-library(ggplot2)
-library(ggalluvial)
-library(scales)
-library(dplyr)
-
-
-# Ensure all combinations exist, fill missing with 0
+# alluvial plot TRGV V1
 alluvial_data_TRGV <- diagnosis_summaryTRGV %>%
   mutate(Diagnosis = factor(Diagnosis),
-         TRGV = factor(TRGV)) %>%
+         TRGV = factor(TRGV,
+                       levels = c("TRGV2", "TRGV3", "TRGV4",
+                                  "TRGV5", "TRGV5P", "TRGV8",
+                                  "TRGV9", "TRGV10"))) %>%
   rename(Stage = Diagnosis, id = TRGV, Freq = percent) %>%
   mutate(alluvium = id) %>%  # Needed for geom_flow
-  complete(Stage, id, fill = list(Freq = 0)) %>%  # fill missing with 0
-  mutate(alluvium = id)  # alluvium must match id
+  complete(Stage, id, fill = list(Freq = 0)) %>%
+  mutate(alluvium = id)
 
+# Replace any remaining NA with 0
 alluvial_data_TRGV[is.na(alluvial_data_TRGV)] <- 0
 
-# Colors
+# Colors (match order of legend)
 dark_colors <- c(
   "TRGV2"  = "#ae1f29",
   "TRGV3"  = "#e05b48",
@@ -284,8 +207,7 @@ dark_colors <- c(
   "TRGV5P" = "#f7f7f7",
   "TRGV8"  = "#cce5f6",
   "TRGV9"  = "#8fc3dd",
-  "TRGV10" = "#4790be",
-  "TRGV11" = "#1666aa"
+  "TRGV10" = "#4790be"
 )
 
 # Plot
@@ -296,11 +218,14 @@ p <- ggplot(alluvial_data_TRGV,
   geom_stratum(width = 0.3, color = "black") +
   geom_text(
     stat = "stratum",
-    aes(label = ifelse(Freq >= 2, paste0(round(Freq, 1), "%"), "")),
+    aes(label = ifelse(Freq >= 1, paste0(round(Freq, 1), "%"), "")),
     size = 2, color = "black"
   ) +
   scale_x_discrete(expand = c(0.1, 0.1)) +
-  scale_fill_manual(values = dark_colors) +
+  scale_fill_manual(values = dark_colors,
+                    breaks = c("TRGV2", "TRGV3", "TRGV4",
+                               "TRGV5", "TRGV5P", "TRGV8",
+                               "TRGV9", "TRGV10")) +
   scale_y_continuous(labels = percent_format(scale = 1)) +
   labs(title = "Proportion of TRGV Types per Diagnosis",
        x = "Diagnosis",
@@ -308,57 +233,8 @@ p <- ggplot(alluvial_data_TRGV,
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(hjust = 0.5))
 
-print(p)
-
-# Save as PNG
-ggsave("TRGV_alluvial_percentages_filtered.png",
-       plot = p, width = 10, height = 5, dpi = 300, bg = "white")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-library(dplyr)
-
-ResultTRDV <- full_metadata %>%
-  group_by(Diagnosis, cluster, TRDV) %>%
-  summarise(count = n(), .groups = "drop_last") %>%
-  mutate(cluster_total = sum(count),
-         percent = round(100 * count / cluster_total, 2)) %>%
-  ungroup() %>%
-  arrange(Diagnosis, cluster, TRDV)
-
-
-
-
-
-
-
-
-
+# Save as PNG and PDF
+ggsave("TRGV_alluvial_percentages_V1.png", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
+ggsave("TRGV_alluvial_percentages_V1.pdf", plot = p, width = 10, height = 5, dpi = 600, bg = "white")
 
 

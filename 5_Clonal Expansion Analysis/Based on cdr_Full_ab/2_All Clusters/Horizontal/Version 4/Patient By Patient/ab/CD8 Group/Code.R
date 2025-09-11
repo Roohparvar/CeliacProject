@@ -37,6 +37,20 @@ df <- metadata_filtered %>%
 # Order clone categories
 df$clone_category <- factor(df$clone_category, levels = rev(c("Singleton", "Size 2-10", "Size 11-50", "Size 51-100", "Size 100+")))
 
+
+# Define the desired patient order
+patient_order_Lymph <- c(
+  "H-3", "H-8", "H-9", "H-10", "H-11", "H-12",
+  "ACD-1", "ACD-2", "ACD-5", "ACD-6", "ACD-7", "ACD-8", "ACD-9",
+  "RCD1-1a", "RCD1-2", "RCD1-3", "RCD1-6a", "RCD1-11", "RCD1-12",
+  "RCD1-13", "RCD1-14", "RCD1-15", "RCD2-1b", "RCD2-2"
+)
+
+# Convert Patient to a factor with specified order
+df$Patient <- factor(df$Patient, levels = patient_order_Lymph)
+
+
+
 library(writexl)
 write_xlsx(df, "df.xlsx")
 

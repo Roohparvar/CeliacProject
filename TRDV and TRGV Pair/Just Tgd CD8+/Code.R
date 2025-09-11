@@ -4,6 +4,7 @@ library(ggplot2)
 library(ggalluvial)
 library(scales)
 library(tidyr)
+library(writexl)
 
 
 full_metadata = full_metadata[full_metadata$cluster == "Tgd CD8+" , ]
@@ -74,7 +75,8 @@ diagnosis_summary <- full_metadata %>%
   ungroup() %>%
   arrange(Diagnosis, TRDV)
 
-print(diagnosis_summary)
+
+write_xlsx(diagnosis_summary, path = "diagnosis_summary_TRDV.xlsx")
 
 
 p <- ggplot(diagnosis_summary, aes(x = Diagnosis, y = percent, fill = TRDV)) +
@@ -147,6 +149,10 @@ diagnosis_summaryTRGV <- full_metadata %>%
          percent = round(100 * count / total, 2)) %>%
   ungroup() %>%
   arrange(Diagnosis, TRGV)
+
+
+write_xlsx(diagnosis_summaryTRGV, path = "diagnosis_summary_TRGV.xlsx")
+
 
 diagnosis_summaryTRGV$TRGV <- factor(diagnosis_summaryTRGV$TRGV,
                                      levels = c("TRGV2", "TRGV3", "TRGV4", "TRGV5", 

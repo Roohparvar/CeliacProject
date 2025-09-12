@@ -12,12 +12,46 @@ full_metadata = full_metadata[full_metadata$cluster == "Tgd", ]
 
 full_metadata <- full_metadata %>% filter( !is.na(full_metadata$TRDV) & !is.na(full_metadata$TRGV) )
 
+RCD22 = full_metadata[full_metadata$Patient == "RCD2-2",]
+RCD21b = full_metadata[full_metadata$Patient == "RCD2-1b",]
+
+table(RCD22$TRDV)
+table(RCD21b$TRDV)
+
 
 result <- full_metadata %>%
   group_by(Diagnosis, TRDV) %>%
   summarise(TRGVs = paste(unique(TRGV), collapse = ","), .groups = "drop") %>%
   arrange(Diagnosis, TRDV)
 
+
+all_sectors <- unique(c(full_metadata$TRDV, full_metadata$TRGV))
+all_sectors <- na.omit(all_sectors)
+
+# Example: define your own colors
+custom_colors <- c(
+  "TRDV1"  = "#c6ab52",   # dark navy
+  "TRDV2"  = "#679966",   # dark grey-purple
+  "TRDV3"  = "#ff6766",    # very dark blue
+  "TRGV2"  = "#ae1f29",
+  "TRGV3"  = "#e05b48",
+  "TRGV4"  = "#f1a284",
+  "TRGV5"  = "#fbdbc3",
+  "TRGV5P" = "#f7f7f7",
+  "TRGV8"  = "#cce5f6",
+  "TRGV9"  = "#8fc3dd",
+  "TRGV10" = "#4790be"
+)
+
+# Assign any sectors not listed above to grey
+grid.col <- setNames(rep("grey", length(all_sectors)), all_sectors)
+grid.col[names(custom_colors)] <- custom_colors
+
+
+TRDV_order <- sort(unique(na.omit(full_metadata$TRDV)))
+
+other_sectors <- setdiff(unique(c(full_metadata$TRDV, full_metadata$TRGV)), TRDV_order)
+sector_order <- c(TRDV_order, other_sectors)
 
 
 
@@ -32,11 +66,14 @@ for (p in Diagnosiss) {
   if (nrow(df) > 0) {
     
     ## --- PDF output ---
-    pdf(file = paste0("Circos_", p, ".pdf"), width = 8, height = 8)  
+    pdf(file = paste0("Circos_", p, ".pdf"), width = 9, height = 9)  
     chordDiagram(df, 
+                 order = sector_order,
                  transparency = 0.5,
                  annotationTrack = "grid",
-                 preAllocateTracks = list(track.height = 0.1))
+                 preAllocateTracks = list(track.height = 0.1), grid.col = grid.col)
+    
+    title(main = paste("TRGV-TRDV pairing - Tgd Cluster -", p), line = 0.3, cex.main = 0.9)
     
     circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
       sector.name = get.cell.meta.data("sector.index")
@@ -47,11 +84,14 @@ for (p in Diagnosiss) {
     circos.clear()
     
     ## --- PNG output ---
-    png(file = paste0("Circos_", p, ".png"), width = 2000, height = 2000, res = 300)
+    png(file = paste0("Circos_", p, ".png"), width = 2300, height = 2200, res = 300)
     chordDiagram(df, 
+                 order = sector_order,
                  transparency = 0.5,
                  annotationTrack = "grid",
-                 preAllocateTracks = list(track.height = 0.1))
+                 preAllocateTracks = list(track.height = 0.1), grid.col = grid.col)
+    
+    title(main = paste("TRGV-TRDV pairing - Tgd Cluster -", p), line = 0.3, cex.main = 0.9)
     
     circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
       sector.name = get.cell.meta.data("sector.index")
@@ -82,7 +122,7 @@ write_xlsx(diagnosis_summary, path = "diagnosis_summary_TRDV.xlsx")
 p <- ggplot(diagnosis_summary, aes(x = Diagnosis, y = percent, fill = TRDV)) +
   geom_bar(stat = "identity", position = "stack") +
   labs(x = "Diagnosis", y = "Percentage",
-       title = "Proportion of TRDV types per Diagnosis") +
+       title = "Proportion of TRDV types per Diagnosis - Tgd Cluster") +
   scale_fill_manual(values = c(
     "TRDV1" = "#c6ab52",   # dark navy
     "TRDV2" = "#679966",   # dark grey-purple
@@ -126,7 +166,7 @@ p <- ggplot(alluvial_data,
   scale_x_discrete(expand = c(0.1, 0.1)) +
   scale_fill_manual(values = trdv_colors) +
   scale_y_continuous(labels = percent_format(scale = 1)) +
-  labs(title = "Proportion of TRDV Types per Diagnosis",
+  labs(title = "Proportion of TRDV Types per Diagnosis - Tgd Cluster",
        x = "Diagnosis",
        y = "Percentage (%)") +
   theme_minimal(base_size = 14) +
@@ -173,7 +213,7 @@ dark_colors <- c(
 p <- ggplot(diagnosis_summaryTRGV, aes(x = Diagnosis, y = percent, fill = TRGV)) +
   geom_bar(stat = "identity", position = "stack") +
   labs(x = "Diagnosis", y = "Percentage",
-       title = "Proportion of TRGV types per Diagnosis") +
+       title = "Proportion of TRGV types per Diagnosis - Tgd Cluster") +
   scale_fill_manual(values = dark_colors) +
   theme_minimal(base_size = 14) +
   theme(plot.title = element_text(hjust = 0.5))
@@ -231,7 +271,7 @@ p <- ggplot(alluvial_data_TRGV,
                                "TRGV5", "TRGV5P", "TRGV8",
                                "TRGV9", "TRGV10")) +
   scale_y_continuous(labels = percent_format(scale = 1)) +
-  labs(title = "Proportion of TRGV Types per Diagnosis",
+  labs(title = "Proportion of TRGV Types per Diagnosis - Tgd Cluster",
        x = "Diagnosis",
        y = "Percentage (%)") +
   theme_minimal(base_size = 14) +

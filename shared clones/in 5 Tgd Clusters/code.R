@@ -30,7 +30,21 @@ png("shared_clones_Tgd_Clusters.png", width = 2000, height = 2300, res = 300, bg
 
 upset(upset_data,
       nsets = length(clones_list),
-      nintersects = 20,
+      nintersects = 40,
+      order.by = "freq",
+      mainbar.y.label = "Shared Clones",
+      sets.x.label = "Clones per Tγδ Clusters")
+
+dev.off()
+
+
+
+# Save as PDF
+pdf("shared_clones_Tgd_Clusters.pdf", width = 10, height = 12)
+
+upset(upset_data,
+      nsets = length(clones_list),
+      nintersects = 40,
       order.by = "freq",
       mainbar.y.label = "Shared Clones",
       sets.x.label = "Clones per Tγδ Clusters")
@@ -44,11 +58,7 @@ dev.off()
 
 
 
-
-
-
 get_exact_shared_metadata <- function(metadata, clones_list, clusters) {
-  # کلون‌های منحصراً مشترک
   common <- Reduce(intersect, clones_list[clusters])
   
   exact <- common[sapply(common, function(cl) {
@@ -56,7 +66,6 @@ get_exact_shared_metadata <- function(metadata, clones_list, clusters) {
     setequal(sort(which_sets), sort(clusters))
   })]
   
-  # فیلتر متادیتا بر اساس همین کلون‌ها
   result_meta <- metadata %>% filter(cdr_Full_gd %in% exact)
   
   return(result_meta)
@@ -64,4 +73,4 @@ get_exact_shared_metadata <- function(metadata, clones_list, clusters) {
 
 
 new_meta <- get_exact_shared_metadata(full_metadata, clones_list, 
-                                      c("Trm IEL", "Tgd INSIG1+"))
+                                      c("Trm IEL", "Tgd CD8+"))

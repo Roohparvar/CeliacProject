@@ -234,7 +234,7 @@ p <- ggplot(long_result, aes(x = Cluster, y = Percent, fill = Combination)) +
 
 
 ggsave("Cluster_Stacked_by_Combination.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
-
+ggsave("Cluster_Stacked_by_Combination.pdf", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
 
 
 
@@ -266,5 +266,5 @@ p <- ggplot(long_result_filtered, aes(x = Cluster, y = Percent, fill = Combinati
 
 
 ggsave("Cluster_Stacked_by_Combination_Selected.png", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
-
+ggsave("Cluster_Stacked_by_Combination_Selected.pdf", plot = p, width = 10, height = 6, dpi = 300, bg = "white")
 

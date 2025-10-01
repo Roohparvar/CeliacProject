@@ -1,5 +1,5 @@
 # Celiac Project
-This repository contains a portion of the data analysis tasks aimed at discovering biologically relevant insights in **Celiac disease**.
+This repository contains a portion of the TCR-level data analysis tasks aimed at uncovering biologically relevant insights into Celiac disease.
 
 ---
 ---

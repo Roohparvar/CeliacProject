@@ -1,4 +1,6 @@
-#--------------------------------------------------------------------------------- Add UMAP plot colored by imm_receptor with custom colors
+setwd("C:/Esmaeil/CeliacProject/CeliacProject/1_Data Cleaning/immune receptors distribution Before Data Cleaning")
+
+#---------------------------------------------------------- Add UMAP plot colored by imm_receptor with custom colors
 library(ggplot2)
 library(dplyr)
 library(cowplot)
@@ -18,7 +20,7 @@ receptor_colors <- c(
 receptor_labels <- c(
   "ab" = "TCR⍺β",
   "gd" = "TRRγδ",
-  "abgd" = "⍺βγδ",
+  "abgd" = "TCR⍺βγδ",
   "T and B" = "T and B",
   "hkl" = "hkl",
   "Aberant ab" = "Aberrant ⍺β",
@@ -69,12 +71,12 @@ legend <- cowplot::get_legend(legend_plot)
 final_plot <- cowplot::plot_grid(main_plot, legend, ncol = 2, rel_widths = c(1, 0.25))
 
 # Save image — total width = 10in, height = 6in
-ggsave("Umap_imm_receptor_highlighted.png", plot = final_plot, width = 8, height = 6, dpi = 600, bg = "white")
+ggsave("Umap_imm_receptor_highlighted.png", plot = final_plot, width = 10, height = 6, dpi = 600, bg = "white")
 
 
 
 
-#--------------------------------------------------------------------------------- Add UMAP plot colored by cluster with custom colors
+#---------------------------------------------------------- Add UMAP plot colored by cluster with custom colors
 full_metadata$cluster <- recode(full_metadata$cluster,
                                 "NK Tgd" = "NK Tγδ",
                                 "Tgd CD8+" = "Tγδ CD8+",

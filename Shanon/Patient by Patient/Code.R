@@ -1,23 +1,19 @@
-
-
-
-
 library(dplyr)
 library(ggplot2)
 library(vegan)
 
-# انتخاب کلاسترهای هدف برای حذف (اختیاری)
-# انتخاب کلاسترهای هدف (اگر میخوای حذفشون کنی)
+
 target_clusters <- c(
   "Plasma cells_1", "B cells_1", "B cells_2",
   "B cells MZB1+", "Plasma cells_2", "Plasmablast",
   "B cells BAFFR", "Tgd INSIG1+", "Tgd", "Tgd CD8+", "ILC2/ILC3", "ILC2/ILTi", "ILC1", "DC", "Macrophages", "Mast cells"
 )
 
+
 full_metadata <- full_metadata %>%
   filter(!cluster %in% target_clusters)
 
-# ترتیب مرجع برای نمودار
+
 ordered_celltypes_bycelltype <- c(
   "CD4-CD8-", "Cyt. IEL", "Trm IEL", "IEL CCL4+", "nIEL",
   "Prolif. IEL", "IEL GZMK+", "CD4-CD8- IL10 ICOS", "CD8 Mem", "CD8 Cyt.",
@@ -28,11 +24,12 @@ ordered_celltypes_bycelltype <- c(
   "Macrophages", "DC", "Mast cells"
 )
 
+
 ordered_clusters <- ordered_celltypes_bycelltype[
   ordered_celltypes_bycelltype %in% unique(full_metadata$cluster)
 ]
 
-# محاسبه شاخص‌ها بر اساس Patient و Cluster
+
 cluster_patient_diversity <- full_metadata %>%
   filter(!is.na(cdr_Full_ab)) %>%
   group_by(Patient, cluster, cdr_Full_ab) %>%
@@ -49,34 +46,33 @@ cluster_patient_diversity <- full_metadata %>%
     cluster = factor(cluster, levels = ordered_clusters)
   )
 
-# تم گرافیکی
+
 custom_theme <- theme_bw() + 
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     axis.text.x = element_text(size = 8, angle = 45, hjust = 1)
   )
 
-# حلقه برای رسم و ذخیره نمودار هر بیمار
+
 patients <- unique(cluster_patient_diversity$Patient)
 
 for (p in patients) {
   df_patient <- cluster_patient_diversity %>% filter(Patient == p)
   
-  # نمودار شانون خام
+
   p1 <- ggplot(df_patient, aes(x = cluster, y = shannon)) +
     geom_bar(stat = "identity", fill = "steelblue") +
     labs(title = paste("Shannon Diversity - Patient", p),
          x = "Cluster", y = "Shannon Index") +
     custom_theme
   
-  # نمودار شانون نرمالایز شده
   p2 <- ggplot(df_patient, aes(x = cluster, y = shannon_norm)) +
     geom_bar(stat = "identity", fill = "darkgreen") +
     labs(title = paste("Normalized Shannon Diversity - Patient", p),
          x = "Cluster", y = "Normalized Shannon Index") +
     custom_theme
   
-  # ذخیره نمودارها
+
   ggsave(paste0("shannon_diversity_Patient_", p, ".png"), plot = p1, width = 10, height = 5, dpi = 300, bg = "white")
   ggsave(paste0("shannon_norm_diversity_Patient_", p, ".png"), plot = p2, width = 10, height = 5, dpi = 300, bg = "white")
 }

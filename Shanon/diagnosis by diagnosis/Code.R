@@ -123,25 +123,60 @@ ggsave("shannon_norm_diversity_by_cluster_and_diagnosis_stacked.pdf",
 
 
 
-# Line plot of normalized Shannon by Cluster and Diagnosis
-p_line <- ggplot(cluster_Diagnosis_diversity,
-                 aes(x = cluster, y = shannon_norm, color = Diagnosis, group = Diagnosis)) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +
-  scale_color_manual(values = c(
+
+
+
+
+
+
+library(dplyr)
+library(ggplot2)
+
+# Define the order of diagnoses
+diag_order <- c("RCD-II", "RCD-I", "ACD", "Healthy")
+
+# Create a start position for each diagnosis within each cluster
+cluster_Diagnosis_diversity <- cluster_Diagnosis_diversity %>%
+  mutate(Diagnosis = factor(Diagnosis, levels = diag_order)) %>%
+  group_by(cluster) %>%
+  arrange(Diagnosis) %>%
+  mutate(
+    y_start = as.numeric(Diagnosis) - 1,          # integer start positions: 0,1,2,3
+    y_end   = y_start + shannon_norm              # extend by normalized Shannon
+  )
+
+# Plot bars manually using geom_rect
+p_combined <- ggplot(cluster_Diagnosis_diversity, aes(x = cluster, fill = Diagnosis)) +
+  geom_rect(aes(xmin = as.numeric(cluster) - 0.4,
+                xmax = as.numeric(cluster) + 0.4,
+                ymin = y_start,
+                ymax = y_end)) +
+  scale_fill_manual(values = c(
     "Healthy" = "#D83A8A",
     "ACD"     = "#349C7C",
     "RCD-I"    = "#D0632B",
     "RCD-II"    = "#6E71AD"
   )) +
-  labs(title = "Normalized Shannon Diversity Across Clusters",
-       x = "Cluster", y = "Normalized Shannon Index", color = "Diagnosis") +
+  labs(title = "Normalized Shannon Diversity by Cluster and Diagnosis",
+       x = "Cluster", y = "Normalized Shannon Index", fill = "Diagnosis") +
   custom_theme +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Save line plot
-ggsave("shannon_norm_diversity_line.png",
-       plot = p_line, width = 12, height = 6, dpi = 300, bg = "white")
+# Save plots
+ggsave("shannon_norm_diversity_by_cluster_and_diagnosis_fixed.png",
+       plot = p_combined, width = 12, height = 6, dpi = 300, bg = "white")
+ggsave("shannon_norm_diversity_by_cluster_and_diagnosis_fixed.pdf",
+       plot = p_combined, width = 12, height = 6, dpi = 300, bg = "white")
 
-ggsave("shannon_norm_diversity_line.pdf",
-       plot = p_line, width = 12, height = 6, dpi = 300, bg = "white")
+
+
+
+
+
+
+
+
+
+
+
+

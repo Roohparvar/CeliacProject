@@ -180,3 +180,28 @@ ggsave("shannon_norm_diversity_by_cluster_and_diagnosis_fixed.pdf",
 
 
 
+library(ggplot2)
+
+# Ensure Diagnosis is a factor with the order you want
+cluster_Diagnosis_diversity$Diagnosis <- factor(cluster_Diagnosis_diversity$Diagnosis,
+                                                levels = c("RCD-II", "RCD-I", "ACD", "Healthy"))
+
+# Point plot
+p_points <- ggplot(cluster_Diagnosis_diversity, 
+                   aes(x = cluster, y = shannon_norm, color = Diagnosis)) +
+  geom_point(size = 2, position = position_dodge(width = 0.3)) +  # dodge to separate points
+  scale_color_manual(values = c(
+    "Healthy" = "#D83A8A",
+    "ACD"     = "#349C7C",
+    "RCD-I"   = "#D0632B",
+    "RCD-II"  = "#6E71AD"
+  )) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Normalized Shannon Entropy by Cluster and Diagnosis",
+       x = "Cluster", y = "Normalized Shannon Index", color = "Diagnosis") +
+  custom_theme +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Save plots
+ggsave("shannon_norm_pointplot.png", plot = p_points, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave("shannon_norm_pointplot.pdf", plot = p_points, width = 10, height = 6, dpi = 300, bg = "white")

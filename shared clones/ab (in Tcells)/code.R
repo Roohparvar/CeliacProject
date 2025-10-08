@@ -97,7 +97,6 @@ dev.off()
 
 
 get_exact_shared_metadata <- function(metadata, clones_list, clusters) {
-  # کلون‌های منحصراً مشترک
   common <- Reduce(intersect, clones_list[clusters])
   
   exact <- common[sapply(common, function(cl) {
@@ -105,7 +104,7 @@ get_exact_shared_metadata <- function(metadata, clones_list, clusters) {
     setequal(sort(which_sets), sort(clusters))
   })]
   
-  # فیلتر متادیتا بر اساس همین کلون‌ها
+
   result_meta <- metadata %>% filter(cdr_Full_ab %in% exact)
   
   return(result_meta)

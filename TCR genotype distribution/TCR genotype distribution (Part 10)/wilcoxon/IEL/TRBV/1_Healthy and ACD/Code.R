@@ -1,7 +1,9 @@
+setwd("C:/Esmaeil/CeliacProject/CeliacProject/TCR genotype distribution/TCR genotype distribution (Part 10)/wilcoxon/IEL/TRBV/1_Healthy and ACD")
+
 clean_data <- full_metadata[
   !is.na(full_metadata$TRBV) &
     !is.na(full_metadata$Patient) &
-    full_metadata$cluster %in% c("IEL GZMK+", "Trm IEL", "Prolif. IEL", "Cyt. IEL", "IEL CCL4+", "nIEL") &
+    full_metadata$cluster %in% c("IEL GZMK+", "Trm IEL", "Prolif. IEL", "Cyt. IEL", "IEL CCL4+", "nIEL", "CD8 Cyt.") &
     full_metadata$Diagnosis %in% c("Healthy", "ACD"),
 ]
 

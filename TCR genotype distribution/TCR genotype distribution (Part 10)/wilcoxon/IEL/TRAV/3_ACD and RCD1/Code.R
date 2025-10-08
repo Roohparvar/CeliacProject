@@ -1,7 +1,9 @@
+setwd("C:/Esmaeil/CeliacProject/CeliacProject/TCR genotype distribution/TCR genotype distribution (Part 10)/wilcoxon/IEL/TRAV/3_ACD and RCD1")
+
 clean_data <- full_metadata[
   !is.na(full_metadata$TRAV) &
     !is.na(full_metadata$Patient) &
-    full_metadata$cluster %in% c("IEL GZMK+", "Trm IEL", "Prolif. IEL", "Cyt. IEL", "IEL CCL4+", "nIEL") &
+    full_metadata$cluster %in% c("IEL GZMK+", "Trm IEL", "Prolif. IEL", "Cyt. IEL", "IEL CCL4+", "nIEL", "CD8 Cyt.") &
     full_metadata$Diagnosis %in% c("ACD", "RCD-I"),
 ]
 
@@ -45,9 +47,9 @@ count_matrix$negLog10P <- -log10(count_matrix$pvalue)
 
 
 
-top_genes <- head(count_matrix[order(count_matrix$pvalue), ], 2)
+top_genes <- head(count_matrix[order(count_matrix$pvalue), ],4)
 top_names <- rownames(top_genes)
-colors <- c("#FFD8B1", "#808000", "green", "purple", "orange")
+colors <- c("#FFB6C1", "#0082C8", "#FDCEAC", "#7F7F3C", "orange")
 
 png("volcano_plot_pvalue_top5_legend_outside.png", width = 1300, height = 1600, res = 300)
 

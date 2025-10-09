@@ -18,7 +18,7 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 ### Part 1 - Step 1: Initial Data Cleaning and Updates 
 - Corrected some spelling mistakes in the dataset.
 - Fixed a typo in the `imm_receptor` column and renamed it to `imm_receptor_Jerome`.
-- A new column `imm_receptor_Esmaeil` was created to preserve the original data before making any further modifications to receptor annotations.
+- A new column, in addition to the existing imm_receptor column, was created to preserve the original data before making any further modifications to the receptor annotations.
 - Patient names were updated based on newly provided metadata.
 - Updated the `cluster` column in `full_metadata` based on `CellID` matches from `updated_clusters.xlsx`.
 - Cluster names were updated based on newly provided metadata.
@@ -32,31 +32,31 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 - Reordered columns to follow a standardized and organized structure, including clinical, demographic, scRNA-seq, and TCR-related parameters.  
 
 ### Part 1 - Step 3: Removing T cell receptor information that was assigned to B cell clusters
-- Cleaning imm_receptor_Esmaeil Column: Remove "ab", gd", Aberrant ab" and "Aberrant g" values from imm_receptor_Esmaeil in selected B cell clusters. **A total of 666 cells were affected**.
+- Cleaning imm_receptor Column: Remove "αβ", γδ", Aberrant αβ" and "Aberrant γ" values from imm_receptor in selected B cell clusters. **A total of 666 cells were affected**.
 - TCR information mistakenly assigned to B cell clusters was removed. **A total of 17,792 cells were affected**, and all alpha, beta, gamma, and delta chain–related columns were cleared.
 
 ### Part 1 - Step 4: Removing B cell receptor information that was assigned to T cell clusters  
-- Cleaning imm_receptor_Esmaeil Column: Remove "hkl" values from imm_receptor_Esmaeil in selected T cell clusters. **A total of 1459 cells were affected**.
+- Cleaning imm_receptor Column: Remove "hkl" values from imm_receptor in selected T cell clusters. **A total of 1459 cells were affected**.
 - BCR information mistakenly assigned to T cell clusters was removed. **A total of 141,029 cells were affected**, and all heavy (IGH), kappa (IGK), and lambda (IGL) chain–related columns were cleared.
 
 ### Part 1 - Step 5: Removing BCR and TCR Information Assigned to "Macrophages", "pDC", "Mast cells"
-- The imm_receptor_Esmaeil column, along with all BCR- and TCR-related fields, was cleared for the affected cells within these clusters, **impacting a total of 979 cells**.
+- The imm_receptor column, along with all BCR- and TCR-related fields, was cleared for the affected cells within these clusters, **impacting a total of 979 cells**.
 
-### Part 1 - Step 6: Updating imm_receptor_Esmaeil Based on Receptor Sequences
-- ab: Assigned to cells where cdr_Full_ab is present → **5204 cells affected**.
-- gd: Assigned to cells where cdr_Full_gd is present → **781 cells affected**.
-- abgd: Assigned to cells where both cdr_Full_ab and cdr_Full_gd are present → **73 cells affected**.
+### Part 1 - Step 6: Updating imm_receptor Based on Receptor Sequences
+- αβ: Assigned to cells where cdr_Full_ab is present → **5204 cells affected**.
+- γδ: Assigned to cells where cdr_Full_gd is present → **781 cells affected**.
+- αβγδ: Assigned to cells where both cdr_Full_ab and cdr_Full_gd are present → **73 cells affected**.
 - hkl: Assigned to B cell clusters where cdr_Full_ig_hk or cdr_Full_ig_hL is present → **346 cells affected**.
 
-### Part 1 - Step 7: Managing Cells with imm_receptor_Esmaeil Annotated as "abgd" or Containing Both cdr_Full_ab and cdr_Full_gd
-A total of 1,408 cells met the criteria of having imm_receptor_Esmaeil annotated as "abgd" or simultaneously containing both cdr_Full_ab and cdr_Full_gd. This step focuses on refining the immune receptor annotation for these ambiguous or dual-feature cells:
+### Part 1 - Step 7: Managing Cells with imm_receptor Annotated as "αβγδ" or Containing Both cdr_Full_ab and cdr_Full_gd
+A total of 1,408 cells met the criteria of having imm_receptor annotated as "αβγδ" or simultaneously containing both cdr_Full_ab and cdr_Full_gd. This step focuses on refining the immune receptor annotation for these ambiguous or dual-feature cells:
 - 2 cells were found in B cell clusters that express cdr_Full_ig_hL or cdr_Full_ig_hk but do not express cdr_Full_ab or cdr_Full_gd. Their immune receptor was classified as 'hkl'
-- 4 cells located in B cell clusters lacked both cdr_Full_ig_hL and cdr_Full_ig_hk despite expressing either cdr_Full_ab or cdr_Full_gd, or having their immune receptor defined as 'abgd'. These cells were excluded from further analysis.
-- First, we identified the gamma-delta (gd) T cell clusters in the dataset, Then:
-	- Updated to "gd" for cells located in the "Act. Tgd" and "Tgd INSIG1+" clusters. Total updated: 160 cells
-	- Updated to "ab" for cells not located in "Act. Tgd", "Tgd INSIG1+", "NK/Tgd", "Tgd CD8+", or "Trm IEL" clusters. Total updated: 820 cells
-	- To resolve remaining ambiguous cases in the "NK/Tgd", "Tgd CD8+", and "Trm IEL" clusters, we examined the expression of key immune receptor genes (Trac, Trbc1, Trbc2, Trgc1, Trgc2, Trdc) and confidently re-annotated 330 cells as "ab" and 92 cells as "gd" based on their gene expression profiles.
-### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
+- 4 cells located in B cell clusters lacked both cdr_Full_ig_hL and cdr_Full_ig_hk despite expressing either cdr_Full_ab or cdr_Full_gd, or having their immune receptor defined as 'αβγδ'. These cells were excluded from further analysis.
+- First, we identified the gamma-delta (γδ) T cell clusters in the dataset, Then:
+	- Updated to "γδ" for cells located in the "Act. Tγδ" and "T INSIG1+" clusters. Total updated: 160 cells
+	- Updated to "αβ" for cells not located in "Act. Tγδ", "Tγδ INSIG1+", "NK/Tγδ", "Tγδ CD8+", or "Trm IEL" clusters. Total updated: 820 cells
+	- To resolve remaining ambiguous cases in the "NK/Tγδ", "Tγδ CD8+", and "Trm IEL" clusters, we examined the expression of key immune receptor genes (Trac, Trbc1, Trbc2, Trgc1, Trgc2, Trdc) and confidently re-annotated 330 cells as "αβ" and 92 cells as "γδ" based on their gene expression profiles.
+### Part 1 - Step 8:  Computing Clone Size for αβ and γδ TCRs 
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.
 - Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.
 
@@ -139,7 +139,7 @@ In this section, we explored the distribution of cells that contain the **CDR3_G
 ---
 ## Part 5: T and B (Ambiguous) Immune Receptor Distribution
 
-In previous steps, we created a new column named imm_receptor_Esmaeil, derived from the original imm_receptor_Jerome, in which we removed cells with ambiguous immune receptor assignments — specifically those labeled as "T and B". While these ambiguous cells were excluded from the final cleaned metadata, this section focuses on analyzing their distribution before removal. The goal is to understand how these "T and B" cells were distributed across clusters and to identify whether they were concentrated in specific regions or broadly spread throughout the dataset.
+In previous steps, we created a new column named imm_receptor, derived from the original imm_receptor_Jerome, in which we removed cells with ambiguous immune receptor assignments — specifically those labeled as "T and B". While these ambiguous cells were excluded from the final cleaned metadata, this section focuses on analyzing their distribution before removal. The goal is to understand how these "T and B" cells were distributed across clusters and to identify whether they were concentrated in specific regions or broadly spread throughout the dataset.
 
 
 ---
@@ -147,7 +147,7 @@ In previous steps, we created a new column named imm_receptor_Esmaeil, derived f
 ---
 
 Part 7: Distribution of Different TCR Combinations
-We analyzed immune receptor types across clusters, counted specific TCR types (ab, gd, aberrant forms), and identified unique CDR3 combination patterns. The results were summarized in a structured table and saved to an Excel file.
+We analyzed immune receptor types across clusters, counted specific TCR types (αβ, γδ, aberrant forms), and identified unique CDR3 combination patterns. The results were summarized in a structured table and saved to an Excel file.
 
 ---
 ---

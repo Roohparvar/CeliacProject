@@ -61,9 +61,10 @@ A total of 1,408 cells met the criteria of having imm_receptor_Esmaeil annotated
 - Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.
 
 ### Part 1 - Step 9:  Outputs
-	- The final UMAP plot was generated to visualize the cell clusters.
-	- The cleaned and updated metadata table was saved for downstream analyses.
-	- The distribution of immune receptors across all clusters was identified and documented.
+- The final UMAP plot was generated to visualize the cell clusters.
+- The cleaned and updated metadata table was saved for downstream analyses.
+- The distribution of immune receptors across all clusters was identified and documented.
+
 ---
 ---
 ---

@@ -831,10 +831,6 @@ full_metadata$cluster <- recode(full_metadata$cluster,
                                 "Tgd CD8+" = "Tγδ CD8+"
 )
 
-full_metadata$cluster <- recode(full_metadata$imm_receptor_Esmaeil,
-                                "Aberrant ab" = "Aberrant αβ",
-                                "Aberrant g" = "Aberrant γ"
-)
 
 plot_data <- full_metadata %>%
   filter(!is.na(cluster))  
@@ -899,4 +895,12 @@ write.xlsx(summary_table, "distribution of immune receptors.xlsx")
 
 #--------------------------------------------------------------------------------- Save MetaData
 full_metadata[full_metadata == ""] <- NA
-save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "MetaData_Esmaeil.Rdata")
+
+full_metadata$imm_receptor_Esmaeil <- recode(full_metadata$imm_receptor_Esmaeil,
+                                "Aberrant ab" = "Aberrant αβ",
+                                "Aberrant g" = "Aberrant γ",
+                                "ab" = "αβ",
+                                "gd" = "γδ"
+)
+
+save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "Final MetaData.Rdata")

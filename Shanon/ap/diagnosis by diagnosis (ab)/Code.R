@@ -1,4 +1,4 @@
-setwd("C:/Esmaeil/CeliacProject/CeliacProject/Shanon/diagnosis by diagnosis")
+setwd("C:/Esmaeil/CeliacProject/CeliacProject/Shanon/ap/diagnosis by diagnosis (ab)")
 
 
 
@@ -11,7 +11,9 @@ library(vegan)
 target_clusters <- c(
   "Plasma cells_1", "B cells_1", "B cells_2",
   "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR", "Tgd INSIG1+", "Tgd", "Tgd CD8+", "ILC2/ILC3", "ILC2/ILTi", "ILC1", "DC", "Macrophages", "Mast cells"
+  "B cells BAFFR", "Tgd INSIG1+", "Tgd", "Tgd CD8+", "NK Tgd", 
+  "ILC2/ILC3", "ILC2/ILTi", "ILC1",
+  "DC", "Macrophages", "Mast cells"
 )
 
 full_metadata <- full_metadata %>%
@@ -20,10 +22,11 @@ full_metadata <- full_metadata %>%
 # ترتیب مرجع برای نمودار
 ordered_celltypes_bycelltype <- c(
   "CD4-CD8-", "Cyt. IEL", "Trm IEL", 
-  "IEL CCL4+", "nIEL", "Prolif. IEL", "IEL GZMK+", 
+  "IEL CCL4+", "nIEL", "Prolif. IEL", "IEL GZMK+", "CD8 Cyt.",
   "CD4-CD8- IL10 ICOS", 
-  "CD8 Mem", "CD8 Cyt.", "CD8 Trm", 
+  "CD8 Mem", "CD8 Trm", 
   "Th", "Tregs", "Th1 Mem", "Th2/Tfh", "Th17",
+  
   "NK Tgd", "Tgd CD8+", "Tgd", "Tgd INSIG1+", 
   "ILC1", "ILC2/ILC3", "ILC2/ILTi",
   "B cells MZB1+", "B cells BAFFR", "B cells_1", "B cells_2",

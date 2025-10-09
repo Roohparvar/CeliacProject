@@ -72,7 +72,8 @@ A total of 1,408 cells met the criteria of having imm_receptor annotated as "α�
 ## Part 2: Immune Receptor Distribution
 We analyzed how each immune receptor type is distributed across different clusters.
 - In the first part of this analysis, we visualized the distribution using a UMAP plot, where cells are colored by their assigned immune receptor types. This provided a global view of receptor-specific localization patterns across the cellular landscape.
-- To complement this, we generated bar plots showing the counts of each receptor type within clusters. These bar plots offer a more quantitative perspective, helping to characterize the immune landscape and receptor usage across cell populations.
+- To complement this, we generated bar plots and a bubble plot showing the counts of each receptor type within clusters. These visualizations provided a quantitative overview of receptor usage across the identified immune populations.
+- Overall, our results show that the αβ TCR represents the predominant receptor type across most T cell clusters, while γδ TCR, Aberrant αβ/γ receptors, and hkl receptors are restricted to specific subsets, reflecting functional specialization and lineage diversity. Notably, we identified three “rogue” clusters with high levels of aberrant receptor expression: CD4-CD8- and T eff. IEL (Aberrant αβ), and Trm IEL (Aberrant γ).
 
 ---
 ---

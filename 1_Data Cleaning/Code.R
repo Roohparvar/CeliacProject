@@ -7,8 +7,8 @@ library(readxl)
 library(writexl)
 library(Matrix)
 library(tidyverse)
-
-
+library(openxlsx)
+library(patchwork)
 
 #-------------------------------------------------------------------------------  Part 1 - Step 1: Initial Data Cleaning and Updates 
 # Corrected some spelling mistakes in the dataset.
@@ -89,6 +89,47 @@ new_clusters <- read_excel("new_cell_clusters.xlsx")
 idx <- match(full_metadata$CellID, new_clusters$CellID)
 full_metadata$cluster[!is.na(idx)] <- new_clusters$cluster[idx[!is.na(idx)]]
 
+
+# Update cluster names based on mapping
+full_metadata <- full_metadata %>%
+  mutate(cluster = case_when(
+    cluster == "Th" ~ "CD4 FTH1+",
+    cluster == "Tregs" ~ "Tregs",
+    cluster == "CD8 Mem" ~ "CD8 Mem",
+    cluster == "IEL GZMK+" ~ "IEL GZMK+",
+    cluster == "Th17" ~ "Th17",
+    cluster == "CD8 Cyt." ~ "Cyt. IEL",
+    cluster == "CD8 Trm" ~ "CD8 Trm",
+    cluster == "Trm IEL" ~ "Trm IEL",
+    cluster == "Prolif. IEL" ~ "Prolif. IEL",
+    cluster == "Tgd CD8+" ~ "Tgd CD8+",
+    cluster == "B cells_1" ~ "Act. plasma IGHA+",
+    cluster == "NK Tgd" ~ "NK/Tgd",
+    cluster == "Plasmablast" ~ "Mem B cells",
+    cluster == "Th1 Mem" ~ "CD4 Trm",
+    cluster == "DC" ~ "Macrophages",
+    cluster == "Tgd INSIG1+" ~ "Tgd INSIG1+",
+    cluster == "ILC2/ILC3" ~ "ILC3",
+    cluster == "CD4-CD8- IL10 ICOS" ~ "CD4-CD8-IL10+",
+    cluster == "CD4-CD8-" ~ "CD4-CD8-",
+    cluster == "ILC1" ~ "ILC1/ILC2",
+    cluster == "Th2/Tfh" ~ "Tfh",
+    cluster == "Cyt. IEL" ~ "T eff. IEL",
+    cluster == "B cells MZB1+" ~ "Act. plasmablast",
+    cluster == "Tgd" ~ "Act. Tgd",
+    cluster == "IEL CCL4+" ~ "IEL CCL4+",
+    cluster == "Plasma cells_2" ~ "Plasma IGHG+",
+    cluster == "Macrophages" ~ "pDC",
+    cluster == "Mast cells" ~ "Mast cells",
+    cluster == "nIEL" ~ "nIEL",
+    cluster == "B cells_2" ~ "Mature plasma IGHA+",
+    cluster == "B cells BAFFR" ~ "B cells BAFFR+",
+    cluster == "Plasma cells_1" ~ "Homing plasmablast",
+    cluster == "ILC2/ILTi" ~ "ILC2/ILTi",
+    TRUE ~ cluster
+  ))
+
+
 # Remove rows where imm_receptor_Jerome is "T and B"
 removed_count <- sum(full_metadata$imm_receptor_Jerome == "T and B")
 full_metadata <- full_metadata[full_metadata$imm_receptor_Jerome != "T and B", ]
@@ -160,9 +201,9 @@ full_metadata <- full_metadata %>% select(all_of(desired_order))
 #------------------------------------------------------------------------------- Part 1 - Step 3: Removing T cell receptor information that was assigned to B cell clusters 
 # Cleaning imm_receptor_Esmaeil Column
 target_clusters <- c(
-  "Plasma cells_1", "B cells_1", "B cells_2",
-  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR"
+  "Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+",
+  "Act. plasmablast", "Plasma IGHG+", "Mem B cells",
+  "B cells BAFFR+"
 )
 
 target_receptors <- c("Aberrant ab", "Aberrant g", "gd", "ab")
@@ -181,9 +222,9 @@ if (length(rows_to_clean) > 0) {
 
 # Removing Other TCR-Related Data
 target_clusters <- c(
-  "Plasma cells_1", "B cells_1", "B cells_2",
-  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR"
+  "Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+",
+  "Act. plasmablast", "Plasma IGHG+", "Mem B cells",
+  "B cells BAFFR+"
 )
 
 rows_to_clean <- which(
@@ -222,9 +263,9 @@ if (length(rows_to_clean) > 0) {
 #------------------------------------------------------------------------------- Part 1 - Step 4: Removing B cell receptor information that was assigned to T cell clusters 
 # Cleaning imm_receptor_Esmaeil Column
 target_clusters <- c(
-  "Plasma cells_1", "B cells_1", "B cells_2",
-  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR", "DC", "Macrophages", "Mast cells"
+  "Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+",
+  "Act. plasmablast", "Plasma IGHG+", "Mem B cells",
+  "B cells BAFFR+", "Macrophages", "pDC", "Mast cells"
 )
 
 rows_to_clean <- which(
@@ -241,9 +282,9 @@ if (length(rows_to_clean) > 0) {
 
 # Removing Other BCR-Related Data
 target_clusters <- c(
-  "Plasma cells_1", "B cells_1", "B cells_2",
-  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR", "DC", "Macrophages", "Mast cells"
+  "Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+",
+  "Act. plasmablast", "Plasma IGHG+", "Mem B cells",
+  "B cells BAFFR+", "Macrophages", "pDC", "Mast cells"
 )
 
 rows_to_clean <- which(
@@ -270,8 +311,8 @@ if (length(rows_to_clean) > 0) {
 
 
 
-#------------------------------------------------------------------------------- Part 1 - Step 5: Removing B cell receptor (BCR) and T cell receptor (TCR) information mistakenly assigned to the following clusters: "DC", "Macrophages", and "Mast cells".
-target_clusters <- c("DC", "Macrophages", "Mast cells")
+#------------------------------------------------------------------------------- Part 1 - Step 5: Removing B cell receptor (BCR) and T cell receptor (TCR) information mistakenly assigned to the following clusters: "Macrophages", "pDC", "Mast cells"
+target_clusters <- c("Macrophages", "pDC", "Mast cells")
 
 rows_to_clean <- which(
   full_metadata$cluster %in% target_clusters & 
@@ -359,9 +400,9 @@ if (length(rows_to_clean) > 0) {
 #------------------------------------------------------------------------------- Part 1 - Step 6: Update imm_receptor_Esmaeil based on presence of TCR and BCR sequences
 # Define non-B cell clusters to check for T cell receptor information
 target_clusters <- c(
-  "Plasma cells_1", "B cells_1", "B cells_2",
-  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR", "DC", "Macrophages", "Mast cells"
+  "Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+",
+  "Act. plasmablast", "Plasma IGHG+", "Mem B cells",
+  "B cells BAFFR+", "Macrophages", "pDC", "Mast cells"
 )
 
 # Annotate alpha-beta TCR (ab)
@@ -407,9 +448,9 @@ full_metadata$imm_receptor_Esmaeil[rows_ab_gd] <- "abgd" # abgd"
 
 # Annotate BCR sequences (hkl)
 target_clusters <- c(
-  "Plasma cells_1", "B cells_1", "B cells_2",
-  "B cells MZB1+", "Plasma cells_2", "Plasmablast",
-  "B cells BAFFR"
+  "Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+",
+  "Act. plasmablast", "Plasma IGHG+", "Mem B cells",
+  "B cells BAFFR+"
 )
 
 rows_hkl <- which(
@@ -444,7 +485,7 @@ target_rows <- (
 #--------------------------------------- Part 1 - Step 7 - Section 1: cells were found in B cell clusters that express cdr_Full_ig_hL
 hkl_rows <- which(
   target_rows & 
-    full_metadata$cluster %in% c("B cells_1", "B cells_2", "B cells MZB1+") &
+    full_metadata$cluster %in% c("Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+", "Act. plasmablast", "Plasma IGHG+", "Mem B cells", "B cells BAFFR+") &
     (is.na(full_metadata$cdr_Full_ab) | full_metadata$cdr_Full_ab == "") &
     (is.na(full_metadata$cdr_Full_gd) | full_metadata$cdr_Full_gd == "") &
     (
@@ -496,7 +537,7 @@ target_rows <- (
 
 rows_to_remove <- which(
   target_rows &
-    full_metadata$cluster %in% c("B cells_1", "B cells_2") &
+    full_metadata$cluster %in% c("Homing plasmablast", "Act. plasma IGHA+", "Mature plasma IGHA+", "Act. plasmablast", "Plasma IGHG+", "Mem B cells", "B cells BAFFR+") &
     (is.na(full_metadata$cdr_Full_ig_hk) | full_metadata$cdr_Full_ig_hk == "") &
     (is.na(full_metadata$cdr_Full_ig_hL) | full_metadata$cdr_Full_ig_hL == "")
 )
@@ -505,9 +546,25 @@ full_metadata <- full_metadata[-rows_to_remove, ]
 #  A total of 4 cells met the criteria
 
 
+#--------------------------------------- Part 1 - Step 7 - Section 3: First, we identified the gamma-delta (gd) T cell clusters
+summary_table <- full_metadata %>%
+  group_by(cluster) %>%
+  summarise(
+    total_cells = n(),  # new column for total number of cells in the cluster
+    ab = sum(imm_receptor_Esmaeil == "ab", na.rm = TRUE),
+    Aberrant_ab = sum(imm_receptor_Esmaeil == "Aberrant ab", na.rm = TRUE),
+    gd = sum(imm_receptor_Esmaeil == "gd", na.rm = TRUE),
+    Aberrant_g = sum(imm_receptor_Esmaeil == "Aberrant g", na.rm = TRUE),
+  )
 
-#--------------------------------------- Part 1 - Step 7 - Section 3: Update immune receptor to "gd" for cells in "NK Tgd", "Tgd INSIG1+", or "Tgd" clusters
-target_clusters <- c("NK Tgd", "Tgd INSIG1+", "Tgd")
+# Save to Excel
+write.xlsx(summary_table, "gamma-delta (gd) T cell clusters.xlsx")
+
+
+#--------------------------------------- Part 1 - Step 7 - Section 4: Update immune receptor to "gd" for cells in "Act. Tgd", "Tgd INSIG1+" clusters
+
+# Updated to "gd" for cells located in the Gama-delta clusters 
+target_clusters <- c("Act. Tgd", "Tgd INSIG1+")
 rows_to_update_gd <- which(
   (
     full_metadata$cluster %in% target_clusters & full_metadata$imm_receptor_Esmaeil == "abgd"
@@ -536,12 +593,12 @@ full_metadata$b_cdr3[rows_to_update_gd] <- ""
 full_metadata$cdr_Full_ab[rows_to_update_gd] <- ""
 full_metadata$clone_size_ab[rows_to_update_gd] <- ""
 full_metadata$clone_size_bucket_ab[rows_to_update_gd] <- ""
-# A total of 187 cells were updated in this step.
+# A total of 160 cells were updated in this step.
 
 
 
-#--------------------------------------- Part 1 - Step 7 - Section 4: Update immune receptor to "ab" for cells not in "NK Tgd", "Tgd INSIG1+", "Tgd" or "Tgd CD8+" clusters
-excluded_clusters <- c("NK Tgd", "Tgd INSIG1+", "Tgd", "Tgd CD8+")
+#--------------------------------------- Part 1 - Step 7 - Section 4: Update immune receptor to "ab" for cells not in "Act. Tgd", "Tgd INSIG1+", "NK/Tgd", "Tgd CD8+", or "Trm IEL" clusters
+excluded_clusters <- c("Act. Tgd", "Tgd INSIG1+", "NK/Tgd", "Tgd CD8+", "Trm IEL")
 rows_to_update_ab <- which(
   (!(full_metadata$cluster %in% excluded_clusters) &  full_metadata$imm_receptor_Esmaeil == "abgd") |
     (
@@ -565,7 +622,7 @@ full_metadata$g_cdr3[rows_to_update_ab] <- ""
 full_metadata$cdr_Full_gd[rows_to_update_ab] <- ""
 full_metadata$clone_size_gd[rows_to_update_ab] <- ""
 full_metadata$clone_size_bucket_gd[rows_to_update_ab] <- ""
-# A total of 1030 cells were updated in this step.
+# A total of 820 cells were updated in this step.
 
 
 
@@ -700,7 +757,7 @@ full_metadata$g_cdr3[full_metadata$CellID %in% ab_subkeys] <- ""
 full_metadata$cdr_Full_gd[full_metadata$CellID %in% ab_subkeys] <- ""
 full_metadata$clone_size_gd[full_metadata$CellID %in% ab_subkeys] <- ""
 full_metadata$clone_size_bucket_gd[full_metadata$CellID %in% ab_subkeys] <- ""
-# 157 cells were re-annotated as ab
+# 330 cells were re-annotated as ab
 
 
 
@@ -718,7 +775,7 @@ full_metadata$b_cdr3[full_metadata$CellID %in% gd_subkeys] <- ""
 full_metadata$cdr_Full_ab[full_metadata$CellID %in% gd_subkeys] <- ""
 full_metadata$clone_size_ab[full_metadata$CellID %in% gd_subkeys] <- ""
 full_metadata$clone_size_bucket_ab[full_metadata$CellID %in% gd_subkeys] <- ""
-# 28 cells were re-annotated as gd
+# 92 cells were re-annotated as gd
 
 
 
@@ -762,13 +819,12 @@ full_metadata$clone_size_bucket_gd <- ifelse(
   )
 )
 
-
-#--------------------------------------------------------------------------------- Plot UMAP colored by cluster
+#--------------------------------------- Part 1 - Step 9 - Section 1: Plot UMAP colored by cluster
 full_metadata$cluster <- recode(full_metadata$cluster,
-                                "NK Tgd" = "NK Tγδ",
-                                "Tgd CD8+" = "Tγδ CD8+",
                                 "Tgd INSIG1+" = "Tγδ INSIG1+",
-                                "Tgd" = "Tγδ"
+                                "NK/Tgd" = "NK/Tγδ",
+                                "Act. Tgd" = "Act. Tγδ",
+                                "Tgd CD8+" = "Tγδ CD8+"
 )
 
 plot_data <- full_metadata %>%
@@ -796,9 +852,41 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
         panel.grid.minor = element_blank(),
         plot.background = element_rect(fill = "white", color = NA))
 
-ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 300, bg = "white")
+ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 600, bg = "white")
+ggsave("UMAP.pdf", plot = umap_plot, width = 8, height = 6, dpi = 600, bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
 
+#--------------------------------------- Part 1 - Step 9 - Section 2: We identified the distribution of immune receptors across all clusters.
+summary_table <- full_metadata %>%
+  group_by(cluster) %>%
+  summarise(
+    total_cells = n(),  # new column for total number of cells in the cluster
+    ab = sum(imm_receptor_Esmaeil == "ab", na.rm = TRUE),
+    Aberrant_ab = sum(imm_receptor_Esmaeil == "Aberrant ab", na.rm = TRUE),
+    gd = sum(imm_receptor_Esmaeil == "gd", na.rm = TRUE),
+    Aberrant_g = sum(imm_receptor_Esmaeil == "Aberrant g", na.rm = TRUE),
+    
+    only_a = sum(!is.na(a_cdr3) & is.na(b_cdr3) & is.na(g_cdr3) & is.na(d_cdr3)),
+    only_b = sum(is.na(a_cdr3) & !is.na(b_cdr3) & is.na(g_cdr3) & is.na(d_cdr3)),
+    only_g = sum(is.na(a_cdr3) & is.na(b_cdr3) & !is.na(g_cdr3) & is.na(d_cdr3)),
+    only_d = sum(is.na(a_cdr3) & is.na(b_cdr3) & is.na(g_cdr3) & !is.na(d_cdr3)),
+    
+    only_a_b = sum(!is.na(a_cdr3) & !is.na(b_cdr3) & is.na(g_cdr3) & is.na(d_cdr3)),
+    only_a_g = sum(!is.na(a_cdr3) & is.na(b_cdr3) & !is.na(g_cdr3) & is.na(d_cdr3)),
+    only_a_d = sum(!is.na(a_cdr3) & is.na(b_cdr3) & is.na(g_cdr3) & !is.na(d_cdr3)),
+    only_b_g = sum(is.na(a_cdr3) & !is.na(b_cdr3) & !is.na(g_cdr3) & is.na(d_cdr3)),
+    only_b_d = sum(is.na(a_cdr3) & !is.na(b_cdr3) & is.na(g_cdr3) & !is.na(d_cdr3)),
+    only_g_d = sum(is.na(a_cdr3) & is.na(b_cdr3) & !is.na(g_cdr3) & !is.na(d_cdr3)),
+    only_a_b_g = sum(!is.na(a_cdr3) & !is.na(b_cdr3) & !is.na(g_cdr3) & is.na(d_cdr3)),
+    only_a_b_d = sum(!is.na(a_cdr3) & !is.na(b_cdr3) & is.na(g_cdr3) & !is.na(d_cdr3)),
+    only_a_g_d = sum(!is.na(a_cdr3) & is.na(b_cdr3) & !is.na(g_cdr3) & !is.na(d_cdr3)),
+    only_b_g_d = sum(is.na(a_cdr3) & !is.na(b_cdr3) & !is.na(g_cdr3) & !is.na(d_cdr3)),
+    
+    all_present = sum(!is.na(a_cdr3) & !is.na(b_cdr3) & !is.na(g_cdr3) & !is.na(d_cdr3)),
+    all_a_b_g_d_NA = sum(is.na(a_cdr3) & is.na(b_cdr3) & is.na(g_cdr3) & is.na(d_cdr3))
+  )
 
+# Save to Excel
+write.xlsx(summary_table, "distribution of immune receptors.xlsx")
 
 #--------------------------------------------------------------------------------- Save MetaData
 full_metadata[full_metadata == ""] <- NA

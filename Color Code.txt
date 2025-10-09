@@ -1,0 +1,7 @@
+"TCRαβ" = "#EE1819",
+"TCRγδ" = "#FD7D00",
+"Aberrant αβ" = "#3A78CE",
+"Aberrant γ" = "#47AD45",
+"hkl" = "#FCD919",
+"TCRαβγδ" = "#92509F"
+"T and B" = "#9B592D"

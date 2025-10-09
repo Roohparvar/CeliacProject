@@ -50,17 +50,20 @@ To ensure consistency and reliability of downstream analyses, several metadata c
 
 ### Part 1 - Step 7: Managing Cells with imm_receptor_Esmaeil Annotated as "abgd" or Containing Both cdr_Full_ab and cdr_Full_gd
 A total of 1,408 cells met the criteria of having imm_receptor_Esmaeil annotated as "abgd" or simultaneously containing both cdr_Full_ab and cdr_Full_gd. This step focuses on refining the immune receptor annotation for these ambiguous or dual-feature cells:
-- 2 cells were found in B cell clusters that express cdr_Full_ig_hL. Their immune receptor was defined as "hkl".
-- 4 cells located in B cell clusters lacked both cdr_Full_ig_hL and cdr_Full_ig_hK. These were excluded from further analysis.
+- 2 cells were found in B cell clusters that express cdr_Full_ig_hL or cdr_Full_ig_hk but do not express cdr_Full_ab or cdr_Full_gd. Their immune receptor was classified as 'hkl'
+- 4 cells located in B cell clusters lacked both cdr_Full_ig_hL and cdr_Full_ig_hk despite expressing either cdr_Full_ab or cdr_Full_gd, or having their immune receptor defined as 'abgd'. These cells were excluded from further analysis.
 - First, we identified the gamma-delta (gd) T cell clusters in the dataset, Then:
 	- Updated to "gd" for cells located in the "Act. Tgd" and "Tgd INSIG1+" clusters. Total updated: 160 cells
-	- Updated to "ab" for cells not located in "Act. Tgd", "Tgd INSIG1+", "NK/Tgd", "Tgd CD8+", Or "Trm IEL" clusters. Total updated: 820 cells
+	- Updated to "ab" for cells not located in "Act. Tgd", "Tgd INSIG1+", "NK/Tgd", "Tgd CD8+", or "Trm IEL" clusters. Total updated: 820 cells
 	- To resolve remaining ambiguous cases in the "NK/Tgd", "Tgd CD8+", and "Trm IEL" clusters, we examined the expression of key immune receptor genes (Trac, Trbc1, Trbc2, Trgc1, Trgc2, Trdc) and confidently re-annotated 330 cells as "ab" and 92 cells as "gd" based on their gene expression profiles.
 ### Part 1 - Step 8:  Computing Clone Size for ab and gd TCRs 
 - Calculated clone_size_ab and clone_size_bucket_ab based on the frequency of each cdr_Full_ab sequence.
 - Calculated clone_size_gd and clone_size_bucket_gd based on the frequency of each cdr_Full_gd sequence.
 
-### Part 1 - Step 9:  Outputs 
+### Part 1 - Step 9:  Outputs
+	- The final UMAP plot was generated to visualize the cell clusters.
+	- The cleaned and updated metadata table was saved for downstream analyses.
+	- The distribution of immune receptors across all clusters was identified and documented.
 ---
 ---
 ---

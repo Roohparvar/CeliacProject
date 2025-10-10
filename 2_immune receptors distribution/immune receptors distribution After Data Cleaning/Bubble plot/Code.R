@@ -3,6 +3,21 @@ setwd("C:/Esmaeil/CeliacProject/CeliacProject/2_immune receptors distribution/im
 library(dplyr)
 library(ggplot2)
 
+
+full_metadata$imm_receptor_Esmaeil <- recode(full_metadata$imm_receptor_Esmaeil,
+                                             "Aberrant ab" = "Aberrant αβ",
+                                             "Aberrant g" = "Aberrant γ",
+                                             "ab" = "αβ",
+                                             "gd" = "γδ"
+)
+full_metadata$cluster <- recode(full_metadata$cluster,
+                                "Tgd INSIG1+" = "Tγδ INSIG1+",
+                                "NK/Tgd" = "NK/Tγδ",
+                                "Act. Tgd" = "Act. Tγδ",
+                                "Tgd CD8+" = "Tγδ CD8+"
+)
+
+
 # Summarize counts per cluster and receptor, remove NAs
 bubble_data <- full_metadata %>%
   filter(!is.na(imm_receptor_Esmaeil)) %>%

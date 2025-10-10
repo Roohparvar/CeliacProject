@@ -11,26 +11,26 @@ library(cowplot)
 
 # Define receptor colors and labels
 receptor_colors <- c(
-  "αβ" = "#ee1819",
-  "γδ" = "#fd7d00",
+  "ab" = "#ee1819",
+  "gd" = "#fd7d00",
   "hkl" = "#fcd919",
-  "Aberrant αβ" = "#3a78ce",
-  "Aberrant γ" = "#47ad45",
+  "Aberrant ab" = "#3a78ce",
+  "Aberrant g" = "#47ad45",
   "None" = "#eeeeee"
 )
 
 receptor_labels <- c(
-  "αβ" = expression(TCR*alpha*beta),
-  "γδ" = expression(TRR*gamma*delta),
+  "ab" = expression(TCR*alpha*beta),
+  "gd" = expression(TRR*gamma*delta),
   "hkl" = "hkl",
-  "Aberrant αβ" = expression(Aberrant*alpha*beta),
-  "Aberrant γ" = expression(Aberrant*gamma)
+  "Aberrant ab" = expression(Aberrant*alpha*beta),
+  "Aberrant g" = expression(Aberrant*gamma)
 )
 
 # Set factor levels
 full_metadata$imm_receptor_Esmaeil <- factor(
   full_metadata$imm_receptor_Esmaeil,
-  levels = c("αβ", "γδ", "Aberrant αβ", "Aberrant γ", "hkl", "None")
+  levels = c("ab", "gd", "Aberrant ab", "Aberrant g", "hkl", "None")
 )
 
 # Main UMAP plot (without legend)

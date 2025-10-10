@@ -5,3 +5,10 @@
 "hkl" = "#FCD919",
 "TCRαβγδ" = "#92509F"
 "T and B" = "#9B592D"
+
+
+"Clone size 1" = "#B3B3B3"
+"Clone size 2-10" = "#F0CCFF"
+"Clone size 11-50" = "#F8766D"
+"Clone size 51-100" = "#619CFF"
+"Clone size 100+" = "#F032E6"

@@ -824,14 +824,6 @@ full_metadata$clone_size_bucket_gd <- ifelse(
 )
 
 #--------------------------------------- Part 1 - Step 9 - Section 1: Plot UMAP colored by cluster
-full_metadata$cluster <- recode(full_metadata$cluster,
-                                "Tgd INSIG1+" = "Tγδ INSIG1+",
-                                "NK/Tgd" = "NK/Tγδ",
-                                "Act. Tgd" = "Act. Tγδ",
-                                "Tgd CD8+" = "Tγδ CD8+"
-)
-
-
 plot_data <- full_metadata %>%
   filter(!is.na(cluster))  
 
@@ -895,12 +887,5 @@ write.xlsx(summary_table, "distribution of immune receptors.xlsx")
 
 #--------------------------------------------------------------------------------- Save MetaData
 full_metadata[full_metadata == ""] <- NA
-
-full_metadata$imm_receptor_Esmaeil <- recode(full_metadata$imm_receptor_Esmaeil,
-                                "Aberrant ab" = "Aberrant αβ",
-                                "Aberrant g" = "Aberrant γ",
-                                "ab" = "αβ",
-                                "gd" = "γδ"
-)
 
 save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "Final MetaData.Rdata")

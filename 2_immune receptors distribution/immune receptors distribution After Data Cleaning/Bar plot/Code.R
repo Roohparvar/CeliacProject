@@ -4,6 +4,22 @@ library(ggplot2)
 library(dplyr)
 library(cowplot)
 
+
+full_metadata$imm_receptor_Esmaeil <- recode(full_metadata$imm_receptor_Esmaeil,
+                                             "Aberrant ab" = "Aberrant αβ",
+                                             "Aberrant g" = "Aberrant γ",
+                                             "ab" = "αβ",
+                                             "gd" = "γδ"
+)
+full_metadata$cluster <- recode(full_metadata$cluster,
+                                "Tgd INSIG1+" = "Tγδ INSIG1+",
+                                "NK/Tgd" = "NK/Tγδ",
+                                "Act. Tgd" = "Act. Tγδ",
+                                "Tgd CD8+" = "Tγδ CD8+"
+)
+
+
+
 # Define receptor colors and labels
 receptor_colors <- c(
   "αβ" = "#ee1819",

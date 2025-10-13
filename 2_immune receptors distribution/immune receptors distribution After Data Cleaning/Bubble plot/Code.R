@@ -70,12 +70,13 @@ bubble_plot <- ggplot(bubble_data, aes(x = cluster, y = imm_receptor_Esmaeil)) +
     plot.title = element_text(hjust = 0.5, size = 16),
     axis.title.x = element_text(size = 14),
     axis.title.y = element_text(size = 12),
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 11),
     axis.text.y = element_text(size = 12),
     legend.title = element_text(size = 10),
     legend.text = element_text(size = 10),
     panel.background = element_rect(fill = "white"),
-    plot.background = element_rect(fill = "white")
+    plot.background = element_rect(fill = "white"),
+    legend.box.margin = margin(t = 10, r = 0, b = 0, l = 0) 
   ) +
   labs(
     title = "Receptor Distribution Across Clusters",

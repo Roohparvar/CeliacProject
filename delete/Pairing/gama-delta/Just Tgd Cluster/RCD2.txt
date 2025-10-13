@@ -1,0 +1,10 @@
+All cells: 25
+RCD2-2: 25
+RCD2-1b: 0 
+
+
+> table(RCD2-2"$TRDV)
+TRDV1: 2  TRDV2: 20  TRDV3: 3
+
+> table(RCD2-1b$TRDV)
+TRDV1: 0  TRDV2: 0  TRDV3: 0

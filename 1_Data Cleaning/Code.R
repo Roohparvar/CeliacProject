@@ -1,7 +1,4 @@
 setwd("C:/Esmaeil/CeliacProject/CeliacProject/1_Data Cleaning")
-
-
-
 #------------------------------------------------------------------------------- libraries
 library(dplyr)
 library(ggplot2)
@@ -550,6 +547,7 @@ full_metadata <- full_metadata[-rows_to_remove, ]
 #  A total of 4 cells met the criteria
 
 
+
 #--------------------------------------- Part 1 - Step 7 - Section 3: First, we identified the gamma-delta (gd) T cell clusters
 summary_table <- full_metadata %>%
   group_by(cluster) %>%
@@ -563,6 +561,7 @@ summary_table <- full_metadata %>%
 
 # Save to Excel
 write.xlsx(summary_table, "gamma-delta (gd) T cell clusters.xlsx")
+
 
 
 #--------------------------------------- Part 1 - Step 7 - Section 4: Update immune receptor to "gd" for cells in "Act. Tgd", "Tgd INSIG1+" clusters
@@ -823,6 +822,8 @@ full_metadata$clone_size_bucket_gd <- ifelse(
   )
 )
 
+
+
 #--------------------------------------- Part 1 - Step 9 - Section 1: Plot UMAP colored by cluster
 plot_data <- full_metadata %>%
   filter(!is.na(cluster))  
@@ -852,7 +853,10 @@ umap_plot <- ggplot(plot_data, aes(x = scVI_with_hvg_UMAP_1,
 ggsave("UMAP.png", plot = umap_plot, width = 8, height = 6, dpi = 600, bg = "white")
 ggsave("UMAP.pdf", plot = umap_plot, width = 8, height = 6, dpi = 600, bg = "white", device = cairo_pdf, family = "Arial Unicode MS")
 
+
+
 #--------------------------------------- Part 1 - Step 9 - Section 2: We identified the distribution of immune receptors across all clusters.
+full_metadata[full_metadata == ""] <- NA
 summary_table <- full_metadata %>%
   group_by(cluster) %>%
   summarise(
@@ -887,5 +891,4 @@ write.xlsx(summary_table, "distribution of immune receptors.xlsx")
 
 #--------------------------------------------------------------------------------- Save MetaData
 full_metadata[full_metadata == ""] <- NA
-
 save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "Final MetaData.Rdata")

@@ -1,7 +1,6 @@
 setwd("C:/Esmaeil/CeliacProject/CeliacProject/2_immune receptors distribution/immune receptors distribution After Data Cleaning/UMAP")
 
 
-
 #------------------------------------------------------------------------------- libraries
 library(ggplot2)
 library(dplyr)

@@ -1,0 +1,7 @@
+> table(RCD22$TRDV)
+TRDV1 TRDV2 TRDV3 
+    5    44     5 
+	
+> table(RCD21b$TRDV)
+TRDV1 TRDV2 TRDV3 
+    4     7     1 

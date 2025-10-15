@@ -890,5 +890,4 @@ summary_table <- full_metadata %>%
 write.xlsx(summary_table, "distribution of immune receptors.xlsx")
 
 #--------------------------------------------------------------------------------- Save MetaData
-full_metadata[full_metadata == ""] <- NA
 save(full_metadata, patient_colours, diagnosis_colours, palette_34, file = "Final MetaData.Rdata")

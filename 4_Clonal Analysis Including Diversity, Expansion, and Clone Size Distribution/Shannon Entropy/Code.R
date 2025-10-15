@@ -1,11 +1,10 @@
 setwd("C:/Esmaeil/CeliacProject/CeliacProject/4_Clonal Analysis Including Diversity, Expansion, and Clone Size Distribution/Shannon Entropy")
-
-
 #------------------------------------------------------------------------------- libraries
 library(dplyr)
 library(ggplot2)
 library(vegan)
 library(tidyr)
+
 
 
 #------------------------------------------------------------------------------- Helper functions
@@ -164,12 +163,16 @@ p_raw <- ggplot(combined_diversity, aes(x = cluster, y = shannon, fill = Diagnos
   geom_bar(stat = "identity", width = 0.9, position = "dodge") +
   facet_grid(Diagnosis ~ Cell_type, scales = "free_x", space = "free_x") +
   scale_fill_manual(values = diagnosis_colors) +
-  labs(title = "", x = "Cluster", y = "Shannon Index") +
-  theme_bw() +
+  labs(title = "", x = "", y = "Shannon Index") +
+  theme_bw(base_size = 18) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     axis.text.x = element_text(size = 15, angle = 45, hjust = 1),
-    strip.text = element_text(face = "bold")
+    strip.text = element_text(face = "bold"),
+    strip.text.x = element_text(size = 20, face = "bold"),
+    strip.text.y = element_text(size = 18, face = "bold"),
+    legend.title = element_text(size = 18, face = "bold"),
+    legend.text  = element_text(size = 16)                  
   )
 
 ggsave("combined_shannon_raw.png", p_raw, width = 15, height = 10, dpi = 300)
@@ -180,12 +183,16 @@ p_norm <- ggplot(combined_diversity, aes(x = cluster, y = shannon_norm, fill = D
   geom_bar(stat = "identity", width = 0.9, position = "dodge") +
   facet_grid(Diagnosis ~ Cell_type, scales = "free_x", space = "free_x") +
   scale_fill_manual(values = diagnosis_colors) +
-  labs(title = "Normalized Shannon Diversity", x = "Cluster", y = "Normalized Shannon Index") +
-  theme_bw() +
+  labs(title = "Normalized Shannon Diversity", x = "", y = "Normalized Shannon Index") +
+  theme_bw(base_size = 18) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     axis.text.x = element_text(angle = 45, hjust = 1),
-    strip.text = element_text(face = "bold")
+    strip.text = element_text(face = "bold"),
+    strip.text.x = element_text(size = 20, face = "bold"),
+    strip.text.y = element_text(size = 18, face = "bold"),
+    legend.title = element_text(size = 18, face = "bold"),
+    legend.text  = element_text(size = 16)      
   )
 
 ggsave("combined_shannon_norm.png", p_norm, width = 15, height = 10, dpi = 300)

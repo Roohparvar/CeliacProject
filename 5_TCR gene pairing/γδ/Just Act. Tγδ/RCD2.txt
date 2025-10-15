@@ -1,0 +1,6 @@
+> table(RCD22$TRDV)
+TRDV1 TRDV2 TRDV3 
+    2    20     3 
+	
+> table(RCD21b$TRDV)
+< table of extent 0 >

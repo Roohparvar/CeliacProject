@@ -1,3 +1,5 @@
+setwd("C:/Esmaeil/CeliacProject/CeliacProject/TCR genotype distribution/Differential presence of CD4⁺ and IELs during celiac progression/CD4 Clusters")
+
 library(tibble)
 library(dplyr)
 library(ggplot2)
@@ -6,7 +8,7 @@ library(tidyr)
 library(scales)  # برای percent_format
 
 
-target_clusters <- c("Th1 Mem", "Th17", "Th2/Tfh", "Tregs")
+target_clusters <- c("Th17", "Tfh", "CD4 Trm", "Tregs", "CD4 FTH1+")
 target_diagnosis <- c("Healthy", "ACD", "RCD-I", "RCD-II")
 
 percent_matrix <- matrix(NA, 
@@ -61,11 +63,15 @@ long_data <- long_data %>%
 
 
 cluster_colors <- c(
-  "Th1 Mem" = "#4A4E69",
-  "Th17"    = "#2a9d8f",  
-  "Th2/Tfh" = "#e76f51",  
-  "Tregs"   = "#8d99ae"   
+  "Th17" = "#4A4E69",
+  "Tfh"    = "#2a9d8f",  
+  "CD4 Trm" = "#e76f51",  
+  "Tregs"   = "#8d99ae",
+  "CD4 FTH1+" = "#4A9d51"
 )
+
+
+
 
 # رسم نمودار
 p <- ggplot(long_data,
@@ -87,8 +93,7 @@ p <- ggplot(long_data,
 print(p)
 
 # ذخیره نمودار به PNG
-ggsave("CD4_alluvial_percentages_Healthy_ACD_RCDI_RCDII.png",
-       plot = p, width = 10, height = 5, dpi = 300, bg = "white")
+ggsave("CD4_alluvial_percentages_Healthy_ACD_RCDI_RCDII.png", plot = p, width = 10, height = 5, dpi = 300, bg = "white")
 
 
 

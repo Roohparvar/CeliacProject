@@ -200,8 +200,8 @@ final_plot <- main_plot / legend_combined + patchwork::plot_layout(heights = c(4
 
 
 # Save final plot
-ggsave("umap_tcr_signatures_ordered_legend.png", plot = final_plot, width = 14, height = 12, dpi = 300, bg = "white")
-ggsave("umap_tcr_signatures_ordered_legend.pdf", plot = final_plot, width = 14, height = 12, dpi = 300, bg = "white")
+ggsave("umap_tcr_signatures_ordered_legend.png", plot = final_plot, width = 14, height = 12, dpi = 600, bg = "white")
+ggsave("umap_tcr_signatures_ordered_legend.pdf", plot = final_plot, width = 14, height = 12, dpi = 600, bg = "white")
 
 
 # ------------------------------------------------------------------------------ Part 2: Distribution of Aberrant clones reported in STM Paper (without legend )
@@ -229,8 +229,8 @@ main_plot_clean <- ggplot() +
   )
 
 
-ggsave("Umap_imm_receptor_highlighted_no_legend.png", plot = main_plot_clean, width = 8, height = 6, dpi = 300, bg = "white")
-ggsave("Umap_imm_receptor_highlighted_no_legend.pdf", plot = main_plot_clean, width = 8, height = 6, dpi = 300, bg = "white")
+ggsave("Umap_imm_receptor_highlighted_no_legend.png", plot = main_plot_clean, width = 8, height = 6, dpi = 600, bg = "white")
+ggsave("Umap_imm_receptor_highlighted_no_legend.pdf", plot = main_plot_clean, width = 8, height = 6, dpi = 600, bg = "white")
 
 
 # ------------------------------------------------------------------------------ Part 3: Count the number of cells belonging to each specified aberrant TCR clone signature in the dataset

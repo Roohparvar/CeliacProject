@@ -46,7 +46,7 @@ count_matrix$negLog10P <- -log10(count_matrix$pvalue)
 
 
 
-top1_genes <- head(count_matrix[order(count_matrix$pvalue), ], 1)
+top1_genes <- head(count_matrix[order(count_matrix$pvalue), ], 3)
 top1_names <- rownames(top1_genes)
 colors <- c("#FABEBE", "blue", "green", "purple", "orange")
 

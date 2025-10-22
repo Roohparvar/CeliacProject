@@ -132,9 +132,6 @@ These visualizations help highlight the extent of clonal expansion and the balan
 ---
 ---
 
-## Part 3: G_CDR3 Combination Analysis
-In this section, we explored the distribution of cells that contain the **CDR3_G** sequence and how their combinations with **CDR3_A** and **CDR3_B** are spread across different clusters. This analysis provides insights into the immune receptor pairing patterns and how they may influence cluster-specific behavior or identity.
-
 ---
 ---
 ---
